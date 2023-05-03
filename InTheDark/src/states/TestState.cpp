@@ -4,11 +4,13 @@
 
 class TestState : public GameState
 {
-	ObjData stone;
+	GameObject stone;
 
 	void init() override
 	{
-		this->stone = assets.getObj(Object::Stone);
+		// Maybe let GameState (or level in the future, which should be a GameState child) hold all GameObjects by default?
+		// Compare to already existing manager instances
+		this->stone = assets.getObj(Object::STONE);
 	}
 
 	void update() override
@@ -19,10 +21,7 @@ class TestState : public GameState
 	void draw() override
 	{
 		canvas.clear();
-
-		
-		// TODO: @Future Me -> Definitely abstract this away
-		glBufferData(GL_ARRAY_BUFFER, this->stone.v.size() * sizeof(glm::vec3), &this->stone.v[0], GL_STATIC_DRAW);
+		this->stone.draw();
 	}
 
 	void discard() override

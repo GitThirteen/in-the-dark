@@ -2,21 +2,31 @@
 
 AssetManager::AssetManager()
 {
-	this->objects = std::unordered_map<Object, ObjData>();
+	this->objects = std::unordered_map<Object, GameObject>();
 	loadAll();
 }
 
 void AssetManager::loadAll()
 {
-	GameObject stone{ };
-	stone.data = loadObj("../_assets/objects/stone_tri.obj");
+	GameObject stone = createObj(Object::STONE);
+	this->objects.insert({ Object::STONE, stone });
 
-	this->objects.insert({ Object::Stone, stone });
+	GameObject crate = createObj(Object::CRATE);
+	this->objects.insert({ Object::CRATE, crate });
+}
+
+GameObject AssetManager::createObj(Object specifier)
+{
+	GameObject obj{ };
+	obj.data = loadObj(OBJ_PATHS.at(specifier));
+	obj.create();
+
+	return obj;
 }
 
 ObjData AssetManager::loadObj(std::string path)
 {
-	ObjData data;
+	ObjData data{ };
 	vec3v indices_v;
 
 	std::ifstream file(path, std::ios::in);
@@ -62,7 +72,7 @@ ObjData AssetManager::loadObj(std::string path)
 
 	/* ---- Indexing ---- */
 
-	ObjData result;
+	ObjData result{ };
 
 	for (auto& indices : indices_v)
 	{
@@ -104,6 +114,7 @@ GameObject AssetManager::getObj(Object object_type)
 	}
 	catch (std::out_of_range e)
 	{
+		LOG_F(ERROR, "Error attempting to obtain object.");
 		return { };
 	}
 }
