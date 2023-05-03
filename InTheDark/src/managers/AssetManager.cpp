@@ -63,30 +63,16 @@ ObjData AssetManager::loadObj(std::string path)
 			for (auto& frag : frags)
 			{
 				auto face = util::floatify<glm::vec3>(util::split(frag, "/"));
-				indices_v.push_back(face);
+
+				data.i.push_back(face.x - 1);
+				// Consider pushing y and z back too if we want to further optimize this
 			}
 		}
 	}
 
 	file.close();
 
-	/* ---- Indexing ---- */
-
-	ObjData result{ };
-
-	for (auto& indices : indices_v)
-	{
-		glm::vec3 vertex = data.v[indices.x - 1];
-		result.v.push_back(vertex);
-
-		glm::vec2 uv = data.uv[indices.y - 1];
-		result.uv.push_back(uv);
-
-		glm::vec3 normal = data.n[indices.z - 1];
-		result.n.push_back(normal);
-	}
-
-	return result;
+	return data;
 }
 
 void AssetManager::loadTexture()
