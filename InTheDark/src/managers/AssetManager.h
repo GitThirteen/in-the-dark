@@ -16,12 +16,12 @@ class AssetManager
 {
 public:
 	/**
-	 * @brief Returns an already loaded object as ObjData struct.
+	 * @brief Returns an already loaded object as GameObject.
 	 * 
 	 * @param The object that should be returned. For possible object types, refer to the 'Object' enum in the GameObject header
-	 * @return The object data.
+	 * @return The object as GameObject. If no GameObject has been created with the specified key, an empty GameObject is returned.
 	*/
-	ObjData getObj(Object);
+	GameObject getObj(Object);
 
 	/**
 	 * @brief Returns a reference to the AssetManager Singleton.
@@ -39,7 +39,7 @@ public:
 private:
 	AssetManager();
 
-	std::unordered_map<Object, ObjData> objects;
+	std::unordered_map<Object, GameObject> objects;
 
 	void loadAll();
 

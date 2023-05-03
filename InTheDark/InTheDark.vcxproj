@@ -33,6 +33,7 @@
     <ClInclude Include="src\managers\CanvasManager.h" />
     <ClInclude Include="src\managers\SettingsManager.h" />
     <ClInclude Include="src\managers\ShaderManager.h" />
+    <ClInclude Include="src\objects\GameObject.h" />
     <ClInclude Include="src\util\ini.h" />
     <ClInclude Include="src\util\util.h" />
     <ClInclude Include="src\util\logger\loguru.hpp" />

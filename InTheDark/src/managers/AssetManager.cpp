@@ -8,7 +8,9 @@ AssetManager::AssetManager()
 
 void AssetManager::loadAll()
 {
-	ObjData stone = loadObj("../_assets/objects/stone_tri.obj");
+	GameObject stone{ };
+	stone.data = loadObj("../_assets/objects/stone_tri.obj");
+
 	this->objects.insert({ Object::Stone, stone });
 }
 
@@ -94,7 +96,14 @@ void AssetManager::loadAudio()
 
 /* ---- GETTER ---- */
 
-ObjData AssetManager::getObj(Object object_type)
+GameObject AssetManager::getObj(Object object_type)
 {
-	return this->objects.at(object_type);
+	try
+	{
+		return this->objects.at(object_type);
+	}
+	catch (std::out_of_range e)
+	{
+		return { };
+	}
 }

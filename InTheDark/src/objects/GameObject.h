@@ -19,10 +19,12 @@ struct ObjData
 class GameObject
 {
 public:
+	ObjData data;
+
 	void draw()
 	{
 
 	}
 private:
-
+	
 };
