@@ -39,8 +39,8 @@ void Camera::update(bool leftMouseDown, glm::vec2 mouse, double r)
 		double dx = mouse.x - this->mouse_old.x;
 		double dy = mouse.y - this->mouse_old.y;
 
-		double width = SettingsManager::getInstance().get<double>("width");
-		double height = SettingsManager::getInstance().get<double>("height");
+		double width = SettingsManager::getInstance().get<int>("width");
+		double height = SettingsManager::getInstance().get<int>("height");
 		double move_x = dx / (width * 0.5);
 		double move_y = dy / (height * 0.5);
 
@@ -90,7 +90,7 @@ glm::mat4 Camera::calcProjMatrix()
 	return glm::perspective(glm::radians(fov), width / (double) height, near, far);
 }
 
-glm::mat4& Camera::getViewProjMatrix()
+glm::mat4 Camera::getViewProjMatrix()
 {
 	return this->view_mat * this->proj_mat;
 }

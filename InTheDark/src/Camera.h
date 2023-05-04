@@ -36,7 +36,7 @@ public:
 	void lock();
 	void unlock();
 
-	glm::mat4& getViewProjMatrix();
+	glm::mat4 getViewProjMatrix();
 
 private:
 	double radius = 1.0;
