@@ -26,7 +26,7 @@ struct ObjData
 };
 
 // TODO: This class is the C++ side of a GameObject containing the draw method.
-// To make this work in Lua, we will need some sort of wrapper between a C++ GameObject
+// To make this work in Lua, we will need some sort of mapper between a C++ GameObject
 // and a Lua GameObject.
 class GameObject
 {
