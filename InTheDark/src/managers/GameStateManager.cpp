@@ -26,7 +26,7 @@ void GameStateManager::draw() // TODO don't pass radius in as param but rather h
 	double m_x = 0.0, m_y = 0.0;
 	glfwGetCursorPos(this->window, &m_x, &m_y);
 	bool rotateFlag = (glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
-	this->camera.update(rotateFlag, glm::vec2(m_x, m_y), 3.0f); // <-- replace 1.0f with radius
+	this->camera.update(rotateFlag, glm::vec2(m_x, m_y), 6.0f); // <-- replace 6.0f with radius
 
 	ShaderManager::getInstance().set(ShaderLocation::VIEWPROJECTION_MAT, this->camera.getViewProjMatrix());
 

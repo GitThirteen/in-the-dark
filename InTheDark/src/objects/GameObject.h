@@ -12,16 +12,26 @@ enum Object
 	STONE
 };
 
+struct ObjVertex
+{
+	glm::vec3 v;
+	glm::vec2 uv;
+	glm::vec3 n;
+};
+
 struct ObjData
 {
-	vec3v v;
-	vec2v uv;
-	vec3v n;
-	std::vector<GLushort> i;
+	std::vector<GLushort> indices;
+	std::vector<ObjVertex> vertices;
 
 	bool incomplete()
 	{
-		return this->v.empty() || this->uv.empty() || this->n.empty() || this->i.empty();
+		if (indices.empty() || indices.size() != vertices.size()) return true;
+		for (auto& vertex : this->vertices)
+		{
+			if (vertex.v.length() != 3 || vertex.uv.length() != 2 || vertex.n.length() != 3) return true;
+		}
+		return false;
 	}
 };
 
@@ -51,39 +61,54 @@ public:
 
 		/* ---- Create VBO and bind our vertices, indices, texture coordinates and normals to them ---- */
 
-		GLuint vbo[4];
-		glGenBuffers(4, vbo);
+		GLuint vbo[2];
+		glGenBuffers(2, vbo);
 
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		glBufferData(GL_ARRAY_BUFFER, data.vertices.size() * (2 * sizeof(glm::vec3) + sizeof(glm::vec2)), data.vertices.data(), GL_STATIC_DRAW);
+
+		auto stride = 8 * sizeof(GLfloat);
+
+		glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+		glEnableVertexAttribArray(ShaderLocation::POSITION);
+
+		glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(ShaderLocation::UV);
+
+		glVertexAttribPointer(ShaderLocation::NORMAL, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(ShaderLocation::NORMAL);
+
+		/*
 		// Vertices
 		auto& vertices = this->data.v;
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
-		// Indices
-		auto& indices = this->data.i;
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
+		glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(ShaderLocation::POSITION);
+
+		std::cout << std::to_string(vertices.size()) + "; sizeof: " + std::to_string(sizeof(glm::vec3)) << std::endl;
 
 		// Texture Coordinates
 		auto& tex_coords = this->data.uv;
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 		glBufferData(GL_ARRAY_BUFFER, tex_coords.size() * sizeof(glm::vec2), tex_coords.data(), GL_STATIC_DRAW);
-		
-		// Normals
-		auto& normals = this->data.n;
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
-		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
-
-		/* ---- Enable attribute pointers ---- */
-
-		glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(ShaderLocation::POSITION);
 
 		glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(ShaderLocation::UV);
 
+		// Normals
+		auto& normals = this->data.n;
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+
 		glVertexAttribPointer(ShaderLocation::NORMAL, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(ShaderLocation::NORMAL);
+		glEnableVertexAttribArray(ShaderLocation::NORMAL);*/
+
+		// Indices
+		auto& indices = this->data.indices;
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
 
 		/* ---- Unbind VAO & VBOs ---- */
 
@@ -98,7 +123,7 @@ public:
 		// TODO: Bind translation, color, reflection, alpha, texture (if needed)
 
 		glBindVertexArray(this->vao);
-		glDrawElements(GL_TRIANGLES, this->data.i.size(), GL_UNSIGNED_SHORT, (void*)0);
+		glDrawElements(GL_TRIANGLES, this->data.indices.size(), GL_UNSIGNED_SHORT, (void*)0);
 		glBindVertexArray(0);
 	}
 private:

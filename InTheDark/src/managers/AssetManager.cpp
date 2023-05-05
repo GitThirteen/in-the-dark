@@ -26,8 +26,10 @@ GameObject AssetManager::createObj(Object specifier)
 
 ObjData AssetManager::loadObj(std::string path)
 {
-	ObjData data{ };
-	vec3v indices_v;
+	vec3v v_defs;
+	vec2v uv_defs;
+	vec3v n_defs;
+	vec3v v_indices;
 
 	std::ifstream file(path, std::ios::in);
 	if (!file) // operator! is overloaded, see https://cplusplus.com/reference/ios/ios/operator_not/
@@ -35,6 +37,8 @@ ObjData AssetManager::loadObj(std::string path)
 		LOG_F(ERROR, "Unable to open object file specified at path %s.", path.c_str());
 		return { };
 	}
+
+	// Part 1: Parse all relevant data from the .OBJ
 
 	std::string cur_line;
 	while (std::getline(file, cur_line))
@@ -46,33 +50,53 @@ ObjData AssetManager::loadObj(std::string path)
 		if (data_type == "v")
 		{
 			auto vertex = util::floatify<glm::vec3>(frags);
-			data.v.push_back(vertex);
+			v_defs.push_back(vertex);
 		}
 		else if (data_type == "vt")
 		{
 			auto uv = util::floatify<glm::vec2>(frags);
-			data.uv.push_back(uv);
+			uv_defs.push_back(uv);
 		}
 		else if (data_type == "vn")
 		{
 			auto normal = util::floatify<glm::vec3>(frags);
-			data.n.push_back(normal);
+			n_defs.push_back(normal);
 		}
 		else if (data_type == "f")
 		{
 			for (auto& frag : frags)
 			{
 				auto face = util::floatify<glm::vec3>(util::split(frag, "/"));
-
-				data.i.push_back(face.x - 1);
-				// Consider pushing y and z back too if we want to further optimize this
+				v_indices.push_back(face);
 			}
 		}
 	}
 
 	file.close();
 
-	return data;
+	// Part 2: Create a single container defining all three attributes, one vertex per vector entry [(v, uv, n), ...]
+
+	// Note: This is a fairly primitive approach, but I've spent the whole day figuring out how to
+	// create index buffers via an algorithm and I'd rather not spend more time on this
+	std::vector<ObjVertex> vertices{ };
+	for (auto& v_i : v_indices)
+	{
+		ObjVertex vertex{ };
+		vertex.v = v_defs[v_i.x - 1];
+		vertex.uv = uv_defs[v_i.y - 1];
+		vertex.n = n_defs[v_i.z - 1];
+
+		vertices.push_back(vertex);
+	}
+
+	ObjData result{ };
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		result.indices.push_back(i);
+	}
+	result.vertices = vertices;
+
+	return result;
 }
 
 void AssetManager::loadTexture()

@@ -36,6 +36,7 @@ int main(int argc, char** argv)
 	shaders.add(Shader::Vertex, "../_shaders/shader.vert");
 	shaders.add(Shader::Fragment, "../_shaders/shader.frag");
 	shaders.create();
+	shaders.use();
 
 	auto test_state = std::make_unique<TestState>();
 	game.changeState(std::move(test_state));

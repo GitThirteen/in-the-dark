@@ -25,6 +25,7 @@ class ShaderManager
 public:
 	void add(Shader, std::string path);
 	void create();
+	void use();
 	void destroy();
 
 	static ShaderManager& getInstance()

@@ -56,6 +56,11 @@ void ShaderManager::create()
 	glDeleteShader(fragShader);
 }
 
+void ShaderManager::use()
+{
+	glUseProgram(this->shader);
+}
+
 void ShaderManager::destroy()
 {
 	glDeleteProgram(this->shader);

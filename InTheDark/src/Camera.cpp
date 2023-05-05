@@ -2,13 +2,19 @@
 
 Camera::Camera() : Camera(1.0) { }
 
-Camera::Camera(double radius) :
-Camera(
-	glm::vec3(0.0f, 0.0f, radius),
-	glm::vec3(0.0f, 0.0f, 0.0f),
-	glm::vec3(0.0f, 1.0f, 0.0f),
-	1.0f
-) { }
+Camera::Camera(double radius) 
+{
+	this->camera = CameraCoords(
+		glm::vec3(0.0f, 0.0f, radius),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f)
+	);
+	this->radius = radius;
+	this->mouse_old = { NAN, NAN };
+
+	this->view_mat = calcViewMatrix();
+	this->proj_mat = calcProjMatrix();
+}
 
 Camera::Camera(glm::vec3& origin, glm::vec3& target, glm::vec3& up, double radius)
 {
@@ -83,16 +89,16 @@ glm::mat4 Camera::calcProjMatrix()
 
 	int height = settings.get<int>("height");
 	int width = settings.get<int>("width");
-	double fov = settings.get<float>("fov");
-	double near = settings.get<float>("near");
-	double far = settings.get<float>("far");
+	float fov = settings.get<float>("fov");
+	float near = settings.get<float>("near");
+	float far = settings.get<float>("far");
 
-	return glm::perspective(glm::radians(fov), width / (double) height, near, far);
+	return glm::perspective(glm::radians(fov), width / (float) height, near, far);
 }
 
 glm::mat4 Camera::getViewProjMatrix()
 {
-	return this->view_mat * this->proj_mat;
+	return this->proj_mat * this->view_mat;
 }
 
 // CameraCoords
