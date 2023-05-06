@@ -44,7 +44,7 @@ public:
 	 * @brief Divides a string into a std::vector of substrings (fragments) depending on another sequence of characters.
 	 * 
 	 * @param string	The string to subdivide into fragments
-	 * @param delimiter The sequence of characters by which this method should filter, if left undefined a whitespace (" ") is used
+	 * @param delimiter The sequence of characters by which this method should filter. If left undefined a whitespace is used
 	 * @return A std::vector containing all string fragments that were separated by the delimiter.
 	*/
 	static std::vector<std::string> split(std::string string, const std::string& delimiter = " ")

@@ -10,8 +10,10 @@
 #include "../objects/GameObject.h"
 
 static std::unordered_map<Object, std::string> OBJ_PATHS = {
-	{ Object::STONE, "../_assets/objects/stone_tri.obj" },
-	{ Object::CRATE, "../_assets/objects/wooden_crate_tri.obj" }
+	{ Object::STONE,	"../_assets/objects/stone_tri.obj" },
+	{ Object::CRATE,	"../_assets/objects/wooden_crate_tri.obj" },
+	{ Object::TORCH,	"../_assets/objects/torch_tri.obj" },
+	{ Object::TREASURE, "../_assets/objects/treasure_chest_tri.obj" }
 };
 
 class AssetManager

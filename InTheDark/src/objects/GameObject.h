@@ -9,7 +9,9 @@ typedef std::vector<glm::vec2> vec2v;
 enum Object
 {
 	CRATE,
-	STONE
+	STONE,
+	TORCH,
+	TREASURE
 };
 
 struct ObjVertex
@@ -77,33 +79,6 @@ public:
 
 		glVertexAttribPointer(ShaderLocation::NORMAL, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(ShaderLocation::NORMAL);
-
-		/*
-		// Vertices
-		auto& vertices = this->data.v;
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(ShaderLocation::POSITION);
-
-		std::cout << std::to_string(vertices.size()) + "; sizeof: " + std::to_string(sizeof(glm::vec3)) << std::endl;
-
-		// Texture Coordinates
-		auto& tex_coords = this->data.uv;
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-		glBufferData(GL_ARRAY_BUFFER, tex_coords.size() * sizeof(glm::vec2), tex_coords.data(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(ShaderLocation::UV);
-
-		// Normals
-		auto& normals = this->data.n;
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(ShaderLocation::NORMAL, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(ShaderLocation::NORMAL);*/
 
 		// Indices
 		auto& indices = this->data.indices;
