@@ -4,7 +4,9 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\managers\AssetManager.cpp" />
     <ClCompile Include="src\managers\CanvasManager.cpp" />
+    <ClCompile Include="src\managers\EventHandler.cpp" />
     <ClCompile Include="src\managers\GameStateManager.cpp" />
+    <ClInclude Include="src\managers\EventHandler.h" />
     <ClInclude Include="src\managers\GameStateManager.h" />
     <ClCompile Include="src\managers\SettingsManager.cpp" />
     <ClCompile Include="src\managers\ShaderManager.cpp" />

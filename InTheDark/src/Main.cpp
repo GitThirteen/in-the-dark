@@ -21,6 +21,7 @@ GLFWwindow* initGL();
 GameStateManager& game = GameStateManager::getInstance();
 SettingsManager& settings = SettingsManager::getInstance();
 ShaderManager& shaders = ShaderManager::getInstance();
+EventHandler& events = EventHandler::getInstance();
 
 /* ---------------------------- */
 // Main
@@ -37,6 +38,8 @@ int main(int argc, char** argv)
 	shaders.add(Shader::Fragment, "../_shaders/shader.frag");
 	shaders.create();
 	shaders.use();
+
+	events.setWindow(window);
 
 	auto test_state = std::make_unique<TestState>();
 	game.changeState(std::move(test_state));
