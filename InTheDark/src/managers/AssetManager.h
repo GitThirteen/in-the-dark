@@ -8,6 +8,7 @@
 #include "../util/logger/loguru.hpp"
 #include "../util/util.h"
 #include "../objects/GameObject.h"
+#include "stb_image.h"
 
 static std::unordered_map<Object, std::string> OBJ_PATHS = {
 	{ Object::STONE,	"../_assets/objects/stone_tri.obj" },
@@ -62,7 +63,7 @@ private:
 	/**
 	 * @brief TODO
 	*/
-	void loadTexture();
+	void loadTexture(const char* filename, int width, int height, int nrChannels);
 
 	/**
 	 * @brief TODO
