@@ -4,9 +4,14 @@
 #include <fstream>
 #include <stdint.h>
 #include <unordered_map>
+#include <iostream>
+#include <sstream>
+#include <GLFW/glfw3.h>
+
 
 #include "../util/logger/loguru.hpp"
 #include "../util/util.h"
+
 
 typedef std::vector<glm::vec3> vec3v;
 typedef std::vector<glm::vec2> vec2v;
@@ -19,9 +24,9 @@ enum Object
 
 struct ObjData
 {
-	vec3v v;
-	vec2v uv;
-	vec3v n;
+	vec3v v;//v
+	vec2v uv;//vt
+	vec3v n;//vn
 };
 
 class AssetManager
@@ -35,10 +40,7 @@ public:
 	*/
 	ObjData loadObj(std::string);
 
-	/**
-	 * TODO
-	*/
-	void loadTexture();
+	void loadTexture(const char *filepath, int width, int height, int nrChannel);
 
 	/**
 	 * TODO
@@ -46,7 +48,7 @@ public:
 	void loadLevel();
 
 	/**
-	 * TODO
+	 * TODO later on
 	*/
 	void loadAudio();
 

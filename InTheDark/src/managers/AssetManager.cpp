@@ -1,4 +1,5 @@
 #include "AssetManager.h"
+#include "stb_image.h"
 
 AssetManager::AssetManager()
 {
@@ -33,8 +34,8 @@ ObjData AssetManager::loadObj(std::string path)
 
 		if (data_type == "v")
 		{
-			auto vertex = util::floatify<glm::vec3>(frags);
-			data.v.push_back(vertex);
+			auto v = util::floatify<glm::vec3>(frags);
+			data.v.push_back(v);
 		}
 		else if (data_type == "vt")
 		{
@@ -43,8 +44,8 @@ ObjData AssetManager::loadObj(std::string path)
 		}
 		else if (data_type == "vn")
 		{
-			auto normal = util::floatify<glm::vec3>(frags);
-			data.n.push_back(normal);
+			auto nl = util::floatify<glm::vec3>(frags);
+			data.n.push_back(n);
 		}
 		else if (data_type == "f")
 		{
@@ -65,21 +66,43 @@ ObjData AssetManager::loadObj(std::string path)
 	for (auto& indices : indices_v)
 	{
 		glm::vec3 vertex = data.v[indices.x - 1];
-		result.v.push_back(vertex);
+		result.v.push_back(v);
 
 		glm::vec2 uv = data.uv[indices.y - 1];
 		result.uv.push_back(uv);
 
 		glm::vec3 normal = data.n[indices.z - 1];
-		result.n.push_back(normal);
+		result.n.push_back(n);
 	}
 
 	return result;
 }
 
-void AssetManager::loadTexture()
+void AssetManager::loadTexture(const char *filepath, int width, int height, int nrChannel)
 {
-	// TODO
+	unsigned int texture; //maybe we need a texture id that we pass on with the parameters
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// set the texture wrapping/filtering options (on the currently bound texture object)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	unsigned char* data = stbi_load(filepath, &width, &height, &nrChannel, 0); 
+
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+
 }
 
 void AssetManager::loadLevel()
