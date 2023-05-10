@@ -40,12 +40,14 @@ int main(int argc, char** argv)
 	shaders.use();
 
 	events.setWindow(window);
+	events.mouse.enableScrollCallback();
 
 	auto test_state = std::make_unique<TestState>();
 	game.changeState(std::move(test_state));
 	
 	while (!glfwWindowShouldClose(window))
 	{
+		game.update();
 		game.draw();
 	}
 
@@ -87,10 +89,6 @@ GLFWwindow* initGL()
 	}
 
 	glfwMakeContextCurrent(window);
-
-	/* ---- Callbacks ---- */
-
-	// TODO
 
 	/* ---- GLEW Init ---- */
 

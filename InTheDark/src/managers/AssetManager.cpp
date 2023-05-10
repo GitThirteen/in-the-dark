@@ -13,6 +13,12 @@ void AssetManager::loadAll()
 
 	GameObject crate = createObj(Object::CRATE);
 	this->objects.insert({ Object::CRATE, crate });
+
+	GameObject torch = createObj(Object::TORCH);
+	this->objects.insert({ Object::TORCH, torch });
+
+	GameObject treasure = createObj(Object::TREASURE);
+	this->objects.insert({ Object::TREASURE, treasure });
 }
 
 GameObject AssetManager::createObj(Object specifier)

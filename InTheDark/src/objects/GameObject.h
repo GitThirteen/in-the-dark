@@ -95,12 +95,32 @@ public:
 
 	void draw()
 	{
-		// TODO: Bind translation, color, reflection, alpha, texture (if needed)
+		// TODO: Bind color, reflection, alpha, texture (if needed)
+		
+		// Technically we should have a separate method that only re-sets the uniforms if needed, but considering
+		// that it's not particularly expensive to do set a uniform, it's not worth the hassle at the moment
+		ShaderManager::getInstance().set(ShaderLocation::TRANSFORM_MAT, this->trans_mat);
 
 		glBindVertexArray(this->vao);
 		glDrawElements(GL_TRIANGLES, this->data.indices.size(), GL_UNSIGNED_SHORT, (void*)0);
 		glBindVertexArray(0);
 	}
+
+	void translate(glm::vec3 translate)
+	{
+		this->trans_mat = glm::translate(this->trans_mat, translate);
+	}
+
+	void rotate(glm::vec3 rotate, float angle)
+	{
+		this->trans_mat = glm::rotate(this->trans_mat, glm::radians(angle), rotate);
+	}
+
+	void scale(glm::vec3 scale)
+	{
+		this->trans_mat = glm::scale(this->trans_mat, scale);
+	}
 private:
 	GLuint vao = 0;
+	glm::mat4 trans_mat = glm::mat4(1.0);
 };

@@ -14,7 +14,7 @@ out vec4 vertexColor;
 
 void main() {
 	// replace mat4 with transform once necessary
-	gl_Position = viewProjMat * mat4(1.0) * vec4(position, 1.0);
+	gl_Position = viewProjMat * transform * vec4(position, 1.0);
 	vertexColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	//fragPos = vec3(mat4(1.0) * vec4(position, 1.0));
 	//vNormal = mat3(transpose(inverse(mat4(1.0)))) * normal;

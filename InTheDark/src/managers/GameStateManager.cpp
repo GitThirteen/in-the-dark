@@ -25,8 +25,9 @@ void GameStateManager::draw() // TODO don't pass radius in as param but rather h
 	events.poll();
 	bool mouse_pressed = events.mouse.pressed(GLFW_MOUSE_BUTTON_LEFT);
 	glm::vec2 mouse_pos = events.mouse.getPosition();
+	double cam_offset = events.mouse.getOffset();
 
-	this->camera.update(mouse_pressed, mouse_pos, 6.0f); // <-- replace 6.0f with radius
+	this->camera.update(mouse_pressed, mouse_pos, cam_offset); // <-- replace 6.0f with radius
 
 	shaders.set(ShaderLocation::VIEWPROJECTION_MAT, this->camera.getViewProjMatrix());
 

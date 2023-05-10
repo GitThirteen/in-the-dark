@@ -3,16 +3,25 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "../util/util.h"
+
 typedef struct InternalMouseHandler
 {
 	InternalMouseHandler(GLFWwindow* window);
 
+	// Mouse-related getters
 	bool pressed(int button);
 	bool released(int button);
 	glm::vec2 getPosition();
+	double getOffset();
 
+	// Misc.
+	void enableScrollCallback();
 private:
 	GLFWwindow* window;
+	static double offset;
+
+	void enableScrollCallback(void (*callback)(GLFWwindow*, double, double));
 };
 
 class EventHandler
@@ -33,9 +42,6 @@ public:
 	};
 
 	void enableKeyCallback();
-	void enableScrollCallback();
-
-	float getCurrentRadius();
 
 	void poll();
 
