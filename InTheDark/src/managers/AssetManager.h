@@ -4,66 +4,35 @@
 #include <fstream>
 #include <stdint.h>
 #include <unordered_map>
-#include <iostream>
-#include <sstream>
-#include <GLFW/glfw3.h>
-
 
 #include "../util/logger/loguru.hpp"
 #include "../util/util.h"
+#include "../objects/GameObject.h"
 
-
-typedef std::vector<glm::vec3> vec3v;
-typedef std::vector<glm::vec2> vec2v;
-
-enum Object
-{
-	Crate,
-	Stone
-};
-
-struct ObjData
-{
-	vec3v v;//v
-	vec2v uv;//vt
-	vec3v n;//vn
+static std::unordered_map<Object, std::string> OBJ_PATHS = {
+	{ Object::STONE,	"../_assets/objects/stone_tri.obj" },
+	{ Object::CRATE,	"../_assets/objects/wooden_crate_tri.obj" },
+	{ Object::TORCH,	"../_assets/objects/torch_tri.obj" },
+	{ Object::TREASURE, "../_assets/objects/treasure_chest_tri.obj" }
 };
 
 class AssetManager
 {
 public:
 	/**
-	 * @brief Loads an wavefront .obj file from a specified path.
+	 * @brief Returns an already loaded object as GameObject.
 	 * 
-	 * @param The path the .obj is located at
-	 * @return The .obj as an ObjData struct.
+	 * @param The object that should be returned. For possible object types, refer to the 'Object' enum in the GameObject header
+	 * @return The object as GameObject. If no GameObject has been created with the specified key, an empty GameObject is returned.
 	*/
-	ObjData loadObj(std::string);
+	GameObject getObj(Object);
 
-	void loadTexture(const char *filepath, int width, int height, int nrChannel);
+	// TODO: Other getters
 
 	/**
-	 * TODO
-	*/
-	void loadLevel();
-
-	/**
-	 * TODO later on
-	*/
-	void loadAudio();
-
-	/**
-	 * @brief Returns an already loaded object as ObjData struct
+	 * @brief Returns a reference to the AssetManager Singleton.
 	 * 
-	 * @param The object that should be returned. For possible object types, refer to the local 'Object' enum
-	 * @return The object data
-	*/
-	ObjData getObj(Object);
-
-	/**
-	 * @brief Returns a reference to the AssetManager Singleton
-	 * 
-	 * @return A reference to the AssetManager
+	 * @return A reference to the AssetManager.
 	*/
 	static AssetManager& getInstance()
 	{
@@ -76,7 +45,32 @@ public:
 private:
 	AssetManager();
 
-	std::unordered_map<Object, ObjData> objects;
+	std::unordered_map<Object, GameObject> objects;
 
 	void loadAll();
+
+	/**
+	 * @brief Optional builder method for creating a GameObject. Calls all required methods in the right order to avoid errors.
+	*/
+	GameObject createObj(Object);
+
+	/**
+	 * @brief Loads a wavefront .obj file from a specified file path. This method will fail if the .obj is not triangulated.
+	*/
+	ObjData loadObj(std::string);
+
+	/**
+	 * @brief TODO
+	*/
+	void loadTexture();
+
+	/**
+	 * @brief TODO
+	*/
+	void loadLevel();
+
+	/**
+	 * @brief TODO
+	*/
+	void loadAudio();
 };

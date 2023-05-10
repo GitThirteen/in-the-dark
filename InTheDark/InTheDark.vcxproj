@@ -4,12 +4,13 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\managers\AssetManager.cpp" />
     <ClCompile Include="src\managers\CanvasManager.cpp" />
+    <ClCompile Include="src\managers\EventHandler.cpp" />
     <ClCompile Include="src\managers\GameStateManager.cpp" />
-    <ClCompile Include="src\managers\GameStateManager.h" />
+    <ClInclude Include="src\managers\EventHandler.h" />
+    <ClInclude Include="src\managers\GameStateManager.h" />
     <ClCompile Include="src\managers\SettingsManager.cpp" />
     <ClCompile Include="src\managers\ShaderManager.cpp" />
-    <ClCompile Include="src\managers\stb_image.cpp" />
-    <ClCompile Include="src\states\GameState.h" />
+    <ClInclude Include="src\states\GameState.h" />
     <ClCompile Include="src\states\TestState.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\util\logger\loguru.cpp" />
@@ -34,7 +35,7 @@
     <ClInclude Include="src\managers\CanvasManager.h" />
     <ClInclude Include="src\managers\SettingsManager.h" />
     <ClInclude Include="src\managers\ShaderManager.h" />
-    <ClInclude Include="src\managers\stb_image.h" />
+    <ClInclude Include="src\objects\GameObject.h" />
     <ClInclude Include="src\util\ini.h" />
     <ClInclude Include="src\util\util.h" />
     <ClInclude Include="src\util\logger\loguru.hpp" />
@@ -88,18 +89,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseExe|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -11,7 +11,7 @@
 
 enum SType { INT, FLOAT, STRING, INVALID };
 
-typedef struct SValue {
+struct SValue {
 	SType type;
 	struct {
 		int i;
@@ -26,6 +26,7 @@ public:
 	template <typename T>
 	T get(std::string)
 	{
+		static_assert(false);
 		return T();
 	}
 

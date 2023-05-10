@@ -19,16 +19,17 @@ void GameStateManager::update()
 void GameStateManager::draw() // TODO don't pass radius in as param but rather have some sort of global entity tracking that, maybe same for mouse position
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glfwPollEvents();
 
 	this->camera.unlock(); // TODO remove and properly use lock & unlock once main menu and co are defined
 	
-	double m_x = 0.0, m_y = 0.0;
-	glfwGetCursorPos(this->window, &m_x, &m_y);
-	bool rotateFlag = (glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
-	this->camera.update(rotateFlag, glm::vec2(m_x, m_y), 1.0f); // <-- replace 1.0f with radius
+	events.poll();
+	bool mouse_pressed = events.mouse.pressed(GLFW_MOUSE_BUTTON_LEFT);
+	glm::vec2 mouse_pos = events.mouse.getPosition();
+	double cam_offset = events.mouse.getOffset();
 
-	ShaderManager::getInstance().set(VIEWPROJECTION_MAT, this->camera.getViewProjMatrix());
+	this->camera.update(mouse_pressed, mouse_pos, cam_offset); // <-- replace 6.0f with radius
+
+	shaders.set(ShaderLocation::VIEWPROJECTION_MAT, this->camera.getViewProjMatrix());
 
 	if (this->active_state)
 	{

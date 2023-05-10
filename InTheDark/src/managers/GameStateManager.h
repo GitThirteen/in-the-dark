@@ -1,9 +1,11 @@
 #pragma once
 
 #include <memory>
+
 #include "../states/GameState.h"
 #include "../Camera.h"
 #include "ShaderManager.h"
+#include "EventHandler.h"
 
 class GameStateManager
 {
@@ -30,7 +32,10 @@ public:
 private:
 	std::unique_ptr<GameState> active_state = nullptr;
 	GLFWwindow* window = nullptr;
-	Camera camera = Camera(1.0);
+	Camera camera = Camera(events.mouse.getOffset());
+
+	ShaderManager& shaders = ShaderManager::getInstance();
+	EventHandler& events = EventHandler::getInstance();
 
 	GameStateManager() { }
 };

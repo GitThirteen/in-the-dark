@@ -57,7 +57,7 @@ SValue SettingsManager::getData(std::string name, SType type)
 			setting.type = SType::INVALID;
 		}
 	}
-	catch (const std::out_of_range& e)
+	catch (const std::out_of_range&)
 	{
 		LOG_F(ERROR, "Couldn't find setting with name '%s'.", name.c_str());
 		setting.type = SType::INVALID;

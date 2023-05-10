@@ -44,7 +44,7 @@ public:
 	 * @brief Divides a string into a std::vector of substrings (fragments) depending on another sequence of characters.
 	 * 
 	 * @param string	The string to subdivide into fragments
-	 * @param delimiter The sequence of characters by which this method should filter, if left undefined a whitespace (" ") is used
+	 * @param delimiter The sequence of characters by which this method should filter. If left undefined a whitespace is used
 	 * @return A std::vector containing all string fragments that were separated by the delimiter.
 	*/
 	static std::vector<std::string> split(std::string string, const std::string& delimiter = " ")
@@ -96,6 +96,7 @@ public:
 	template <typename T>
 	static T floatify(std::vector<std::string>&)
 	{
+		static_assert(false);
 		return T();
 	}
 
@@ -109,9 +110,9 @@ public:
 	template<>
 	static glm::vec2 floatify<glm::vec2>(std::vector<std::string>& strings)
 	{
-		glm::vec2 res;
-		res.x = ::atof(strings[0].c_str());
-		res.y = ::atof(strings[1].c_str());
+		glm::vec2 res{ };
+		res.x = (float) ::atof(strings[0].c_str());
+		res.y = (float) ::atof(strings[1].c_str());
 		return res;
 	}
 
@@ -125,10 +126,10 @@ public:
 	template<>
 	static glm::vec3 floatify<glm::vec3>(std::vector<std::string>& strings)
 	{
-		glm::vec3 res;
-		res.x = ::atof(strings[0].c_str());
-		res.y = ::atof(strings[1].c_str());
-		res.z = ::atof(strings[2].c_str());
+		glm::vec3 res{ };
+		res.x = (float) ::atof(strings[0].c_str());
+		res.y = (float) ::atof(strings[1].c_str());
+		res.z = (float) ::atof(strings[2].c_str());
 		return res;
 	}
 

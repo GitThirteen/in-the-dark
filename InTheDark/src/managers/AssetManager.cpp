@@ -1,22 +1,41 @@
 #include "AssetManager.h"
-#include "stb_image.h"
 
 AssetManager::AssetManager()
 {
-	this->objects = std::unordered_map<Object, ObjData>();
+	this->objects = std::unordered_map<Object, GameObject>();
 	loadAll();
 }
 
 void AssetManager::loadAll()
 {
-	ObjData stone = loadObj("../_assets/objects/stone_tri.obj");
-	this->objects.insert({ Object::Stone, stone });
+	GameObject stone = createObj(Object::STONE);
+	this->objects.insert({ Object::STONE, stone });
+
+	GameObject crate = createObj(Object::CRATE);
+	this->objects.insert({ Object::CRATE, crate });
+
+	GameObject torch = createObj(Object::TORCH);
+	this->objects.insert({ Object::TORCH, torch });
+
+	GameObject treasure = createObj(Object::TREASURE);
+	this->objects.insert({ Object::TREASURE, treasure });
+}
+
+GameObject AssetManager::createObj(Object specifier)
+{
+	GameObject obj{ };
+	obj.data = loadObj(OBJ_PATHS.at(specifier));
+	obj.create();
+
+	return obj;
 }
 
 ObjData AssetManager::loadObj(std::string path)
 {
-	ObjData data;
-	vec3v indices_v;
+	vec3v v_defs;
+	vec2v uv_defs;
+	vec3v n_defs;
+	vec3v v_indices;
 
 	std::ifstream file(path, std::ios::in);
 	if (!file) // operator! is overloaded, see https://cplusplus.com/reference/ios/ios/operator_not/
@@ -24,6 +43,8 @@ ObjData AssetManager::loadObj(std::string path)
 		LOG_F(ERROR, "Unable to open object file specified at path %s.", path.c_str());
 		return { };
 	}
+
+	// Part 1: Parse all relevant data from the .OBJ
 
 	std::string cur_line;
 	while (std::getline(file, cur_line))
@@ -34,75 +55,59 @@ ObjData AssetManager::loadObj(std::string path)
 
 		if (data_type == "v")
 		{
-			auto v = util::floatify<glm::vec3>(frags);
-			data.v.push_back(v);
+			auto vertex = util::floatify<glm::vec3>(frags);
+			v_defs.push_back(vertex);
 		}
 		else if (data_type == "vt")
 		{
 			auto uv = util::floatify<glm::vec2>(frags);
-			data.uv.push_back(uv);
+			uv_defs.push_back(uv);
 		}
 		else if (data_type == "vn")
 		{
-			auto nl = util::floatify<glm::vec3>(frags);
-			data.n.push_back(n);
+			auto normal = util::floatify<glm::vec3>(frags);
+			n_defs.push_back(normal);
 		}
 		else if (data_type == "f")
 		{
 			for (auto& frag : frags)
 			{
 				auto face = util::floatify<glm::vec3>(util::split(frag, "/"));
-				indices_v.push_back(face);
+				v_indices.push_back(face);
 			}
 		}
 	}
 
 	file.close();
 
-	/* ---- Indexing ---- */
+	// Part 2: Create a single container defining all three attributes, one vertex per vector entry [(v, uv, n), ...]
 
-	ObjData result;
-
-	for (auto& indices : indices_v)
+	// Note: This is a fairly primitive approach, but I've spent the whole day figuring out how to
+	// create index buffers via an algorithm and I'd rather not spend more time on this
+	std::vector<ObjVertex> vertices{ };
+	for (auto& v_i : v_indices)
 	{
-		glm::vec3 vertex = data.v[indices.x - 1];
-		result.v.push_back(v);
+		ObjVertex vertex{ };
+		vertex.v = v_defs[v_i.x - 1];
+		vertex.uv = uv_defs[v_i.y - 1];
+		vertex.n = n_defs[v_i.z - 1];
 
-		glm::vec2 uv = data.uv[indices.y - 1];
-		result.uv.push_back(uv);
-
-		glm::vec3 normal = data.n[indices.z - 1];
-		result.n.push_back(n);
+		vertices.push_back(vertex);
 	}
+
+	ObjData result{ };
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		result.indices.push_back(i);
+	}
+	result.vertices = vertices;
 
 	return result;
 }
 
-void AssetManager::loadTexture(const char *filepath, int width, int height, int nrChannel)
+void AssetManager::loadTexture()
 {
-	unsigned int texture; //maybe we need a texture id that we pass on with the parameters
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	unsigned char* data = stbi_load(filepath, &width, &height, &nrChannel, 0); 
-
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		//glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-
+	// TODO
 }
 
 void AssetManager::loadLevel()
@@ -117,7 +122,15 @@ void AssetManager::loadAudio()
 
 /* ---- GETTER ---- */
 
-ObjData AssetManager::getObj(Object object_type)
+GameObject AssetManager::getObj(Object object_type)
 {
-	return this->objects.at(object_type);
+	try
+	{
+		return this->objects.at(object_type);
+	}
+	catch (std::out_of_range e)
+	{
+		LOG_F(ERROR, "Error attempting to obtain object.");
+		return { };
+	}
 }

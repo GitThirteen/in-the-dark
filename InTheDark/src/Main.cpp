@@ -21,6 +21,7 @@ GLFWwindow* initGL();
 GameStateManager& game = GameStateManager::getInstance();
 SettingsManager& settings = SettingsManager::getInstance();
 ShaderManager& shaders = ShaderManager::getInstance();
+EventHandler& events = EventHandler::getInstance();
 
 /* ---------------------------- */
 // Main
@@ -36,12 +37,17 @@ int main(int argc, char** argv)
 	shaders.add(Shader::Vertex, "../_shaders/shader.vert");
 	shaders.add(Shader::Fragment, "../_shaders/shader.frag");
 	shaders.create();
+	shaders.use();
+
+	events.setWindow(window);
+	events.mouse.enableScrollCallback();
 
 	auto test_state = std::make_unique<TestState>();
 	game.changeState(std::move(test_state));
 	
 	while (!glfwWindowShouldClose(window))
 	{
+		game.update();
 		game.draw();
 	}
 
@@ -84,10 +90,6 @@ GLFWwindow* initGL()
 
 	glfwMakeContextCurrent(window);
 
-	/* ---- Callbacks ---- */
-
-	// TODO
-
 	/* ---- GLEW Init ---- */
 
 	glewExperimental = true;
@@ -99,6 +101,7 @@ GLFWwindow* initGL()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_CULL_FACE);
 
 	glViewport(0, 0, width, height);
 

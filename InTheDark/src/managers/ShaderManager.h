@@ -13,11 +13,11 @@ enum Shader
 };
 
 enum ShaderLocation {
-	POSITION,
-	NORMAL,
-	UV,
-	TRANSFORM_MAT,
-	VIEWPROJECTION_MAT
+	POSITION			= 0,
+	NORMAL				= 1,
+	UV					= 2,
+	TRANSFORM_MAT		= 3,
+	VIEWPROJECTION_MAT	= 4
 };
 
 class ShaderManager
@@ -25,6 +25,7 @@ class ShaderManager
 public:
 	void add(Shader, std::string path);
 	void create();
+	void use();
 	void destroy();
 
 	static ShaderManager& getInstance()
