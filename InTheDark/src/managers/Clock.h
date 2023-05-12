@@ -39,7 +39,7 @@ private:
 	std::chrono::steady_clock::time_point frame_time;
 	std::chrono::duration<double> dt;
 
-	bool first_frame = true;
-
-	Clock() { };
+	Clock() {
+		this->frame_time = std::chrono::steady_clock::now();
+	};
 };

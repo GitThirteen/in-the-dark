@@ -14,10 +14,8 @@ int Clock::getFPS()
 void Clock::tick()
 {
 	auto cur_time = std::chrono::steady_clock::now();
-	this->dt = first_frame ? (cur_time - cur_time) : (cur_time - this->frame_time);
+	this->dt = cur_time - this->frame_time;
 	this->frame_time = cur_time;
-
-	if (first_frame) first_frame = false;
 }
 
 void Clock::sleep(int millis)
