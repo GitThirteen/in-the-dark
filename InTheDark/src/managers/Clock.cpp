@@ -25,9 +25,9 @@ void Clock::tock()
 		return;
 	}
 
-	this->dt = this->cur_time - this->last_time;
+		this->dt = this->cur_time - this->last_time;
 	this->last_time = this->cur_time;
-}
+	}
 
 void Clock::sleep(int millis)
 {

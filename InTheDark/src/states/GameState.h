@@ -2,6 +2,7 @@
 
 #include "../managers/AssetManager.h"
 #include "../managers/CanvasManager.h"
+#include "../managers/Clock.h"
 
 class GameState
 {
@@ -16,4 +17,5 @@ public:
 protected:
 	AssetManager& assets = AssetManager::getInstance();
 	CanvasManager& canvas = CanvasManager::getInstance();
+	Clock& clock = Clock::getInstance();
 };
