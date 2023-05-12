@@ -10,6 +10,8 @@ void GameStateManager::changeState(std::unique_ptr<GameState> state)
 
 void GameStateManager::update()
 {
+	clock.tick();
+
 	if (this->active_state)
 	{
 		this->active_state->update();

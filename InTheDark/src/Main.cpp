@@ -22,7 +22,6 @@ GameStateManager& game = GameStateManager::getInstance();
 SettingsManager& settings = SettingsManager::getInstance();
 ShaderManager& shaders = ShaderManager::getInstance();
 EventHandler& events = EventHandler::getInstance();
-Clock& chrono = Clock::getInstance();
 
 /* ---------------------------- */
 // Main
@@ -48,10 +47,8 @@ int main(int argc, char** argv)
 	
 	while (!glfwWindowShouldClose(window))
 	{
-		chrono.tick();
 		game.update();
 		game.draw();
-		chrono.tock();
 	}
 
 	shaders.destroy();

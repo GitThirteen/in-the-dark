@@ -36,6 +36,7 @@ private:
 
 	ShaderManager& shaders = ShaderManager::getInstance();
 	EventHandler& events = EventHandler::getInstance();
+	Clock& clock = Clock::getInstance();
 
 	GameStateManager() { }
 };
