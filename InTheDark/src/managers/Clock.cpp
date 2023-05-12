@@ -28,3 +28,8 @@ void Clock::tock()
 	this->dt = this->cur_time - this->last_time;
 	this->last_time = this->cur_time;
 }
+
+void Clock::sleep(int millis)
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(millis));
+}
