@@ -17,6 +17,6 @@ void main() {
 	gl_Position = viewProjMat * transform * vec4(position, 1.0);
 	vertexColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	//fragPos = vec3(mat4(1.0) * vec4(position, 1.0));
-	//vNormal = mat3(transpose(inverse(mat4(1.0)))) * normal;
+	//vNormal = mat3(transpose(inverse(transform))) * normal;
 	//uvCoord = uv;
 }
