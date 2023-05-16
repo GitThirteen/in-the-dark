@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <utility>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -14,11 +15,18 @@ public:
 	void clear();
 	/**
 	 * @brief Clears the canvas with a custom RGB color code.
-	 * @param r The red component of the color
-	 * @param g The green component of the color
-	 * @param b The blue component of the color
+	 * @param r The red component of the color (0-255)
+	 * @param g The green component of the color (0-255)
+	 * @param b The blue component of the color (0-255)
 	*/
 	void clear(uint8_t r, uint8_t g, uint8_t b);
+	/**
+	 * @brief Clears the canvas with a custom RGB color and alpha value.
+	 * @param r The red component of the color (0-255)
+	 * @param g The green component of the color (0-255)
+	 * @param b The blue component of the color (0-255)
+	 * @param alpha The transparency of the color (0-100)
+	*/
 	void clear(uint8_t r, uint8_t g, uint8_t b, uint8_t alpha);
 
 	static CanvasManager& getInstance()

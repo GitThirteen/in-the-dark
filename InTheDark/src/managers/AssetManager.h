@@ -30,8 +30,6 @@ public:
 	// TODO: Other getters
 
 	/**
-	 * @brief Returns a reference to the AssetManager Singleton.
-	 * 
 	 * @return A reference to the AssetManager.
 	*/
 	static AssetManager& getInstance()
