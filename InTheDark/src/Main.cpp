@@ -62,7 +62,9 @@ GLFWwindow* initGL()
 
 	if (!glfwInit())
 	{
-		util::LOG_ERROR_AND_EXIT("GLFW Initialization failed.");
+		auto error_msg = "GLFW Initialization failed.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
 	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -85,7 +87,9 @@ GLFWwindow* initGL()
 	
 	if (!window)
 	{
-		util::LOG_ERROR_AND_EXIT("Window Initialization failed.");
+		auto error_msg = "Window Initialization failed.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
 	}
 
 	glfwMakeContextCurrent(window);
@@ -96,7 +100,9 @@ GLFWwindow* initGL()
 	GLenum glewResponse = glewInit();
 	if (glewResponse != GLEW_OK)
 	{
-		util::LOG_ERROR_AND_EXIT("GLEW Initialization failed.");
+		auto error_msg = "GLEW Initialization failed.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
 	}
 
 	glEnable(GL_DEPTH_TEST);

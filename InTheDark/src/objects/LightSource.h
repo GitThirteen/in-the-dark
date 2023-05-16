@@ -13,7 +13,7 @@ protected:
 
 	virtual void place() = 0;
 
-	void setColor(glm::vec3&);
+	void setColor(glm::vec3);
 };
 
 class PointLight : public LightSource
