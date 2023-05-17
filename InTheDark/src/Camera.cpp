@@ -47,8 +47,8 @@ void Camera::update(bool rightMouseDown, glm::vec2 mouse, double r)
 
 		double width = SettingsManager::getInstance().get<int>("width");
 		double height = SettingsManager::getInstance().get<int>("height");
-		double move_x = dx / (width * 0.5);
-		double move_y = dy / (height * 0.5);
+		double move_x = dx / (width * 0.33);
+		double move_y = dy / (height * 0.33);
 
 		if (dx != 0 || dy != 0)
 		{
@@ -99,6 +99,11 @@ glm::mat4 Camera::calcProjMatrix()
 glm::mat4 Camera::getViewProjMatrix()
 {
 	return this->proj_mat * this->view_mat;
+}
+
+CameraCoords Camera::getCoordinates()
+{
+	return this->camera;
 }
 
 // CameraCoords

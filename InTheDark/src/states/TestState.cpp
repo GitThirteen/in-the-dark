@@ -15,7 +15,7 @@ class TestState : public GameState
 		// Compare to already existing manager instances
 		this->rot = 0.005f;
 		this->stone = assets.getObj(Object::STONE);
-		this->stone.illuminate(glm::vec3(0.1, 0.7, 0.3), 8);
+		this->stone.illuminate(glm::vec3(0.1, 0.7, 0.3));
 
 		this->lights = assets.getLights();
 		for (auto& light : this->lights) light->place();
@@ -23,9 +23,9 @@ class TestState : public GameState
 
 	void update() override
 	{
-		this->cur_rot += rot;
+		//this->cur_rot += rot;
 
-		std::cout << "Current rotation: " + std::to_string(cur_rot) + " deg." << std::endl;
+		//std::cout << "Current rotation: " + std::to_string(cur_rot) + " deg." << std::endl;
 		std::cout << "dt: " + std::to_string(clock.getDeltaTime()) + " sec." << std::endl;
 		std::cout << "fps: " + std::to_string(clock.getFPS()) << std::endl;
 
@@ -38,7 +38,7 @@ class TestState : public GameState
 	void draw() override
 	{
 		canvas.clear();
-		this->stone.rotate(glm::vec3(0, 1, 0), this->rot);
+		//this->stone.rotate(glm::vec3(0, 1, 0), this->rot);
 		this->stone.draw();
 	}
 

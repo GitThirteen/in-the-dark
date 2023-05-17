@@ -37,7 +37,7 @@ public:
 	void unlock();
 
 	glm::mat4 getViewProjMatrix();
-
+	CameraCoords getCoordinates();
 private:
 	double radius = 1.0;
 	bool locked = true;

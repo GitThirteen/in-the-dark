@@ -47,16 +47,16 @@ void main() {
 	vec3 diffuse = reflection.y * (pDiffuse + dDiffuse);
 
 	// Specular (Point)
-	vec3 pLightRefl = reflect(-pLightDir, vertNormal);
-	float pReflDot = pow(max(dot(viewDirection, pLightRefl), 0.0), glossiness);
+	vec3 pReflDirection = reflect(-pLightDir, vertNormal);
+	float pReflDot = pow(max(dot(viewDirection, pReflDirection), 0.0), glossiness);
 	vec3 pSpecular = (pReflDot * pntLightColor) / a;
 
 	// Specular (Directional)
-	vec3 dLightRefl = reflect(-dLightDir, vertNormal);
-	float dReflDot = pow(max(dot(viewDirection, dLightRefl), 0.0), glossiness);
+	vec3 dReflDirection = reflect(-dLightDir, vertNormal);
+	float dReflDot = pow(max(dot(viewDirection, dReflDirection), 0.0), glossiness);
 	vec3 dSpecular = (dReflDot * dirLightColor);
 
-	vec3 specular = reflection.z * (pSpecular + pDiffuse);
+	vec3 specular = reflection.z * (pSpecular + dSpecular);
 
 	vec3 combined = (ambient + diffuse) * vertexColor.rgb + specular;
 	fragColor = vec4(combined, 1.0);

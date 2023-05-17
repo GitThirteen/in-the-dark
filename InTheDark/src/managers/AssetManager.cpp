@@ -119,11 +119,11 @@ LevelWrapper AssetManager::loadLevel()
 	
 	auto p1 = std::make_shared<PointLight>();
 	p1->setColor(255, 255, 255);
-	p1->setPosition(-2, -5, -5);
-	p1->setAttenuation(glm::vec3(0.1, 0.7, 0.3));
+	p1->setPosition(-1, 3, 1);
+	p1->setAttenuation(glm::vec3(1.0, 0.05, 0.0));
 	
 	auto l1 = std::make_shared<DirectionalLight>();
-	l1->setColor(204, 204, 204);
+	l1->setColor(230, 230, 230);
 	l1->setDirection(glm::vec3(0.0, -1.0, -1.0));
 
 	Lights temp;

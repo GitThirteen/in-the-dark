@@ -31,6 +31,7 @@ void GameStateManager::draw()
 	this->camera.update(mouse_pressed, mouse_pos, cam_offset);
 
 	shaders.set(ShaderLocation::VIEWPROJECTION_MAT, this->camera.getViewProjMatrix());
+	shaders.set(ShaderLocation::CAMERA_POSITION, this->camera.getCoordinates().origin);
 
 	if (this->active_state)
 	{
