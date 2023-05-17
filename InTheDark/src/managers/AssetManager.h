@@ -8,6 +8,15 @@
 #include "../util/logger/loguru.hpp"
 #include "../util/util.h"
 #include "../objects/GameObject.h"
+#include "../objects/LightSource.h"
+
+typedef std::vector<std::shared_ptr<LightSource>> Lights;
+
+struct LevelWrapper
+{
+	Lights lights;
+	// LevelData level;
+};
 
 static std::unordered_map<Object, std::string> OBJ_PATHS = {
 	{ Object::STONE,	"../_assets/objects/stone_tri.obj" },
@@ -27,6 +36,8 @@ public:
 	*/
 	GameObject getObj(Object);
 
+	Lights getLights();
+
 	// TODO: Other getters
 
 	/**
@@ -44,6 +55,7 @@ private:
 	AssetManager();
 
 	std::unordered_map<Object, GameObject> objects;
+	std::vector<LevelWrapper> levels;
 
 	void loadAll();
 
@@ -65,7 +77,7 @@ private:
 	/**
 	 * @brief TODO
 	*/
-	void loadLevel();
+	LevelWrapper loadLevel();
 
 	/**
 	 * @brief TODO

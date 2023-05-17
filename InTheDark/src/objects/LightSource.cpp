@@ -1,8 +1,12 @@
 #include "LightSource.h"
 
-void LightSource::setColor(glm::vec3 color)
+void LightSource::setColor(uint8_t r, uint8_t g, uint8_t b)
 {
-	this->color = color;
+	float rgb_r = r / 255.0f;
+	float rgb_g = g / 255.0f;
+	float rgb_b = b / 255.0f;
+
+	this->color = glm::vec3(rgb_r, rgb_g, rgb_b);
 }
 
 // Point Light
@@ -14,9 +18,9 @@ PointLight::PointLight(glm::vec3 position, glm::vec3 attenuation)
 	this->attenuation = attenuation;
 }
 
-void PointLight::setPosition(const glm::vec3 position)
+void PointLight::setPosition(double x, double y, double z)
 {
-	this->position = position;
+	this->position = glm::vec3(x, y, z);
 }
 
 void PointLight::setAttenuation(glm::vec3 attenuation)
@@ -28,7 +32,9 @@ void PointLight::place()
 {
 	ShaderManager& shader = ShaderManager::getInstance();
 
-	// TODO: Set Color, Position and Attenuation
+	shader.set(ShaderLocation::LIGHT_P_COL, this->color);
+	shader.set(ShaderLocation::LIGHT_P_POSITION, this->position);
+	shader.set(ShaderLocation::LIGHT_P_ATTENUATION, this->attenuation);
 }
 
 // Directional Light
@@ -48,5 +54,6 @@ void DirectionalLight::place()
 {
 	ShaderManager& shader = ShaderManager::getInstance();
 
-	// TODO: Set Color and Direction
+	shader.set(ShaderLocation::LIGHT_D_COL, this->color);
+	shader.set(ShaderLocation::LIGHT_D_DIRECTION, this->direction);
 }

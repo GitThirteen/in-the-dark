@@ -26,7 +26,7 @@ Camera::Camera(glm::vec3& origin, glm::vec3& target, glm::vec3& up, double radiu
 	this->proj_mat = calcProjMatrix();
 }
 
-void Camera::update(bool leftMouseDown, glm::vec2 mouse, double r)
+void Camera::update(bool rightMouseDown, glm::vec2 mouse, double r)
 {
 	if (this->radius != r)
 	{
@@ -37,7 +37,7 @@ void Camera::update(bool leftMouseDown, glm::vec2 mouse, double r)
 		this->view_mat = calcViewMatrix();
 	}
 
-	if (!this->locked && leftMouseDown)
+	if (!this->locked && rightMouseDown)
 	{
 		if (std::isnan(this->mouse_old.x)) this->mouse_old.x = mouse.x;
 		if (std::isnan(this->mouse_old.y)) this->mouse_old.y = mouse.y;

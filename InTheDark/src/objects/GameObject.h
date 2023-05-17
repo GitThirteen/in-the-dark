@@ -95,11 +95,16 @@ public:
 
 	void draw()
 	{
-		// TODO: Bind color, reflection, alpha, texture (if needed)
+		ShaderManager& shader = ShaderManager::getInstance();
+
+		// TODO: Bind color and texture (if needed)
 		
 		// Technically we should have a separate method that only re-sets the uniforms if needed, but considering
 		// that it's not particularly expensive to do set a uniform, it's not worth the hassle at the moment
-		ShaderManager::getInstance().set(ShaderLocation::TRANSFORM_MAT, this->trans_mat);
+
+		shader.set(ShaderLocation::TRANSFORM_MAT, this->trans_mat);
+		shader.set(ShaderLocation::REFLECTION, this->reflection);
+		shader.set(ShaderLocation::GLOSSINESS, this->glossiness);
 
 		glBindVertexArray(this->vao);
 		glDrawElements(GL_TRIANGLES, this->data.indices.size(), GL_UNSIGNED_SHORT, (void*)0);
@@ -120,7 +125,25 @@ public:
 	{
 		this->trans_mat = glm::scale(this->trans_mat, scale);
 	}
+
+	void illuminate(glm::vec3 reflection)
+	{
+		this->reflection = reflection;
+	}
+
+	void illuminate(uint8_t glossiness)
+	{
+		this->glossiness = glossiness;
+	}
+
+	void illuminate(glm::vec3 reflection, uint8_t glossiness)
+	{
+		this->reflection = reflection;
+		this->glossiness = glossiness;
+	}
 private:
 	GLuint vao = 0;
 	glm::mat4 trans_mat = glm::mat4(1.0);
+	glm::vec3 reflection = glm::vec3(1.0, 0.4, 0.1);
+	uint8_t glossiness = 8;
 };

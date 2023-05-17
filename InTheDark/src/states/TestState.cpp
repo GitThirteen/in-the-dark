@@ -5,6 +5,7 @@
 class TestState : public GameState
 {
 	GameObject stone;
+	Lights lights;
 	float rot;
 	float cur_rot = 0;
 
@@ -14,6 +15,10 @@ class TestState : public GameState
 		// Compare to already existing manager instances
 		this->rot = 0.005f;
 		this->stone = assets.getObj(Object::STONE);
+		this->stone.illuminate(glm::vec3(0.1, 0.7, 0.3), 8);
+
+		this->lights = assets.getLights();
+		for (auto& light : this->lights) light->place();
 	}
 
 	void update() override

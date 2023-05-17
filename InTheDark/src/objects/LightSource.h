@@ -6,26 +6,25 @@
 
 class LightSource
 {
+public:
+	void setColor(uint8_t r, uint8_t g, uint8_t b);
+	virtual void place() = 0;
 protected:
 	glm::vec3 color = glm::vec3(0);
 
-	LightSource() { };
-
-	virtual void place() = 0;
-
-	void setColor(glm::vec3);
+	LightSource() { };	
 };
 
 class PointLight : public LightSource
 {
 public:
 	PointLight();
-	PointLight(const glm::vec3 position, const glm::vec3 attenuation);
+	PointLight(glm::vec3 position, glm::vec3 attenuation);
 
 	void place() override;
 
-	void setPosition(const glm::vec3);
-	void setAttenuation(const glm::vec3);
+	void setPosition(double x, double y, double z);
+	void setAttenuation(glm::vec3);
 private:
 	glm::vec3 position = glm::vec3(0);
 	glm::vec3 attenuation = glm::vec3(0);

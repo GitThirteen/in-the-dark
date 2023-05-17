@@ -78,6 +78,11 @@ void ShaderManager::set(ShaderLocation location, glm::vec3 value)
 	glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
+void ShaderManager::set(ShaderLocation location, float value)
+{
+	glUniform1f(location, value);
+}
+
 std::string ShaderManager::read(const std::string& path)
 {
 	std::string content;

@@ -25,7 +25,7 @@ void GameStateManager::draw()
 	this->camera.unlock(); // TODO remove and properly use lock & unlock once main menu and co are defined
 	
 	events.poll();
-	bool mouse_pressed = events.mouse.pressed(GLFW_MOUSE_BUTTON_LEFT);
+	bool mouse_pressed = events.mouse.pressed(GLFW_MOUSE_BUTTON_RIGHT);
 	glm::vec2 mouse_pos = events.mouse.getPosition();
 	double cam_offset = events.mouse.getOffset();
 	this->camera.update(mouse_pressed, mouse_pos, cam_offset);
