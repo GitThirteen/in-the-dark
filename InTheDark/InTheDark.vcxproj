@@ -41,6 +41,7 @@
     <ClInclude Include="src\managers\ShaderManager.h" />
     <ClInclude Include="src\objects\GameObject.h" />
     <ClInclude Include="src\util\ini.h" />
+    <ClInclude Include="src\util\json.hpp" />
     <ClInclude Include="src\util\util.h" />
     <ClInclude Include="src\util\logger\loguru.hpp" />
   </ItemGroup>

@@ -5,17 +5,21 @@
 class TestState : public GameState
 {
 	GameObject stone;
+	GameObject stone2;
 	Lights lights;
 	float rot;
 	float cur_rot = 0;
 
 	void init() override
 	{
-		// Maybe let GameState (or level in the future, which should be a GameState child) hold all GameObjects by default?
-		// Compare to already existing manager instances
 		this->rot = 0.005f;
-		this->stone = assets.getObj(Object::STONE);
-		this->stone.illuminate(glm::vec3(0.1, 0.7, 0.3));
+		this->stone = assets.getObj(Object::TREASURE);
+		this->stone.rotate(glm::vec3(0.0f, 1.0f, 0.0f), 270);
+		this->stone.illuminate(glm::vec3(0.1, 0.4, 0.1), 32);
+
+		/*this->stone2 = assets.getObj(Object::STONE);
+		this->stone2.illuminate(glm::vec3(0.1, 0.7, 0.3));
+		this->stone2.translate(glm::vec3(1, 0, 0));*/
 
 		this->lights = assets.getLights();
 		for (auto& light : this->lights) light->place();
@@ -40,6 +44,7 @@ class TestState : public GameState
 		canvas.clear();
 		//this->stone.rotate(glm::vec3(0, 1, 0), this->rot);
 		this->stone.draw();
+		//this->stone2.draw();
 	}
 
 	void discard() override

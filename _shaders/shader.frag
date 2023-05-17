@@ -23,6 +23,13 @@ layout(location = 12) uniform float glossiness;
 
 out vec4 fragColor;
 
+float calcIntensity(float value) {
+	if (value > 0.8) return 1.0;
+	if (value > 0.3) return 0.8;
+	if (value > 0.0) return 0.6;
+	return 0.3;
+}
+
 void main() {
 	// Setup
 	float d = distance(fragPosition, pntLightPosition);
@@ -36,25 +43,29 @@ void main() {
 
 	// Diffuse (Point)
 	vec3 pLightDir = normalize(pntLightPosition - fragPosition);
-	float pDot = max(dot(vertNormal, pLightDir), 0.0);
-	vec3 pDiffuse = (pDot * pntLightColor) / a;
+	float pIntensity = smoothstep(0, 0.01, dot(vertNormal, pLightDir));
+	float pLightFactor = calcIntensity(pIntensity);
+	vec3 pDiffuse = pLightFactor * pntLightColor / a;
 	
 	// Diffuse (Directional)
 	vec3 dLightDir = normalize(-dirLightDirection);
-	float dDot = max(dot(vertNormal, dLightDir), 0.0);
-	vec3 dDiffuse = (dDot * dirLightColor);
+	float dIntensity = smoothstep(0, 0.01, dot(vertNormal, dLightDir));
+	float dLightFactor = calcIntensity(dIntensity);
+	vec3 dDiffuse = dLightFactor * dirLightColor;
 
 	vec3 diffuse = reflection.y * (pDiffuse + dDiffuse);
 
 	// Specular (Point)
 	vec3 pReflDirection = reflect(-pLightDir, vertNormal);
-	float pReflDot = pow(max(dot(viewDirection, pReflDirection), 0.0), glossiness);
-	vec3 pSpecular = (pReflDot * pntLightColor) / a;
+	float pReflDot = max(dot(viewDirection, pReflDirection) * pIntensity, 0.0);
+	float pReflIntensity = smoothstep(0, 0.1, pow(pReflDot, glossiness * glossiness));
+	vec3 pSpecular = (pReflIntensity * pntLightColor) / a;
 
 	// Specular (Directional)
 	vec3 dReflDirection = reflect(-dLightDir, vertNormal);
-	float dReflDot = pow(max(dot(viewDirection, dReflDirection), 0.0), glossiness);
-	vec3 dSpecular = (dReflDot * dirLightColor);
+	float dReflDot = max(dot(viewDirection, dReflDirection) * dIntensity, 0.0);
+	float dReflIntensity = smoothstep(0, 0.1, pow(dReflDot, glossiness * glossiness));
+	vec3 dSpecular = (dReflIntensity * dirLightColor);
 
 	vec3 specular = reflection.z * (pSpecular + dSpecular);
 
