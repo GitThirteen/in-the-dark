@@ -2,7 +2,7 @@
 
 in vec3 fragPosition;
 in vec3 vertexNormal;
-//in vec3 uvCoord;
+//in vec2 uvCoord;
 in vec4 vertexColor;
 
 // Directional Light
@@ -31,7 +31,6 @@ float calcIntensity(float value) {
 }
 
 void main() {
-	// Setup
 	float d = distance(fragPosition, pntLightPosition);
 	float a = attenuation.x + (attenuation.y * d) + (attenuation.z * (d * d));
 
@@ -68,6 +67,13 @@ void main() {
 	vec3 dSpecular = (dReflIntensity * dirLightColor);
 
 	vec3 specular = reflection.z * (pSpecular + dSpecular);
+
+	// Vignette (for later)
+	//vec2 dims = vec2(1280, 1024);
+	//vec2 center_pos = (gl_FragCoord.xy / dims.xy) - vec2(0.5);
+	//center_pos.x *= dims.x / dims.y;
+	//float len = length(center_pos);
+	//float vig = smoothstep(0.75, 0.3, len);
 
 	vec3 combined = (ambient + diffuse) * vertexColor.rgb + specular;
 	fragColor = vec4(combined, 1.0);

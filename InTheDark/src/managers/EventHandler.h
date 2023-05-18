@@ -5,7 +5,7 @@
 
 #include "../util/util.h"
 
-typedef struct InternalMouseHandler
+struct InternalMouseHandler
 {
 	InternalMouseHandler(GLFWwindow* window);
 

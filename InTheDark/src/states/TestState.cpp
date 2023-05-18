@@ -14,12 +14,12 @@ class TestState : public GameState
 	{
 		this->rot = 0.005f;
 		this->stone = assets.getObj(Object::TREASURE);
-		this->stone.rotate(glm::vec3(0.0f, 1.0f, 0.0f), 270);
+		//this->stone.rotate(glm::vec3(0.0f, 1.0f, 0.0f), 270);
 		this->stone.illuminate(glm::vec3(0.1, 0.4, 0.1), 32);
+		this->stone.translate(glm::vec3(0, 1, 0));
 
-		/*this->stone2 = assets.getObj(Object::STONE);
-		this->stone2.illuminate(glm::vec3(0.1, 0.7, 0.3));
-		this->stone2.translate(glm::vec3(1, 0, 0));*/
+		this->stone2 = assets.getObj(Object::STONE);
+		this->stone2.illuminate(glm::vec3(0.1, 0.4, 0.0));
 
 		this->lights = assets.getLights();
 		for (auto& light : this->lights) light->place();
@@ -41,10 +41,10 @@ class TestState : public GameState
 
 	void draw() override
 	{
-		canvas.clear();
+		canvas.clear(29, 24, 21);
 		//this->stone.rotate(glm::vec3(0, 1, 0), this->rot);
 		this->stone.draw();
-		//this->stone2.draw();
+		this->stone2.draw();
 	}
 
 	void discard() override
