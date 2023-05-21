@@ -19,6 +19,9 @@ void AssetManager::loadAll()
 
 	GameObject treasure = createObj(Object::TREASURE);
 	this->objects.insert({ Object::TREASURE, treasure });
+
+	LevelWrapper level_one = loadLevel();
+	this->levels.push_back(level_one);
 }
 
 GameObject AssetManager::createObj(Object specifier)
@@ -135,9 +138,26 @@ void AssetManager::loadTexture(const char *filename, int width, int height, int 
 	stbi_image_free(data);
 }
 
-void AssetManager::loadLevel()
+LevelWrapper AssetManager::loadLevel()
 {
-	// TODO
+	// This is just mock code, please replace with actual level loading!
+	
+	auto p1 = std::make_shared<PointLight>();
+	p1->setColor(255, 255, 255);
+	p1->setPosition(-0.2, 4, 0.5);
+	p1->setAttenuation(glm::vec3(1.0, 0.027, 0.0028));
+	
+	auto l1 = std::make_shared<DirectionalLight>();
+	l1->setColor(230, 230, 230);
+	l1->setDirection(glm::vec3(1.0, -1.0, -1.0));
+
+	Lights temp;
+	temp.push_back(p1);
+	temp.push_back(l1);
+
+	return {
+		temp
+	};
 }
 
 void AssetManager::loadAudio()
@@ -158,4 +178,10 @@ GameObject AssetManager::getObj(Object object_type)
 		LOG_F(ERROR, "Error attempting to obtain object.");
 		return { };
 	}
+}
+
+Lights AssetManager::getLights(/* will probably need level distinguisher */)
+{
+	// This is just mock code, please replace!
+	return this->levels[0].lights;
 }

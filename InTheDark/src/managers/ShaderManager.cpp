@@ -19,7 +19,9 @@ void ShaderManager::create()
 {
 	if (this->vert_sh_path.empty() || this->frag_sh_path.empty())
 	{
-		util::LOG_ERROR_AND_EXIT("ShaderManager is missing shader(s) to create shader program. Please verify if shader paths for vert and frag have been set.");
+		auto error_msg = "ShaderManager is missing shader(s) to create shader program. Please verify if shader paths for vert and frag have been set.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
 	}
 
 	/* ---- Shader Init ---- */
@@ -76,6 +78,11 @@ void ShaderManager::set(ShaderLocation location, glm::vec3 value)
 	glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
+void ShaderManager::set(ShaderLocation location, float value)
+{
+	glUniform1f(location, value);
+}
+
 std::string ShaderManager::read(const std::string& path)
 {
 	std::string content;
@@ -83,7 +90,9 @@ std::string ShaderManager::read(const std::string& path)
 	
 	if (!file)
 	{
-		util::LOG_ERROR_AND_EXIT("Couldn't read file from filepath '" + path + "'.");
+		auto error_msg = "Couldn't read file from filepath '" + path + "'.";
+		LOG_F(ERROR, error_msg.c_str());
+		exit(EXIT_FAILURE);
 	}
 
 	std::string cur_line;
@@ -105,7 +114,10 @@ void ShaderManager::compile(GLuint shader)
 
 	if (success == GL_FALSE) {
 		glDeleteShader(shader);
-		util::LOG_ERROR_AND_EXIT("Shader initialization failed.");
+
+		auto error_msg = "Shader initialization failed.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -117,6 +129,9 @@ void ShaderManager::linkProgram(GLuint program)
 	glGetProgramiv(program, GL_LINK_STATUS, (int*)&success);
 	if (success == GL_FALSE) {
 		glDeleteProgram(program);
-		util::LOG_ERROR_AND_EXIT("Program initialization failed.");
+
+		auto error_msg = "Program initialization failed.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
 	}
 }

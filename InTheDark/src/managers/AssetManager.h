@@ -8,13 +8,21 @@
 #include "../util/logger/loguru.hpp"
 #include "../util/util.h"
 #include "../objects/GameObject.h"
-#include "stb_image.h"
+#include "../objects/LightSource.h"
+
+typedef std::vector<std::shared_ptr<LightSource>> Lights;
+
+struct LevelWrapper
+{
+	Lights lights;
+	// LevelData level;
+};
 
 static std::unordered_map<Object, std::string> OBJ_PATHS = {
-	{ Object::STONE,	"../_assets/objects/stone_tri.obj" },
-	{ Object::CRATE,	"../_assets/objects/wooden_crate_tri.obj" },
+	{ Object::STONE,	"../_assets/objects/stone.obj" },
+	{ Object::CRATE,	"../_assets/objects/wooden_crate.obj" },
 	{ Object::TORCH,	"../_assets/objects/torch_tri.obj" },
-	{ Object::TREASURE, "../_assets/objects/treasure_chest_tri.obj" }
+	{ Object::TREASURE, "../_assets/objects/treasure_chest.obj" }
 };
 
 class AssetManager
@@ -28,11 +36,11 @@ public:
 	*/
 	GameObject getObj(Object);
 
+	Lights getLights();
+
 	// TODO: Other getters
 
 	/**
-	 * @brief Returns a reference to the AssetManager Singleton.
-	 * 
 	 * @return A reference to the AssetManager.
 	*/
 	static AssetManager& getInstance()
@@ -47,6 +55,7 @@ private:
 	AssetManager();
 
 	std::unordered_map<Object, GameObject> objects;
+	std::vector<LevelWrapper> levels;
 
 	void loadAll();
 
@@ -63,12 +72,12 @@ private:
 	/**
 	 * @brief TODO
 	*/
-	void loadTexture(const char* filename, int width, int height, int nrChannels);
+	void loadTexture();
 
 	/**
 	 * @brief TODO
 	*/
-	void loadLevel();
+	LevelWrapper loadLevel();
 
 	/**
 	 * @brief TODO

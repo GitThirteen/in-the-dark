@@ -132,15 +132,4 @@ public:
 		res.z = (float) ::atof(strings[2].c_str());
 		return res;
 	}
-
-	/**
-	 * @brief Logs an error in the logger and force-exits the app with a failure code.
-	 * 
-	 * @param message The error message
-	*/
-	static void LOG_ERROR_AND_EXIT(const std::string& message)
-	{
-		LOG_F(ERROR, message.c_str());
-		exit(EXIT_FAILURE);
-	}
 };

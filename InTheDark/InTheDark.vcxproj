@@ -12,9 +12,9 @@
     <ClInclude Include="src\managers\GameStateManager.h" />
     <ClCompile Include="src\managers\SettingsManager.cpp" />
     <ClCompile Include="src\managers\ShaderManager.cpp" />
-    <ClInclude Include="src\managers\stb_image.h" />
+    <ClInclude Include="src\objects\LightSource.h" />
     <ClInclude Include="src\states\GameState.h" />
-    <ClCompile Include="src\managers\stb_image.cpp" />
+    <ClCompile Include="src\objects\LightSource.cpp" />
     <ClCompile Include="src\states\TestState.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\util\logger\loguru.cpp" />
@@ -41,6 +41,7 @@
     <ClInclude Include="src\managers\ShaderManager.h" />
     <ClInclude Include="src\objects\GameObject.h" />
     <ClInclude Include="src\util\ini.h" />
+    <ClInclude Include="src\util\json.hpp" />
     <ClInclude Include="src\util\util.h" />
     <ClInclude Include="src\util\logger\loguru.hpp" />
   </ItemGroup>

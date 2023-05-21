@@ -17,7 +17,15 @@ enum ShaderLocation {
 	NORMAL				= 1,
 	UV					= 2,
 	TRANSFORM_MAT		= 3,
-	VIEWPROJECTION_MAT	= 4
+	VIEWPROJECTION_MAT	= 4,
+	LIGHT_D_DIRECTION	= 5,
+	LIGHT_D_COL			= 6,
+	LIGHT_P_POSITION	= 7,
+	LIGHT_P_COL			= 8,
+	LIGHT_P_ATTENUATION = 9,
+	CAMERA_POSITION		= 10,
+	REFLECTION			= 11,
+	GLOSSINESS			= 12
 };
 
 class ShaderManager
@@ -36,6 +44,7 @@ public:
 
 	void set(ShaderLocation, glm::mat4);
 	void set(ShaderLocation, glm::vec3);
+	void set(ShaderLocation, float);
 
 	ShaderManager(ShaderManager const&)  = delete;
 	void operator=(ShaderManager const&) = delete;
