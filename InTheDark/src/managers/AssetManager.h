@@ -1,4 +1,7 @@
 #pragma once
+
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -7,6 +10,7 @@
 
 #include "../util/logger/loguru.hpp"
 #include "../util/util.h"
+#include "../util/stb_image.h"
 #include "../objects/GameObject.h"
 #include "../objects/LightSource.h"
 
