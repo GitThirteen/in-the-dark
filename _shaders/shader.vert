@@ -9,7 +9,7 @@ layout(location = 4) uniform mat4 viewProjMat;
 
 out vec3 fragPosition;
 out vec3 vertexNormal;
-//out vec2 uvCoord;
+out vec2 uvCoord;
 out vec4 vertexColor;
 
 void main() {
@@ -17,7 +17,6 @@ void main() {
 
 	fragPosition = vec3(transform * vec4(position, 1.0));
 	vertexNormal = mat3(transpose(inverse(transform))) * normal;
+	uvCoord = uv;
 	vertexColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
-	//uvCoord = uv;
 }

@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <filesystem>
+#include <cctype>
 #include "logger/loguru.hpp"
 
 class is
@@ -16,7 +18,8 @@ public:
 	 * @param data A string containing the value to check
 	 * @return 'true' if float, 'false' if not.
 	*/
-	static bool aFloat(std::string data) {
+	static bool aFloat(std::string data)
+	{
 		std::istringstream iss(data);
 		float f;
 		iss >> std::noskipws >> f;
@@ -29,7 +32,8 @@ public:
 	 * @param data A string containing the value to check
 	 * @return 'true' if int, 'false' if not.
 	*/
-	static bool anInt(std::string data) {
+	static bool anInt(std::string data)
+	{
 		if (data.empty() || (!isdigit(data[0]) && (data[0] != '-') && (data[0] != '+'))) return false;
 		char* p;
 		static_cast<void>(strtol(data.c_str(), &p, 10));
@@ -132,4 +136,24 @@ public:
 		res.z = (float) ::atof(strings[2].c_str());
 		return res;
 	}
+
+	/**
+	 * @brief Finds the relative path of a file given the folder name and the type ending of the file
+	 * 
+	 * @param folder_name The name of the folder to search in
+	 * @param type_ending The type ending of the file (case sensitive!)
+	 * @return A string containing the relative path of the file, otherwise an empty string
+	*/
+	static std::string findPath(const std::string& folder_name, const std::string& type_ending)
+	{
+		for (const auto& entry : std::filesystem::recursive_directory_iterator(folder_name))
+		{
+			if (entry.path().has_extension() && entry.path().extension().string().compare(type_ending) == 0) // spaghetti codebonara
+			{
+				return entry.path().relative_path().string();
+			}
+		}
+
+		return "";
+	};
 };

@@ -25,7 +25,8 @@ enum ShaderLocation {
 	LIGHT_P_ATTENUATION = 9,
 	CAMERA_POSITION		= 10,
 	REFLECTION			= 11,
-	GLOSSINESS			= 12
+	GLOSSINESS			= 12,
+	TEXTURE				= 13
 };
 
 class ShaderManager

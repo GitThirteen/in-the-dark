@@ -27,13 +27,14 @@ void AssetManager::loadAll()
 GameObject AssetManager::createObj(Object specifier)
 {
 	GameObject obj{ };
-	obj.data = loadObj(OBJ_PATHS.at(specifier));
+	obj.data = loadObj(util::findPath(OBJ_PATHS.at(specifier), ".obj"));
+	obj.texture = loadTexture(util::findPath(OBJ_PATHS.at(specifier), ".jpg"));
 	obj.create();
 
 	return obj;
 }
 
-ObjData AssetManager::loadObj(std::string path)
+ObjData AssetManager::loadObj(const std::string& path)
 {
 	vec3v v_defs;
 	vec2v uv_defs;
@@ -108,34 +109,29 @@ ObjData AssetManager::loadObj(std::string path)
 	return result;
 }
 
-void AssetManager::loadTexture(const char *filename, int width, int height, int nrChannels)
+Texture AssetManager::loadTexture(const std::string& path)
 {
-	// TODO
-
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-
-	// set the texture wrapping/filtering options (on the currently bound texture object) --> not sure if this needs to be in or out of the method
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-	// load and generate the texture
-	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
-	if (data)
+	if (path.empty())
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		LOG_F(ERROR, "No texture found. Make sure that every asset has a .jpg or .png texture.");
+		return { };
 	}
-	else
+
+	int width, height, channels;
+	uint8_t* img = stbi_load(path.c_str(), &width, &height, &channels, 0);
+	if (img == NULL)
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		LOG_F(ERROR, "Couldn't read texture for file path %s.", path.c_str());
+		return { };
 	}
-	stbi_image_free(data);
+
+	Texture texture;
+	texture.width = width;
+	texture.height = height;
+	texture.channels = channels;
+	texture.data = img;
+
+	return texture;
 }
 
 LevelWrapper AssetManager::loadLevel()

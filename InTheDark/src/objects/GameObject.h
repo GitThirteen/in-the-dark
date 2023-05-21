@@ -6,6 +6,8 @@
 typedef std::vector<glm::vec3> vec3v;
 typedef std::vector<glm::vec2> vec2v;
 
+static uint16_t TEX_UNIT = -1;
+
 enum Object
 {
 	CRATE,
@@ -23,6 +25,8 @@ struct ObjVertex
 
 struct ObjData
 {
+	GLuint vao = 0;
+
 	std::vector<GLushort> indices;
 	std::vector<ObjVertex> vertices;
 
@@ -35,19 +39,10 @@ struct ObjData
 		}
 		return false;
 	}
-};
-
-// TODO: This class is the C++ side of a GameObject containing the draw method.
-// To make this work in Lua, we will need some sort of mapper between a C++ GameObject
-// and a Lua GameObject.
-class GameObject
-{
-public:
-	ObjData data;
 
 	void create()
 	{
-		if (this->data.incomplete())
+		if (incomplete())
 		{
 			LOG_F(ERROR, "GameObject data incomplete, GameObject has not been created.");
 			return;
@@ -67,7 +62,7 @@ public:
 		glGenBuffers(2, vbo);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		glBufferData(GL_ARRAY_BUFFER, data.vertices.size() * (2 * sizeof(glm::vec3) + sizeof(glm::vec2)), data.vertices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * (2 * sizeof(glm::vec3) + sizeof(glm::vec2)), this->vertices.data(), GL_STATIC_DRAW);
 
 		auto stride = 8 * sizeof(GLfloat);
 
@@ -81,9 +76,8 @@ public:
 		glEnableVertexAttribArray(ShaderLocation::NORMAL);
 
 		// Indices
-		auto& indices = this->data.indices;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLushort), this->indices.data(), GL_STATIC_DRAW);
 
 		/* ---- Unbind VAO & VBOs ---- */
 
@@ -92,12 +86,66 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+};
+
+struct Texture
+{
+	GLuint id = 0;
+	uint16_t tex_unit = 0;
+
+	int width;
+	int height;
+	int channels;
+	uint8_t* data;
+
+	void create()
+	{
+		GLuint texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);				// use linear for magnifying
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	// use linear blend for minifying
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		this->id = texture;
+		this->tex_unit = ++TEX_UNIT;
+	}
+
+	void bind()
+	{
+		glActiveTexture(GL_TEXTURE0 + tex_unit);
+		glBindTexture(GL_TEXTURE_2D, this->id);
+	}
+
+	void unbind()
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+};
+
+// TODO: This class is the C++ side of a GameObject containing the draw method.
+// To make this work in Lua, we will need some sort of mapper between a C++ GameObject
+// and a Lua GameObject.
+class GameObject
+{
+public:
+	ObjData data;
+	Texture texture;
+
+	void create()
+	{
+		this->data.create();
+		this->texture.create();
+	}
 
 	void draw()
 	{
 		ShaderManager& shader = ShaderManager::getInstance();
-
-		// TODO: Bind color and texture (if needed)
 		
 		// Technically we should have a separate method that only re-sets the uniforms if needed, but considering
 		// that it's not particularly expensive to do set a uniform, it's not worth the hassle at the moment
@@ -106,9 +154,21 @@ public:
 		shader.set(ShaderLocation::REFLECTION, this->reflection);
 		shader.set(ShaderLocation::GLOSSINESS, this->glossiness);
 
-		glBindVertexArray(this->vao);
+		bool tex_loaded = this->texture.data != NULL;
+		if (tex_loaded)
+		{
+			shader.set(ShaderLocation::TEXTURE, this->texture.tex_unit);
+			this->texture.bind();
+		}
+
+		glBindVertexArray(this->data.vao);
 		glDrawElements(GL_TRIANGLES, this->data.indices.size(), GL_UNSIGNED_SHORT, (void*)0);
 		glBindVertexArray(0);
+
+		if (tex_loaded)
+		{
+			this->texture.unbind();
+		}
 	}
 
 	void translate(glm::vec3 translate)
@@ -142,7 +202,6 @@ public:
 		this->glossiness = glossiness;
 	}
 private:
-	GLuint vao = 0;
 	glm::mat4 trans_mat = glm::mat4(1.0);
 	glm::vec3 reflection = glm::vec3(1.0, 0.4, 0.1);
 	uint8_t glossiness = 8;

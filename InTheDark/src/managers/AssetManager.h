@@ -1,6 +1,13 @@
 #pragma once
 
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
+#define STBI_NO_PSD
+#define STBI_NO_TGA
+#define STBI_NO_GIF
+#define STBI_NO_HDR
+#define STBI_NO_PIC
+#define STBI_NO_PNM
 
 #include <string>
 #include <vector>
@@ -16,17 +23,17 @@
 
 typedef std::vector<std::shared_ptr<LightSource>> Lights;
 
+static std::unordered_map<Object, std::string> OBJ_PATHS = {
+	{ Object::STONE,	"../_assets/objects/stone" },
+	{ Object::CRATE,	"../_assets/objects/wooden_crate" },
+	{ Object::TORCH,	"../_assets/objects/torch" },
+	{ Object::TREASURE, "../_assets/objects/treasure_chest" }
+};
+
 struct LevelWrapper
 {
 	Lights lights;
 	// LevelData level;
-};
-
-static std::unordered_map<Object, std::string> OBJ_PATHS = {
-	{ Object::STONE,	"../_assets/objects/stone.obj" },
-	{ Object::CRATE,	"../_assets/objects/wooden_crate.obj" },
-	{ Object::TORCH,	"../_assets/objects/torch_tri.obj" },
-	{ Object::TREASURE, "../_assets/objects/treasure_chest.obj" }
 };
 
 class AssetManager
@@ -71,12 +78,12 @@ private:
 	/**
 	 * @brief Loads a wavefront .obj file from a specified file path. This method will fail if the .obj is not triangulated.
 	*/
-	ObjData loadObj(std::string);
+	ObjData loadObj(const std::string&);
 
 	/**
-	 * @brief TODO
+	 * @brief Loads a .jpg file from a specified file path.
 	*/
-	void loadTexture();
+	Texture loadTexture(const std::string&);
 
 	/**
 	 * @brief TODO

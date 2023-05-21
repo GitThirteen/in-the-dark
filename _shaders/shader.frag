@@ -2,7 +2,7 @@
 
 in vec3 fragPosition;
 in vec3 vertexNormal;
-//in vec2 uvCoord;
+in vec2 uvCoord;
 in vec4 vertexColor;
 
 // Directional Light
@@ -21,13 +21,16 @@ layout(location = 10) uniform vec3 camPosition;
 layout(location = 11) uniform vec3 reflection; // .x (ambient) .y (diffuse) .z (specular)
 layout(location = 12) uniform float glossiness;
 
+// Texture
+layout(location = 13) uniform sampler2D tex;
+
 out vec4 fragColor;
 
 float calcIntensity(float value) {
 	if (value > 0.8) return 1.0;
 	if (value > 0.3) return 0.8;
 	if (value > 0.0) return 0.6;
-	return 0.3;
+	return 0.4;
 }
 
 void main() {
@@ -75,6 +78,6 @@ void main() {
 	//float len = length(center_pos);
 	//float vig = smoothstep(0.75, 0.3, len);
 
-	vec3 combined = (ambient + diffuse) * vertexColor.rgb + specular;
+	vec3 combined = (ambient + diffuse) * texture(tex, uvCoord).rgb + specular;
 	fragColor = vec4(combined, 1.0);
 }
