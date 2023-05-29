@@ -18,22 +18,28 @@
 #include "../util/logger/loguru.hpp"
 #include "../util/util.h"
 #include "../util/stb_image.h"
+#include "../util/json.hpp"
 #include "../objects/GameObject.h"
 #include "../objects/LightSource.h"
 
 typedef std::vector<std::shared_ptr<LightSource>> Lights;
+typedef std::vector<std::shared_ptr<GameObject>> GameObjects;
 
-static std::unordered_map<Object, std::string> OBJ_PATHS = {
+static const std::unordered_map<Object, std::string> OBJ_PATHS = {
 	{ Object::STONE,	"../_assets/objects/stone" },
 	{ Object::CRATE,	"../_assets/objects/wooden_crate" },
 	{ Object::TORCH,	"../_assets/objects/torch" },
 	{ Object::TREASURE, "../_assets/objects/treasure_chest" }
 };
 
+static const std::vector<std::string> LVL_PATHS = {
+	"../_assets/levels/level_0.json"
+};
+
 struct LevelWrapper
 {
 	Lights lights;
-	// LevelData level;
+	GameObjects data;
 };
 
 class AssetManager
@@ -47,9 +53,7 @@ public:
 	*/
 	GameObject getObj(Object);
 
-	Lights getLights();
-
-	// TODO: Other getters
+	LevelWrapper getLevel(uint16_t);
 
 	/**
 	 * @return A reference to the AssetManager.
@@ -78,17 +82,17 @@ private:
 	/**
 	 * @brief Loads a wavefront .obj file from a specified file path. This method will fail if the .obj is not triangulated.
 	*/
-	ObjData loadObj(const std::string&);
+	obj::Data loadObj(const std::string&);
 
 	/**
 	 * @brief Loads a .jpg file from a specified file path.
 	*/
-	Texture loadTexture(const std::string&);
+	obj::Texture loadTexture(const std::string&);
 
 	/**
-	 * @brief TODO
+	 * @brief Loads a level specified in a .json file from a specified file path and returns it in a typeof LevelWrapper.
 	*/
-	LevelWrapper loadLevel();
+	LevelWrapper loadLevel(const std::string&);
 
 	/**
 	 * @brief TODO

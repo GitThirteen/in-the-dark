@@ -16,117 +16,145 @@ enum Object
 	TREASURE
 };
 
-struct ObjVertex
+namespace obj
 {
-	glm::vec3 v;
-	glm::vec2 uv;
-	glm::vec3 n;
-};
-
-struct ObjData
-{
-	GLuint vao = 0;
-
-	std::vector<GLushort> indices;
-	std::vector<ObjVertex> vertices;
-
-	bool incomplete()
+	struct Container
 	{
-		if (indices.empty() || indices.size() != vertices.size()) return true;
-		for (auto& vertex : this->vertices)
+		Object type;
+		glm::vec3 position;
+		glm::vec3 reflection;
+		uint8_t glossiness;
+	};
+
+	// ObjContainer JSON mapping functions
+	inline void to_json(nlohmann::json& j, const obj::Container& c)
+	{
+		// This will never happen but the json lib requires it.
+		// If you should ever need it, blame past you @future me
+	}
+
+	inline void from_json(const nlohmann::json& j, obj::Container& c)
+	{
+		j.at("type").get_to(c.type);
+		auto& pos = j.at("position");
+		c.position = glm::vec3(pos[0], pos[1], pos[2]);
+		auto& ref = j.at("reflection");
+		c.reflection = glm::vec3(ref[0], ref[1], ref[2]);
+		j.at("glossiness").get_to(c.glossiness);
+	}
+
+	struct Vertex
+	{
+		glm::vec3 v;
+		glm::vec2 uv;
+		glm::vec3 n;
+	};
+
+	struct Data
+	{
+		GLuint vao = 0;
+
+		std::vector<GLushort> indices;
+		std::vector<obj::Vertex> vertices;
+
+		bool incomplete()
 		{
-			if (vertex.v.length() != 3 || vertex.uv.length() != 2 || vertex.n.length() != 3) return true;
+			if (indices.empty() || indices.size() != vertices.size()) return true;
+			for (auto& vertex : this->vertices)
+			{
+				if (vertex.v.length() != 3 || vertex.uv.length() != 2 || vertex.n.length() != 3) return true;
+			}
+			return false;
 		}
-		return false;
-	}
 
-	void create()
-	{
-		if (incomplete())
+		void create()
 		{
-			LOG_F(ERROR, "GameObject data incomplete, GameObject has not been created.");
-			return;
+			if (incomplete())
+			{
+				LOG_F(ERROR, "GameObject data incomplete, GameObject has not been created.");
+				return;
+			}
+
+			/* ---- Create VAO and bind it ---- */
+
+			GLuint vao;
+			glGenVertexArrays(1, &vao);
+			glBindVertexArray(vao);
+
+			this->vao = vao;
+
+			/* ---- Create VBO and bind our vertices, indices, texture coordinates and normals to them ---- */
+
+			GLuint vbo[2];
+			glGenBuffers(2, vbo);
+
+			glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+			glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * (2 * sizeof(glm::vec3) + sizeof(glm::vec2)), this->vertices.data(), GL_STATIC_DRAW);
+
+			auto stride = 8 * sizeof(GLfloat);
+
+			glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+			glEnableVertexAttribArray(ShaderLocation::POSITION);
+
+			glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(ShaderLocation::UV);
+
+			glVertexAttribPointer(ShaderLocation::NORMAL, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(ShaderLocation::NORMAL);
+
+			// Indices
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLushort), this->indices.data(), GL_STATIC_DRAW);
+
+			/* ---- Unbind VAO & VBOs ---- */
+
+			glBindVertexArray(0);
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
+	};
+
+	struct Texture
+	{
+		GLuint id = 0;
+		uint16_t tex_unit = 0;
+
+		int width = 0;
+		int height = 0;
+		int channels = 0;
+		uint8_t* data = 0;
+
+		void create()
+		{
+			GLuint texture;
+			glGenTextures(1, &texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
+
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);				// use linear for magnifying
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	// use linear blend for minifying
+			//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			this->id = texture;
+			this->tex_unit = ++TEX_UNIT;
 		}
 
-		/* ---- Create VAO and bind it ---- */
+		void bind()
+		{
+			glActiveTexture(GL_TEXTURE0 + tex_unit);
+			glBindTexture(GL_TEXTURE_2D, this->id);
+		}
 
-		GLuint vao;
-		glGenVertexArrays(1, &vao);
-		glBindVertexArray(vao);
-
-		this->vao = vao;
-
-		/* ---- Create VBO and bind our vertices, indices, texture coordinates and normals to them ---- */
-
-		GLuint vbo[2];
-		glGenBuffers(2, vbo);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * (2 * sizeof(glm::vec3) + sizeof(glm::vec2)), this->vertices.data(), GL_STATIC_DRAW);
-
-		auto stride = 8 * sizeof(GLfloat);
-
-		glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
-		glEnableVertexAttribArray(ShaderLocation::POSITION);
-
-		glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(ShaderLocation::UV);
-
-		glVertexAttribPointer(ShaderLocation::NORMAL, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(ShaderLocation::NORMAL);
-
-		// Indices
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLushort), this->indices.data(), GL_STATIC_DRAW);
-
-		/* ---- Unbind VAO & VBOs ---- */
-
-		glBindVertexArray(0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-};
-
-struct Texture
-{
-	GLuint id = 0;
-	uint16_t tex_unit = 0;
-
-	int width;
-	int height;
-	int channels;
-	uint8_t* data;
-
-	void create()
-	{
-		GLuint texture;
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);				// use linear for magnifying
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	// use linear blend for minifying
-		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		this->id = texture;
-		this->tex_unit = ++TEX_UNIT;
-	}
-
-	void bind()
-	{
-		glActiveTexture(GL_TEXTURE0 + tex_unit);
-		glBindTexture(GL_TEXTURE_2D, this->id);
-	}
-
-	void unbind()
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-};
+		void unbind()
+		{
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+	};
+}
 
 // TODO: This class is the C++ side of a GameObject containing the draw method.
 // To make this work in Lua, we will need some sort of mapper between a C++ GameObject
@@ -134,8 +162,8 @@ struct Texture
 class GameObject
 {
 public:
-	ObjData data;
-	Texture texture;
+	obj::Data data;
+	obj::Texture texture;
 
 	void create()
 	{

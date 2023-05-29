@@ -20,7 +20,7 @@ void AssetManager::loadAll()
 	GameObject treasure = createObj(Object::TREASURE);
 	this->objects.insert({ Object::TREASURE, treasure });
 
-	LevelWrapper level_one = loadLevel();
+	LevelWrapper level_one = loadLevel(LVL_PATHS[0]);
 	this->levels.push_back(level_one);
 }
 
@@ -34,7 +34,7 @@ GameObject AssetManager::createObj(Object specifier)
 	return obj;
 }
 
-ObjData AssetManager::loadObj(const std::string& path)
+obj::Data AssetManager::loadObj(const std::string& path)
 {
 	vec3v v_defs;
 	vec2v uv_defs;
@@ -88,10 +88,10 @@ ObjData AssetManager::loadObj(const std::string& path)
 
 	// Note: This is a fairly primitive approach, but I've spent the whole day figuring out how to
 	// create index buffers via an algorithm and I'd rather not spend more time on this
-	std::vector<ObjVertex> vertices{ };
+	std::vector<obj::Vertex> vertices{ };
 	for (auto& v_i : v_indices)
 	{
-		ObjVertex vertex{ };
+		obj::Vertex vertex{ };
 		vertex.v = v_defs[v_i.x - 1];
 		vertex.uv = uv_defs[v_i.y - 1];
 		vertex.n = n_defs[v_i.z - 1];
@@ -99,7 +99,7 @@ ObjData AssetManager::loadObj(const std::string& path)
 		vertices.push_back(vertex);
 	}
 
-	ObjData result{ };
+	obj::Data result{ };
 	for (int i = 0; i < vertices.size(); i++)
 	{
 		result.indices.push_back(i);
@@ -109,11 +109,11 @@ ObjData AssetManager::loadObj(const std::string& path)
 	return result;
 }
 
-Texture AssetManager::loadTexture(const std::string& path)
+obj::Texture AssetManager::loadTexture(const std::string& path)
 {
 	if (path.empty())
 	{
-		LOG_F(ERROR, "No texture found. Make sure that every asset has a .jpg or .png texture.");
+		LOG_F(ERROR, "Empty texture file path. Make sure that every asset has a .jpg or .png texture.");
 		return { };
 	}
 
@@ -125,7 +125,7 @@ Texture AssetManager::loadTexture(const std::string& path)
 		return { };
 	}
 
-	Texture texture;
+	obj::Texture texture;
 	texture.width = width;
 	texture.height = height;
 	texture.channels = channels;
@@ -134,15 +134,26 @@ Texture AssetManager::loadTexture(const std::string& path)
 	return texture;
 }
 
-LevelWrapper AssetManager::loadLevel()
+LevelWrapper AssetManager::loadLevel(const std::string& path)
 {
-	// This is just mock code, please replace with actual level loading!
-	
+	std::ifstream file(path, std::ios::in);
+	if (!file)
+	{
+		LOG_F(ERROR, "Unable to open level file specified at path %s.", path.c_str());
+		return { };
+	}
+
+	nlohmann::json level_json = nlohmann::json::parse(file);
+
+	auto& lights = level_json["lights"];
+
+	// This is just mock code, please replace with actual light loading!
+
 	auto p1 = std::make_shared<PointLight>();
 	p1->setColor(255, 255, 255);
 	p1->setPosition(-0.2, 4, 0.5);
 	p1->setAttenuation(glm::vec3(1.0, 0.027, 0.0028));
-	
+
 	auto l1 = std::make_shared<DirectionalLight>();
 	l1->setColor(230, 230, 230);
 	l1->setDirection(glm::vec3(1.0, -1.0, -1.0));
@@ -151,8 +162,31 @@ LevelWrapper AssetManager::loadLevel()
 	temp.push_back(p1);
 	temp.push_back(l1);
 
+	auto& player = level_json["player"];
+
+	// TODO
+
+	auto& level	= level_json["level"];
+
+	GameObjects game_objects;
+
+	for (auto& layer : level["data"])
+	{
+		for (auto& game_obj : layer)
+		{
+			auto obj_data = game_obj.get<obj::Container>();
+
+			auto obj = std::make_shared<GameObject>(createObj(obj_data.type));
+			obj->translate(obj_data.position);
+			obj->illuminate(obj_data.reflection, obj_data.glossiness);
+
+			game_objects.push_back(obj);
+		}
+	}
+
 	return {
-		temp
+		temp,
+		game_objects
 	};
 }
 
@@ -176,8 +210,13 @@ GameObject AssetManager::getObj(Object object_type)
 	}
 }
 
-Lights AssetManager::getLights(/* will probably need level distinguisher */)
+LevelWrapper AssetManager::getLevel(uint16_t level_number)
 {
-	// This is just mock code, please replace!
-	return this->levels[0].lights;
+	if (level_number < 0 || level_number > 65535)
+	{
+		LOG_F(ERROR, "Error attempting to obtain level. Parameter 'level_number' cannot be < 0 or > 65535.");
+		return { };
+	}
+
+	return this->levels[level_number];
 }
