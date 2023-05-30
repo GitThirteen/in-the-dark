@@ -24,14 +24,56 @@ namespace obj
 		glm::vec3 position;
 		glm::vec3 reflection;
 		uint8_t glossiness;
+		std::vector<Container> children;
+
+		/**
+		 * @brief Returns true if this container has children, false otherwise.
+		*/
+		bool hasChildren()
+		{
+			return !this->children.empty();
+		}
+
+		/**
+		 * @brief Flattens the children of this container to a single layer. 
+		 * Each children has its absolute world position applied to it.
+		 * @return A container with a flattened children list.
+		*/
+		Container flatten()
+		{
+			std::vector<Container> payload;
+
+			if (hasChildren())
+			{
+				this->children = extractChildren(*this, payload);
+			}
+
+			return *this;
+		}
+
+	private:
+		std::vector<Container> extractChildren(Container& current, std::vector<Container>& payload)
+		{
+			for (auto& child : current.children)
+			{
+				child.position += current.position;
+				payload.push_back(child);
+
+				if (child.hasChildren())
+				{
+					extractChildren(child, payload);
+				}
+			}
+
+			return payload;
+		}
 	};
 
 	// ObjContainer JSON mapping functions
-	inline void to_json(nlohmann::json& j, const obj::Container& c)
-	{
-		// This will never happen but the json lib requires it.
-		// If you should ever need it, blame past you @future me
-	}
+
+	// This will never happen but the json lib requires it.
+	// If you should ever need it, blame past you @future me
+	inline void to_json(nlohmann::json& j, const obj::Container& c) { }
 
 	inline void from_json(const nlohmann::json& j, obj::Container& c)
 	{
@@ -41,7 +83,20 @@ namespace obj
 		auto& ref = j.at("reflection");
 		c.reflection = glm::vec3(ref[0], ref[1], ref[2]);
 		j.at("glossiness").get_to(c.glossiness);
+
+		auto& children = j.find("children");
+		if (children == j.end()) return;
+
+		Container container;
+
+		for (auto& child : children.value())
+		{
+			from_json(child, container);
+		}
+
+		c.children.push_back(std::move(container));
 	}
+		
 
 	struct Vertex
 	{

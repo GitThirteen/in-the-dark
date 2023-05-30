@@ -167,20 +167,29 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	// TODO
 
 	auto& level	= level_json["level"];
-
 	GameObjects game_objects;
+
+	const auto saveObject = [&](obj::Container& c) -> void
+	{
+		auto obj = std::make_shared<GameObject>(createObj(c.type));
+		obj->translate(c.position);
+		obj->illuminate(c.reflection, c.glossiness);
+		game_objects.push_back(obj);
+	};
 
 	for (auto& layer : level["data"])
 	{
 		for (auto& game_obj : layer)
 		{
 			auto obj_data = game_obj.get<obj::Container>();
+			saveObject(obj_data);
+			
+			if (!obj_data.hasChildren()) continue;
 
-			auto obj = std::make_shared<GameObject>(createObj(obj_data.type));
-			obj->translate(obj_data.position);
-			obj->illuminate(obj_data.reflection, obj_data.glossiness);
-
-			game_objects.push_back(obj);
+			for (auto& child : obj_data.flatten().children)
+			{
+				saveObject(child);
+			}
 		}
 	}
 
