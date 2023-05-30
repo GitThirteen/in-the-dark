@@ -26,8 +26,8 @@ typedef std::vector<std::shared_ptr<LightSource>> Lights;
 typedef std::vector<std::shared_ptr<GameObject>> GameObjects;
 
 static const std::unordered_map<Object, std::string> OBJ_PATHS = {
-	{ Object::STONE,	"../_assets/objects/stone" },
 	{ Object::CRATE,	"../_assets/objects/wooden_crate" },
+	{ Object::STONE,	"../_assets/objects/stone" },
 	{ Object::TORCH,	"../_assets/objects/torch" },
 	{ Object::TREASURE, "../_assets/objects/treasure_chest" }
 };

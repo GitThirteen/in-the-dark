@@ -7,7 +7,7 @@ void EventHandler::poll()
 
 // Mouse Handler
 
-double InternalMouseHandler::offset = 6;
+double InternalMouseHandler::offset = 20;
 
 InternalMouseHandler::InternalMouseHandler(GLFWwindow* window)
 {
@@ -39,8 +39,8 @@ double InternalMouseHandler::getOffset()
 void InternalMouseHandler::enableScrollCallback()
 {
 	enableScrollCallback([](GLFWwindow*, double, double y_offset) -> void {
-		double dy = offset - (y_offset * 0.25);
-		offset = util::clamp(dy, 1, 50);
+		double dy = offset - (y_offset * 0.75);
+		offset = util::clamp(dy, 5, 40);
 	});
 }
 

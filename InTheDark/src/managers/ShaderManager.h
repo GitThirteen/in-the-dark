@@ -46,6 +46,7 @@ public:
 	void set(ShaderLocation, glm::mat4);
 	void set(ShaderLocation, glm::vec3);
 	void set(ShaderLocation, float);
+	void set(ShaderLocation, int);
 
 	ShaderManager(ShaderManager const&)  = delete;
 	void operator=(ShaderManager const&) = delete;
