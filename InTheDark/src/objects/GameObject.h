@@ -6,7 +6,7 @@
 typedef std::vector<glm::vec3> vec3v;
 typedef std::vector<glm::vec2> vec2v;
 
-static uint16_t TEX_UNIT = -1;
+static 
 
 enum Object
 {
@@ -195,7 +195,7 @@ namespace obj
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			this->id = texture;
-			this->tex_unit = ++TEX_UNIT;
+			this->tex_unit = ++global_tex_counter;
 		}
 
 		void bind()
@@ -208,6 +208,9 @@ namespace obj
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
+
+	private:
+		inline static int global_tex_counter = -1;
 	};
 }
 

@@ -171,7 +171,7 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 	const auto saveObject = [&](obj::Container& c) -> void
 	{
-		auto obj = std::make_shared<GameObject>(createObj(c.type));
+		auto obj = std::make_shared<GameObject>(this->getObj(c.type));
 		obj->translate(c.position);
 		obj->illuminate(c.reflection, c.glossiness);
 		game_objects.push_back(obj);
