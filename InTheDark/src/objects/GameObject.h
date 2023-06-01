@@ -73,7 +73,7 @@ namespace obj
 
 	// This will never happen but the json lib requires it.
 	// If you should ever need it, blame past you @future me
-	inline void to_json(nlohmann::json& j, const obj::Container& c) { }
+	inline void to_json(nlohmann::json& j, const obj::Container& c) = delete;
 
 	inline void from_json(const nlohmann::json& j, obj::Container& c)
 	{

@@ -20,13 +20,17 @@ enum ShaderLocation {
 	VIEWPROJECTION_MAT	= 4,
 	LIGHT_D_DIRECTION	= 5,
 	LIGHT_D_COL			= 6,
-	LIGHT_P_POSITION	= 7,
-	LIGHT_P_COL			= 8,
-	LIGHT_P_ATTENUATION = 9,
+	//LIGHT_P_POSITION	= 7,
+	//LIGHT_P_COL		= 8,
+	//LIGHT_P_ATTENUATION = 9,
 	CAMERA_POSITION		= 10,
 	REFLECTION			= 11,
 	GLOSSINESS			= 12,
 	TEXTURE				= 13
+};
+
+enum ShaderBinding {
+	LIGHT_P_BUFFER		= 0
 };
 
 class ShaderManager

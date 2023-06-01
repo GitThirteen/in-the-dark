@@ -145,26 +145,27 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 	nlohmann::json level_json = nlohmann::json::parse(file);
 
+	// Extract lights from JSON
+
 	auto& lights = level_json["lights"];
+	LightWrapper game_lights;
 
-	// This is just mock code, please replace with actual light loading!
+	auto& dir_j = lights["directional"];
+	auto dir_light = dir_j.get<lightSource::Directional>();
+	game_lights.directionalLight = dir_light;
 
-	auto p1 = std::make_shared<PointLight>();
-	p1->setColor(255, 255, 255);
-	p1->setPosition(-0.2, 4, 0.5);
-	p1->setAttenuation(glm::vec3(1.0, 0.027, 0.0028));
+	for (auto& pnt_j : lights["point"])
+	{
+		auto pnt_light = pnt_j.get<lightSource::Point>();
+		game_lights.pointLights.entities.push_back(pnt_light);
+	}
+	game_lights.pointLights.create();
 
-	auto l1 = std::make_shared<DirectionalLight>();
-	l1->setColor(230, 230, 230);
-	l1->setDirection(glm::vec3(1.0, -1.0, -1.0));
-
-	Lights temp;
-	temp.push_back(p1);
-	temp.push_back(l1);
+	// TODO Extract player from JSON
 
 	auto& player = level_json["player"];
 
-	// TODO
+	// Extract objects from JSON
 
 	auto& level	= level_json["level"];
 	GameObjects game_objects;
@@ -194,7 +195,7 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	}
 
 	return {
-		temp,
+		game_lights,
 		game_objects
 	};
 }
@@ -221,9 +222,9 @@ GameObject AssetManager::getObj(Object object_type)
 
 LevelWrapper AssetManager::getLevel(uint16_t level_number)
 {
-	if (level_number < 0 || level_number > 65535)
+	if (level_number < 0 || level_number > 65535 || level_number >= this->levels.size())
 	{
-		LOG_F(ERROR, "Error attempting to obtain level. Parameter 'level_number' cannot be < 0 or > 65535.");
+		LOG_F(ERROR, "Error attempting to obtain level.");
 		return { };
 	}
 

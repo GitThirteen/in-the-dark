@@ -22,7 +22,7 @@
 #include "../objects/GameObject.h"
 #include "../objects/LightSource.h"
 
-typedef std::vector<std::shared_ptr<LightSource>> Lights;
+typedef std::vector<std::shared_ptr<lightSource::Point>> PointLights;
 typedef std::vector<std::shared_ptr<GameObject>> GameObjects;
 
 static const std::unordered_map<Object, std::string> OBJ_PATHS = {
@@ -36,9 +36,15 @@ static const std::vector<std::string> LVL_PATHS = {
 	"../_assets/levels/level_0.json"
 };
 
+struct LightWrapper
+{
+	lightSource::Directional directionalLight;
+	PointLightDataHandler pointLights;
+};
+
 struct LevelWrapper
 {
-	Lights lights;
+	LightWrapper lights;
 	GameObjects data;
 };
 

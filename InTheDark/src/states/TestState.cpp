@@ -11,6 +11,10 @@ class TestState : public GameState
 	void init() override
 	{
 		this->level = assets.getLevel(0);
+
+		this->level.lights.directionalLight.addToScene();
+		this->level.lights.pointLights.addToScene();
+		
 		/*this->rot = 0.005f;
 		this->stone = assets.getObj(Object::TREASURE);
 		//this->stone.rotate(glm::vec3(0.0f, 1.0f, 0.0f), 270);
@@ -33,17 +37,11 @@ class TestState : public GameState
 		{
 			this->cur_rot = 0.0f;
 		}
-
-		// TODO Only update if light position has changed
-		for (auto& light : this->level.lights)
-		{
-			light->place();
-		}
 	}
 
 	void draw() override
 	{
-		canvas.clear(29, 24, 21);
+		canvas.clear(24, 34, 33);
 
 		for (auto& obj : this->level.data)
 		{
