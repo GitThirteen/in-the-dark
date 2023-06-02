@@ -212,6 +212,17 @@ namespace obj
 	private:
 		inline static int global_tex_counter = -1;
 	};
+
+	/**
+	 * @brief A rectangular 3D bounding box is defined by its two distinct edge points - the
+	 * bottom left one and the upper right one, thus allowing to interpolate all other edges
+	 * of the bounding box. The lower and upper edge points are relative to the object position,
+	 * which is the center of the bottom plane of the bounding box.
+	*/
+	struct BBox {
+		glm::vec3 lower;
+		glm::vec3 upper;
+	};
 }
 
 // TODO: This class is the C++ side of a GameObject containing the draw method.
@@ -222,6 +233,7 @@ class GameObject
 public:
 	obj::Data data;
 	obj::Texture texture;
+	obj::BBox bbox; // TODO Set bbox of regular object
 
 	void create()
 	{

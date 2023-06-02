@@ -161,9 +161,18 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	}
 	game_lights.pointLights.create();
 
-	// TODO Extract player from JSON
+	// Extract player from JSON
 
 	auto& player = level_json["player"];
+
+	Player game_character;
+	auto& pos = player.at("position");
+	game_character.position = glm::vec3(pos[0], pos[1], pos[2]);
+	auto& bbox = player.at("bbox");
+	auto& bbox_lower = bbox["lower"];
+	auto& bbox_upper = bbox["upper"];
+	game_character.bbox.lower = glm::vec3(bbox_lower[0], bbox_lower[1], bbox_lower[2]);
+	game_character.bbox.upper = glm::vec3(bbox_upper[0], bbox_upper[1], bbox_upper[2]);
 
 	// Extract objects from JSON
 
@@ -196,6 +205,7 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 	return {
 		game_lights,
+		game_character,
 		game_objects
 	};
 }

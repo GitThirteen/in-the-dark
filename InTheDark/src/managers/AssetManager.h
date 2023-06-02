@@ -21,6 +21,7 @@
 #include "../util/json.hpp"
 #include "../objects/GameObject.h"
 #include "../objects/LightSource.h"
+#include "../objects/Player.h"
 
 typedef std::vector<std::shared_ptr<lightSource::Point>> PointLights;
 typedef std::vector<std::shared_ptr<GameObject>> GameObjects;
@@ -45,6 +46,7 @@ struct LightWrapper
 struct LevelWrapper
 {
 	LightWrapper lights;
+	Player player;
 	GameObjects data;
 };
 
