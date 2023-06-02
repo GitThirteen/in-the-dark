@@ -61,6 +61,13 @@ public:
 	*/
 	GameObject getObj(Object);
 
+	/**
+	 * @brief Returns already loaded level data (lights, player, objects) as LevelWrapper. Please notice that this method fails silently
+	 * and returns an empty object { } if the uint is greater than 65535 or an attempt is made to fetch via an inexistant level number.
+	 * @return All relevant level data as typeof LevelWrapper.
+	 * 
+	 * @param An unsigned integer representing the level number of the level to be returned.
+	*/
 	LevelWrapper getLevel(uint16_t);
 
 	/**
