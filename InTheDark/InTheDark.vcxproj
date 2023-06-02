@@ -18,7 +18,9 @@
     <ClInclude Include="src\objects\LightSource.h" />
     <ClInclude Include="src\objects\Player.h" />
     <ClInclude Include="src\states\GameState.h" />
+    <ClCompile Include="src\objects\BBox.cpp" />
     <ClCompile Include="src\objects\LightSource.cpp" />
+    <ClCompile Include="src\objects\Player.cpp" />
     <ClCompile Include="src\states\TestState.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\util\logger\loguru.cpp" />

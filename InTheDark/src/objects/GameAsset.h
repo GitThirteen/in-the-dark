@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include "../util/json.hpp"
 #include "../managers/ShaderManager.h"
 #include "BBox.h"
 

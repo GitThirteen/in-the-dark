@@ -96,7 +96,7 @@ asset::Data AssetManager::loadObj(const std::string& path)
 	}
 
 	asset::Data result{ };
-	for (int i = 0; i < vertices.size(); i++)
+	for (uint16_t i = 0; i < vertices.size(); i++)
 	{
 		result.indices.push_back(i);
 	}

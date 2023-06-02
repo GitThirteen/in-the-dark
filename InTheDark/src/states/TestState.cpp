@@ -31,12 +31,9 @@ class TestState : public GameState
 
 		//std::cout << "Current rotation: " + std::to_string(cur_rot) + " deg." << std::endl;
 		//std::cout << "dt: " + std::to_string(clock.getDeltaTime()) + " sec." << std::endl;
-		std::cout << "fps: " + std::to_string(clock.getFPS()) << std::endl;
+		//std::cout << "fps: " + std::to_string(clock.getFPS()) << std::endl;
 
-		if (this->cur_rot >= 360.0f)
-		{
-			this->cur_rot = 0.0f;
-		}
+		this->level.player->update();
 	}
 
 	void draw() override
