@@ -19,6 +19,7 @@
 #include "../util/util.h"
 #include "../util/stb_image.h"
 #include "../util/json.hpp"
+#include "../objects/GameAsset.h"
 #include "../objects/GameObject.h"
 #include "../objects/LightSource.h"
 #include "../objects/Player.h"
@@ -26,11 +27,12 @@
 typedef std::vector<std::shared_ptr<lightSource::Point>> PointLights;
 typedef std::vector<std::shared_ptr<GameObject>> GameObjects;
 
-static const std::unordered_map<Object, std::string> OBJ_PATHS = {
-	{ Object::CRATE,	"../_assets/objects/wooden_crate" },
-	{ Object::STONE,	"../_assets/objects/stone" },
-	{ Object::TORCH,	"../_assets/objects/torch" },
-	{ Object::TREASURE, "../_assets/objects/treasure_chest" }
+static const std::unordered_map<AssetType, std::string> ASSET_PATHS = {
+	{ AssetType::CRATE,	"../_assets/objects/wooden_crate" },
+	{ AssetType::STONE,	"../_assets/objects/stone" },
+	{ AssetType::TORCH,	"../_assets/objects/torch" },
+	{ AssetType::TREASURE, "../_assets/objects/treasure_chest" },
+	{ AssetType::PLAYER,	"../_assets/objects/player" }
 };
 
 static const std::vector<std::string> LVL_PATHS = {
@@ -59,7 +61,7 @@ public:
 	 * @param The object that should be returned. For possible object types, refer to the 'Object' enum in the GameObject header
 	 * @return The object as GameObject. If no GameObject has been created with the specified key, an empty GameObject is returned.
 	*/
-	GameObject getObj(Object);
+	GameAsset getAsset(AssetType);
 
 	/**
 	 * @brief Returns already loaded level data (lights, player, objects) as LevelWrapper. Please notice that this method fails silently
@@ -84,25 +86,25 @@ public:
 private:
 	AssetManager();
 
-	std::unordered_map<Object, GameObject> objects;
+	std::unordered_map<AssetType, GameAsset> assets;
 	std::vector<LevelWrapper> levels;
 
 	void loadAll();
 
 	/**
-	 * @brief Optional builder method for creating a GameObject. Calls all required methods in the right order to avoid errors.
+	 * @brief Optional builder method for creating a GameAsset. Calls all required methods in the right order to avoid errors.
 	*/
-	GameObject createObj(Object);
+	GameAsset createAsset(AssetType);
 
 	/**
 	 * @brief Loads a wavefront .obj file from a specified file path. This method will fail if the .obj is not triangulated.
 	*/
-	obj::Data loadObj(const std::string&);
+	asset::Data loadObj(const std::string&);
 
 	/**
 	 * @brief Loads a .jpg file from a specified file path.
 	*/
-	obj::Texture loadTexture(const std::string&);
+	asset::Texture loadTexture(const std::string&);
 
 	/**
 	 * @brief Loads a level specified in a .json file from a specified file path and returns it in a typeof LevelWrapper.

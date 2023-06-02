@@ -45,8 +45,9 @@ class TestState : public GameState
 
 		for (auto& obj : this->level.data)
 		{
-			obj->draw();
+			obj->asset.draw();
 		}
+		this->level.player.asset.draw();
 	}
 
 	void discard() override

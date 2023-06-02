@@ -12,6 +12,7 @@
     <ClInclude Include="src\managers\GameStateManager.h" />
     <ClCompile Include="src\managers\SettingsManager.cpp" />
     <ClCompile Include="src\managers\ShaderManager.cpp" />
+    <ClInclude Include="src\objects\GameAsset.h" />
     <ClInclude Include="src\objects\Level.h" />
     <ClInclude Include="src\objects\LightSource.h" />
     <ClInclude Include="src\objects\Player.h" />

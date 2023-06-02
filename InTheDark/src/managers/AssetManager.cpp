@@ -2,39 +2,42 @@
 
 AssetManager::AssetManager()
 {
-	this->objects = std::unordered_map<Object, GameObject>();
+	this->assets = std::unordered_map<AssetType, GameAsset>();
 	loadAll();
 }
 
 void AssetManager::loadAll()
 {
-	GameObject stone = createObj(Object::STONE);
-	this->objects.insert({ Object::STONE, stone });
+	GameAsset stone = createAsset(AssetType::STONE);
+	this->assets.insert({ AssetType::STONE, stone });
 
-	GameObject crate = createObj(Object::CRATE);
-	this->objects.insert({ Object::CRATE, crate });
+	GameAsset crate = createAsset(AssetType::CRATE);
+	this->assets.insert({ AssetType::CRATE, crate });
 
-	GameObject torch = createObj(Object::TORCH);
-	this->objects.insert({ Object::TORCH, torch });
+	GameAsset torch = createAsset(AssetType::TORCH);
+	this->assets.insert({ AssetType::TORCH, torch });
 
-	GameObject treasure = createObj(Object::TREASURE);
-	this->objects.insert({ Object::TREASURE, treasure });
+	GameAsset treasure = createAsset(AssetType::TREASURE);
+	this->assets.insert({ AssetType::TREASURE, treasure });
+
+	GameAsset player = createAsset(AssetType::PLAYER);
+	this->assets.insert({ AssetType::PLAYER, player });
 
 	LevelWrapper level_one = loadLevel(LVL_PATHS[0]);
 	this->levels.push_back(level_one);
 }
 
-GameObject AssetManager::createObj(Object specifier)
+GameAsset AssetManager::createAsset(AssetType specifier)
 {
-	GameObject obj{ };
-	obj.data = loadObj(util::findPath(OBJ_PATHS.at(specifier), ".obj"));
-	obj.texture = loadTexture(util::findPath(OBJ_PATHS.at(specifier), ".jpg"));
+	GameAsset obj{ };
+	obj.data = loadObj(util::findPath(ASSET_PATHS.at(specifier), ".obj"));
+	obj.texture = loadTexture(util::findPath(ASSET_PATHS.at(specifier), ".jpg"));
 	obj.create();
 
 	return obj;
 }
 
-obj::Data AssetManager::loadObj(const std::string& path)
+asset::Data AssetManager::loadObj(const std::string& path)
 {
 	vec3v v_defs;
 	vec2v uv_defs;
@@ -88,10 +91,10 @@ obj::Data AssetManager::loadObj(const std::string& path)
 
 	// Note: This is a fairly primitive approach, but I've spent the whole day figuring out how to
 	// create index buffers via an algorithm and I'd rather not spend more time on this
-	std::vector<obj::Vertex> vertices{ };
+	std::vector<asset::Vertex> vertices{ };
 	for (auto& v_i : v_indices)
 	{
-		obj::Vertex vertex{ };
+		asset::Vertex vertex{ };
 		vertex.v = v_defs[v_i.x - 1];
 		vertex.uv = uv_defs[v_i.y - 1];
 		vertex.n = n_defs[v_i.z - 1];
@@ -99,7 +102,7 @@ obj::Data AssetManager::loadObj(const std::string& path)
 		vertices.push_back(vertex);
 	}
 
-	obj::Data result{ };
+	asset::Data result{ };
 	for (int i = 0; i < vertices.size(); i++)
 	{
 		result.indices.push_back(i);
@@ -109,7 +112,7 @@ obj::Data AssetManager::loadObj(const std::string& path)
 	return result;
 }
 
-obj::Texture AssetManager::loadTexture(const std::string& path)
+asset::Texture AssetManager::loadTexture(const std::string& path)
 {
 	if (path.empty())
 	{
@@ -125,7 +128,7 @@ obj::Texture AssetManager::loadTexture(const std::string& path)
 		return { };
 	}
 
-	obj::Texture texture;
+	asset::Texture texture;
 	texture.width = width;
 	texture.height = height;
 	texture.channels = channels;
@@ -164,10 +167,14 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	// Extract player from JSON
 
 	auto& player = level_json["player"];
-
 	Player game_character;
+
+	game_character.asset = getAsset(AssetType::PLAYER);
+
 	auto& pos = player.at("position");
 	game_character.position = glm::vec3(pos[0], pos[1], pos[2]);
+	game_character.asset.translate(game_character.position);
+
 	auto& bbox = player.at("bbox");
 	auto& bbox_lower = bbox["lower"];
 	auto& bbox_upper = bbox["upper"];
@@ -176,14 +183,19 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 	// Extract objects from JSON
 
-	auto& level	= level_json["level"];
+	auto& level = level_json["level"];
 	GameObjects game_objects;
 
-	const auto saveObject = [&](obj::Container& c) -> void
+	const auto saveObject = [&](asset::Container& c) -> void
 	{
-		auto obj = std::make_shared<GameObject>(getObj(c.type));
-		obj->translate(c.position);
-		obj->illuminate(c.reflection, c.glossiness);
+		auto obj = std::make_shared<GameObject>();
+
+		obj->asset = getAsset(c.type);
+		obj->position = c.position;
+		obj->asset.translate(c.position);
+		obj->asset.illuminate(c.reflection, c.glossiness);
+		// TODO define bbox per game object
+
 		game_objects.push_back(obj);
 	};
 
@@ -191,7 +203,7 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	{
 		for (auto& game_obj : layer)
 		{
-			auto obj_data = game_obj.get<obj::Container>();
+			auto obj_data = game_obj.get<asset::Container>();
 			saveObject(obj_data);
 			
 			if (!obj_data.hasChildren()) continue;
@@ -217,11 +229,11 @@ void AssetManager::loadAudio()
 
 /* ---- GETTER ---- */
 
-GameObject AssetManager::getObj(Object object_type)
+GameAsset AssetManager::getAsset(AssetType identifier)
 {
 	try
 	{
-		return this->objects.at(object_type);
+		return this->assets.at(identifier);
 	}
 	catch (std::out_of_range e)
 	{
