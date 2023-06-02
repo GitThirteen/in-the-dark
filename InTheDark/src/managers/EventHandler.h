@@ -9,14 +9,13 @@ struct InternalMouseHandler
 {
 	InternalMouseHandler(GLFWwindow* window);
 
-	// Mouse-related getters
 	bool pressed(int button);
 	bool released(int button);
 	glm::vec2 getPosition();
 	double getOffset();
 
-	// Misc.
 	void enableScrollCallback();
+
 private:
 	GLFWwindow* window;
 	static double offset;
@@ -24,10 +23,22 @@ private:
 	void enableScrollCallback(void (*callback)(GLFWwindow*, double, double));
 };
 
+struct InternalKeyHandler
+{
+	InternalKeyHandler(GLFWwindow* window);
+
+	bool pressed(int key);
+	bool released(int key);
+
+private:
+	GLFWwindow* window;
+};
+
 class EventHandler
 {
 public:
 	InternalMouseHandler mouse = nullptr;
+	InternalKeyHandler key = nullptr;
 
 	static EventHandler& getInstance()
 	{
@@ -39,9 +50,8 @@ public:
 	{
 		this->window = window;
 		this->mouse = InternalMouseHandler(window);
+		this->key = InternalKeyHandler(window);
 	};
-
-	void enableKeyCallback();
 
 	void poll();
 
@@ -53,7 +63,4 @@ protected:
 
 private:
 	EventHandler() { };
-
-	void keyCallback();
-	void scrollCallback();
 };

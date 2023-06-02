@@ -48,3 +48,20 @@ void InternalMouseHandler::enableScrollCallback(void (*callback)(GLFWwindow*, do
 {
 	glfwSetScrollCallback(this->window, callback);
 }
+
+// Key Handler
+
+InternalKeyHandler::InternalKeyHandler(GLFWwindow* window)
+{
+	this->window = window;
+}
+
+bool InternalKeyHandler::pressed(int key)
+{
+	return glfwGetKey(this->window, key) == GLFW_PRESS;
+}
+
+bool InternalKeyHandler::released(int key)
+{
+	return glfwGetKey(this->window, key) == GLFW_RELEASE;
+}
