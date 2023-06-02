@@ -1,5 +1,7 @@
 # pragma once
 
+#include "GameAsset.h"
+
 /**
 * @brief A rectangular 3D bounding box is defined by two vertices - the bottom
 * left one and the upper right one, thus allowing to interpolate all other vertices

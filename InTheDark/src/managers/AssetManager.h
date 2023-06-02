@@ -48,7 +48,7 @@ struct LightWrapper
 struct LevelWrapper
 {
 	LightWrapper lights;
-	Player player;
+	std::shared_ptr<Player> player;
 	GameObjects data;
 };
 

@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include "../managers/ShaderManager.h"
+#include "GameObject.h"
 
 typedef std::vector<glm::vec3> vec3v;
 typedef std::vector<glm::vec2> vec2v;
@@ -23,6 +24,7 @@ namespace asset
 		glm::vec3 position;
 		glm::vec3 reflection;
 		uint8_t glossiness;
+		BBox bbox;
 		std::vector<Container> children;
 
 		/**
@@ -82,6 +84,11 @@ namespace asset
 		auto& ref = j.at("reflection");
 		c.reflection = glm::vec3(ref[0], ref[1], ref[2]);
 		j.at("glossiness").get_to(c.glossiness);
+
+		auto& lower = j.at("bbox")["lower"];
+		auto& upper = j.at("bbox")["upper"];
+		c.bbox.lower = glm::vec3(lower[0], lower[1], lower[2]);
+		c.bbox.upper = glm::vec3(upper[0], upper[1], upper[2]);
 
 		auto& children = j.find("children");
 		if (children == j.end()) return;

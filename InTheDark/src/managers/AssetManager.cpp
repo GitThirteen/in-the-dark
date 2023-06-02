@@ -164,53 +164,50 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	}
 	game_lights.pointLights.create();
 
+	/* ---- */
+
+	const auto convertToObj = [&](asset::Container& c) -> std::shared_ptr<GameObject>
+	{
+		auto obj = std::make_shared<GameObject>();
+
+		obj->asset = getAsset(c.type);
+		obj->asset.translate(c.position);
+		obj->asset.illuminate(c.reflection, c.glossiness);
+
+		obj->position = c.position;
+		obj->bbox = c.bbox;
+
+		return obj;
+	};
+
+	/* ---- */
+
 	// Extract player from JSON
 
 	auto& player = level_json["player"];
-	Player game_character;
-
-	game_character.asset = getAsset(AssetType::PLAYER);
-
-	auto& pos = player.at("position");
-	game_character.position = glm::vec3(pos[0], pos[1], pos[2]);
-	game_character.asset.translate(game_character.position);
-
-	auto& bbox = player.at("bbox");
-	auto& bbox_lower = bbox["lower"];
-	auto& bbox_upper = bbox["upper"];
-	game_character.bbox.lower = glm::vec3(bbox_lower[0], bbox_lower[1], bbox_lower[2]);
-	game_character.bbox.upper = glm::vec3(bbox_upper[0], bbox_upper[1], bbox_upper[2]);
+	player["type"] = AssetType::PLAYER;
+	auto data = player.get<asset::Container>();
+	std::shared_ptr<Player> game_character = std::dynamic_pointer_cast<Player>(convertToObj(data));
 
 	// Extract objects from JSON
 
 	auto& level = level_json["level"];
 	GameObjects game_objects;
 
-	const auto saveObject = [&](asset::Container& c) -> void
-	{
-		auto obj = std::make_shared<GameObject>();
-
-		obj->asset = getAsset(c.type);
-		obj->position = c.position;
-		obj->asset.translate(c.position);
-		obj->asset.illuminate(c.reflection, c.glossiness);
-		// TODO define bbox per game object
-
-		game_objects.push_back(obj);
-	};
+	game_objects.push_back(game_character); // So we don't have to handle the player separately in the draw logic (it's the same pointer)
 
 	for (auto& layer : level["data"])
 	{
 		for (auto& game_obj : layer)
 		{
 			auto obj_data = game_obj.get<asset::Container>();
-			saveObject(obj_data);
+			game_objects.push_back(convertToObj(obj_data));
 			
 			if (!obj_data.hasChildren()) continue;
 
 			for (auto& child : obj_data.flatten().children)
 			{
-				saveObject(child);
+				game_objects.push_back(convertToObj(child));
 			}
 		}
 	}
