@@ -48,7 +48,6 @@ void PointLightDataHandler::create()
 	glGenBuffers(1, &ssbo);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	std::cout << sizeof(lightSource::Point) << std::endl;
 	glBufferData(GL_SHADER_STORAGE_BUFFER, this->entities.size() * sizeof(lightSource::Point), this->entities.data(), GL_STATIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ShaderBinding::LIGHT_P_BUFFER, ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);

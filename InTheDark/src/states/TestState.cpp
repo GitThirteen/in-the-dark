@@ -47,7 +47,6 @@ class TestState : public GameState
 		{
 			obj->asset.draw();
 		}
-		this->level.player.asset.draw();
 	}
 
 	void discard() override

@@ -8,20 +8,13 @@ AssetManager::AssetManager()
 
 void AssetManager::loadAll()
 {
-	GameAsset stone = createAsset(AssetType::STONE);
-	this->assets.insert({ AssetType::STONE, stone });
+	for (int asset_type = AssetType::CRATE; asset_type < AssetType::UNDEFINED; asset_type++)
+	{
+		AssetType type = static_cast<AssetType>(asset_type);
+		GameAsset asset = createAsset(type);
 
-	GameAsset crate = createAsset(AssetType::CRATE);
-	this->assets.insert({ AssetType::CRATE, crate });
-
-	GameAsset torch = createAsset(AssetType::TORCH);
-	this->assets.insert({ AssetType::TORCH, torch });
-
-	GameAsset treasure = createAsset(AssetType::TREASURE);
-	this->assets.insert({ AssetType::TREASURE, treasure });
-
-	GameAsset player = createAsset(AssetType::PLAYER);
-	this->assets.insert({ AssetType::PLAYER, player });
+		this->assets.insert({ type, asset });
+	}
 
 	LevelWrapper level_one = loadLevel(LVL_PATHS[0]);
 	this->levels.push_back(level_one);
@@ -166,9 +159,11 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 	/* ---- */
 
-	const auto convertToObj = [&](asset::Container& c) -> std::shared_ptr<GameObject>
+	const auto convertToObj = [&](asset::JSONContainer& c) -> std::shared_ptr<GameObject>
 	{
-		auto obj = std::make_shared<GameObject>();
+		auto obj = c.type == AssetType::PLAYER
+			? std::make_shared<Player>() 
+			: std::make_shared<GameObject>();
 
 		obj->asset = getAsset(c.type);
 		obj->asset.translate(c.position);
@@ -186,8 +181,10 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 	auto& player = level_json["player"];
 	player["type"] = AssetType::PLAYER;
-	auto data = player.get<asset::Container>();
+	auto data = player.get<asset::JSONContainer>();
 	std::shared_ptr<Player> game_character = std::dynamic_pointer_cast<Player>(convertToObj(data));
+
+	assert(game_character != nullptr);
 
 	// Extract objects from JSON
 
@@ -200,7 +197,7 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	{
 		for (auto& game_obj : layer)
 		{
-			auto obj_data = game_obj.get<asset::Container>();
+			auto obj_data = game_obj.get<asset::JSONContainer>();
 			game_objects.push_back(convertToObj(obj_data));
 			
 			if (!obj_data.hasChildren()) continue;

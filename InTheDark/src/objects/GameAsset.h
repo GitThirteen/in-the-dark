@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 #include "../managers/ShaderManager.h"
-#include "GameObject.h"
+#include "BBox.h"
 
 typedef std::vector<glm::vec3> vec3v;
 typedef std::vector<glm::vec2> vec2v;
@@ -13,36 +13,38 @@ enum AssetType
 	STONE,
 	TORCH,
 	TREASURE,
-	PLAYER
+	PLAYER,
+	UNDEFINED
 };
 
 namespace asset
 {
-	struct Container
+	struct JSONContainer
 	{
 		AssetType type;
 		glm::vec3 position;
+		BBox bbox;
 		glm::vec3 reflection;
 		uint8_t glossiness;
-		BBox bbox;
-		std::vector<Container> children;
+		std::vector<asset::JSONContainer> children;
 
 		/**
-		 * @brief Returns true if this container has children, false otherwise.
+		* @brief Returns true if this container has children, false otherwise.
 		*/
 		bool hasChildren()
 		{
 			return !this->children.empty();
-		}
+		};
 
 		/**
-		 * @brief Flattens the children of this container to a single layer. 
-		 * Each children has its absolute world position applied to it.
-		 * @return A container with a flattened children list.
+		* @brief Flattens the children of this container to a single layer.
+		* Each children has its absolute world position applied to it.
+		*
+		* @return A container with a flattened children list.
 		*/
-		Container flatten()
+		asset::JSONContainer flatten()
 		{
-			std::vector<Container> payload;
+			std::vector<asset::JSONContainer> payload;
 
 			if (hasChildren())
 			{
@@ -50,10 +52,10 @@ namespace asset
 			}
 
 			return *this;
-		}
+		};
 
 	private:
-		std::vector<Container> extractChildren(Container& current, std::vector<Container>& payload)
+		std::vector<asset::JSONContainer> extractChildren(asset::JSONContainer& current, std::vector<asset::JSONContainer>& payload)
 		{
 			for (auto& child : current.children)
 			{
@@ -67,16 +69,16 @@ namespace asset
 			}
 
 			return payload;
-		}
+		};
 	};
 
 	// ObjContainer JSON mapping functions
 
 	// This will never happen but the json lib requires it.
 	// If you should ever need it, blame past you @future me
-	inline void to_json(nlohmann::json& j, const asset::Container& c) = delete;
+	inline void to_json(nlohmann::json& j, const asset::JSONContainer& c) = delete;
 
-	inline void from_json(const nlohmann::json& j, asset::Container& c)
+	inline void from_json(const nlohmann::json& j, asset::JSONContainer& c)
 	{
 		j.at("type").get_to(c.type);
 		auto& pos = j.at("position");
@@ -93,7 +95,7 @@ namespace asset
 		auto& children = j.find("children");
 		if (children == j.end()) return;
 
-		Container container;
+		asset::JSONContainer container;
 
 		for (auto& child : children.value())
 		{
@@ -102,7 +104,6 @@ namespace asset
 
 		c.children.push_back(std::move(container));
 	}
-		
 
 	struct Vertex
 	{
