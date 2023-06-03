@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include <typeinfo>
 #include <iostream>
 #include <string>
 
@@ -6,7 +7,6 @@ class TestState : public GameState
 {
 	LevelWrapper level;
 	float rot;
-	float cur_rot = 0;
 
 	void init() override
 	{
@@ -14,15 +14,6 @@ class TestState : public GameState
 
 		this->level.lights.directionalLight.addToScene();
 		this->level.lights.pointLights.addToScene();
-		
-		/*this->rot = 0.005f;
-		this->stone = assets.getObj(Object::TREASURE);
-		//this->stone.rotate(glm::vec3(0.0f, 1.0f, 0.0f), 270);
-		this->stone.illuminate(glm::vec3(0.1, 0.4, 0.1), 32);
-		this->stone.translate(glm::vec3(0, 1, 0));
-
-		this->stone2 = assets.getObj(Object::STONE);
-		this->stone2.illuminate(glm::vec3(0.1, 0.4, 0.0));*/
 	}
 
 	void update() override
@@ -34,6 +25,30 @@ class TestState : public GameState
 		//std::cout << "fps: " + std::to_string(clock.getFPS()) << std::endl;
 
 		this->level.player->update();
+		
+		auto collisions = std::vector<std::shared_ptr<GameObject>>();
+		for (auto& obj : this->level.data)
+		{
+			if (obj->asset.type == AssetType::PLAYER) continue;
+			
+			if (this->level.player->isCollidingWith(obj))
+			{
+				collisions.push_back(obj);
+			}
+		}
+
+		std::cout << collisions.size() << std::endl;
+		std::cout << std::to_string(this->level.player->bbox.lower.x) + " " + std::to_string(this->level.player->bbox.lower.y) + " " + std::to_string(this->level.player->bbox.lower.z) << std::endl;
+		std::cout << std::to_string(this->level.player->bbox.upper.x) + " " + std::to_string(this->level.player->bbox.upper.y) + " " + std::to_string(this->level.player->bbox.upper.z) << std::endl;
+
+		if (collisions.size() == 1)
+		{
+
+		}
+		else if (collisions.size() > 1)
+		{
+
+		}
 	}
 
 	void draw() override

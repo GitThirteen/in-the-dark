@@ -23,6 +23,7 @@ void AssetManager::loadAll()
 GameAsset AssetManager::createAsset(AssetType specifier)
 {
 	GameAsset obj{ };
+	obj.type = specifier;
 	obj.data = loadObj(util::findPath(ASSET_PATHS.at(specifier), ".obj"));
 	obj.texture = loadTexture(util::findPath(ASSET_PATHS.at(specifier), ".jpg"));
 	obj.create();
@@ -170,7 +171,8 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 		obj->asset.illuminate(c.reflection, c.glossiness);
 
 		obj->position = c.position;
-		obj->bbox = c.bbox;
+		obj->bbox.lower = c.bbox.lower + c.position;
+		obj->bbox.upper = c.bbox.upper + c.position;
 
 		return obj;
 	};

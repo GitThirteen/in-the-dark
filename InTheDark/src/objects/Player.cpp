@@ -2,6 +2,7 @@
 
 void Player::update()
 {
+    // Adjust, neg_dz and pos_dz probably wrong due to RHCS
     bool pos_dz = events.key.pressed(GLFW_KEY_S) || events.key.pressed(GLFW_KEY_DOWN);
     bool neg_dz = events.key.pressed(GLFW_KEY_W) || events.key.pressed(GLFW_KEY_UP);
     bool pos_dx = events.key.pressed(GLFW_KEY_D) || events.key.pressed(GLFW_KEY_RIGHT);
@@ -20,19 +21,57 @@ void Player::update()
         dz = pos_dz ? 1.0 : -1.0;
     }
 
-    this->movementVector = (forward * dz + right * dx) * speed;
+    this->input_direction = (forward * dz + right * dx);
+    //this->movement_vec.y = GRAVITY;
+
     move();
+    //std::cout << std::to_string(this->movement_vec.x) + " " + std::to_string(this->movement_vec.y) + " " + std::to_string(this->movement_vec.z) << std::endl;
+
+    //movement_vec *= FRICTION_FACTOR;
+
+    if (this->position.y < -3)
+    {
+        resetPosition();
+    }
 }
 
 void Player::move()
 {
-    double dt = clock.getDeltaTime();
-    glm::vec3 weee = glm::vec3(
-        this->movementVector.x * dt,
-        this->movementVector.y * dt,
-        this->movementVector.z * dt
-    );
+    float dt = clock.getDeltaTime();
+    glm::vec3 max_velocity = MAX_SPEED * this->input_direction;
+
+    if (this->input_direction.x == 0 && this->input_direction.y == 0 && this->input_direction.z == 0)
+    {
+        TRANSITION_SPEED = 8.0f;
+    }
+
+    this->velocity = this->velocity * (1 - dt * TRANSITION_SPEED) + max_velocity * (dt * TRANSITION_SPEED);
+
+    glm::vec3 force = velocity * dt;
+
+    // update player bbox
+    this->bbox.lower += force;
+    this->bbox.upper += force;
     
-    this->position += weee;
-    this->asset.translate(weee);
+    // update player position and translate asset accordingly
+    this->position += force;
+    this->asset.translate(force);
+}
+
+void Player::resetPosition()
+{
+    this->asset.translate(-this->position);
+    this->position = glm::vec3(0, 0, 0);
+}
+
+bool Player::isCollidingWith(std::shared_ptr<GameObject> obj)
+{
+    return (
+        this->bbox.lower.x <= obj->bbox.upper.x &&
+        this->bbox.upper.x >= obj->bbox.lower.x &&
+        this->bbox.lower.y <= obj->bbox.upper.y &&
+        this->bbox.upper.y >= obj->bbox.lower.y &&
+        this->bbox.lower.z <= obj->bbox.upper.z &&
+        this->bbox.upper.z >= obj->bbox.lower.z
+    );
 }

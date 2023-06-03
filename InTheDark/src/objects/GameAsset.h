@@ -12,6 +12,7 @@ enum AssetType
 {
 	CRATE,
 	STONE,
+	SAND,
 	TORCH,
 	TREASURE,
 	PLAYER,
@@ -225,6 +226,7 @@ namespace asset
 class GameAsset
 {
 public:
+	AssetType type;
 	asset::Data data;
 	asset::Texture texture;
 
