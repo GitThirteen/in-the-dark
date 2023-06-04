@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "managers/SettingsManager.h"
+#include "managers/ShaderManager.h"
 
 struct CameraCoords
 {
@@ -31,22 +32,25 @@ public:
 	Camera();
 	Camera(double);
 	Camera(glm::vec3&, glm::vec3&, glm::vec3&, double);
+	
 
 	void update(bool, glm::vec2, double);
+	void updatePosition(glm::vec3);
 	void lock();
 	void unlock();
 
 	glm::mat4 getViewProjMatrix();
-	CameraCoords getCoordinates();
+
 private:
 	double radius = 1.0;
 	bool locked = true;
-	CameraCoords camera;
+	
+	CameraCoords coords;
 	glm::mat4 view_mat;
 	glm::mat4 proj_mat;
-
 	glm::vec2 mouse_old;
 
 	glm::mat4 calcViewMatrix();
 	glm::mat4 calcProjMatrix();
+	void sendToShader();
 };

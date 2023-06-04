@@ -4,7 +4,7 @@ Camera::Camera() : Camera(1.0) { }
 
 Camera::Camera(double radius) 
 {
-	this->camera = CameraCoords(
+	this->coords = CameraCoords(
 		glm::vec3(0.0f, 0.0f, radius),
 		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(0.0f, 1.0f, 0.0f)
@@ -18,7 +18,7 @@ Camera::Camera(double radius)
 
 Camera::Camera(glm::vec3& origin, glm::vec3& target, glm::vec3& up, double radius)
 {
-	this->camera = CameraCoords(origin, target, up);
+	this->coords = CameraCoords(origin, target, up);
 	this->radius = radius;
 	this->mouse_old = { NAN, NAN };
 
@@ -30,10 +30,10 @@ void Camera::update(bool rightMouseDown, glm::vec2 mouse, double r)
 {
 	if (this->radius != r)
 	{
-		this->camera.spherical.x = r;
+		this->coords.spherical.x = r;
 		this->radius = r;
 
-		this->camera.origin = this->camera.calcCartesian() + this->camera.target;
+		this->coords.origin = this->coords.calcCartesian() + this->coords.target;
 		this->view_mat = calcViewMatrix();
 	}
 
@@ -45,25 +45,34 @@ void Camera::update(bool rightMouseDown, glm::vec2 mouse, double r)
 		double dx = mouse.x - this->mouse_old.x;
 		double dy = mouse.y - this->mouse_old.y;
 
-		double width = SettingsManager::getInstance().get<int>("width");
-		double height = SettingsManager::getInstance().get<int>("height");
+		SettingsManager& settings = SettingsManager::getInstance();
+		double width = settings.get<int>("width");
+		double height = settings.get<int>("height");
 		double move_x = dx / (width * 0.33);
 		double move_y = dy / (height * 0.33);
 
 		if (dx != 0 || dy != 0)
 		{
 			// adjusting pitch if mouse moves up or down
-			this->camera.spherical.y = util::clamp(this->camera.spherical.y - move_y, 0.01, M_PI - 0.01);
+			this->coords.spherical.y = util::clamp(this->coords.spherical.y - move_y, 0.01, M_PI - 0.01);
 			// adjusting yaw if mouse moves left or right
-			this->camera.spherical.z += move_x;
+			this->coords.spherical.z += move_x;
 
-			this->camera.origin = this->camera.calcCartesian() + this->camera.target;
-			this->view_mat = calcViewMatrix();
+			this->coords.origin = this->coords.calcCartesian() + this->coords.target;
 		}
 	}
 
+	this->view_mat = calcViewMatrix();
+	sendToShader();
+
 	this->mouse_old.x = mouse.x;
 	this->mouse_old.y = mouse.y;
+}
+
+void Camera::updatePosition(glm::vec3 player_pos)
+{
+	this->coords.origin += player_pos - this->coords.target;
+	this->coords.target = player_pos;
 }
 
 void Camera::lock()
@@ -80,7 +89,7 @@ void Camera::unlock()
 
 glm::mat4 Camera::calcViewMatrix()
 {
-	return glm::lookAt(this->camera.origin, this->camera.target, this->camera.up);
+	return glm::lookAt(this->coords.origin, this->coords.target, this->coords.up);
 }
 
 glm::mat4 Camera::calcProjMatrix()
@@ -101,9 +110,11 @@ glm::mat4 Camera::getViewProjMatrix()
 	return this->proj_mat * this->view_mat;
 }
 
-CameraCoords Camera::getCoordinates()
+void Camera::sendToShader()
 {
-	return this->camera;
+	ShaderManager& shaders = ShaderManager::getInstance();
+	shaders.set(ShaderLocation::VIEWPROJECTION_MAT, getViewProjMatrix());
+	shaders.set(ShaderLocation::CAMERA_POSITION, this->coords.origin);
 }
 
 // CameraCoords

@@ -36,6 +36,11 @@ double InternalMouseHandler::getOffset()
 	return offset;
 }
 
+void InternalMouseHandler::setOffset(double offset)
+{
+	this->offset = offset;
+}
+
 void InternalMouseHandler::enableScrollCallback()
 {
 	enableScrollCallback([](GLFWwindow*, double, double y_offset) -> void {

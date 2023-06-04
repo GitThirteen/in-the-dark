@@ -36,11 +36,29 @@ layout(location = 13) uniform sampler2D tex;
 
 out vec4 fragColor;
 
+// Color space conversions taken from lolengine.net/blog/2013/07/27/rgb-to-hsv-in-glsl
+vec3 rgb2hsv(vec3 col) {
+	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	vec4 p = col.g < col.b ? vec4(col.bg, K.wz) : vec4(col.gb, K.xy);
+	vec4 q = col.r < p.x ? vec4(p.xyw, col.r) : vec4(col.r, p.yzx);
+
+	float d = q.x - min(q.w, q.y);
+	float e = 1.0e-10;
+	return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+vec3 hsv2rgb(vec3 col) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(col.xxx + K.xyz) * 6.0 - K.www);
+    return col.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), col.y);
+}
+
 float calcIntensity(float value) {
 	if (value > 0.8) return 1.0;
-	if (value > 0.3) return 0.8;
-	if (value > 0.0) return 0.6;
-	return 0.4;
+	if (value > 0.5) return 0.8;
+	if (value > 0.2) return 0.5;
+	if (value > 0.0) return 0.2;
+	return 0.0;
 }
 
 vec3[2] calcPointLight(PointLight light, vec3 vNormal, vec3 viewDir) {
@@ -74,7 +92,6 @@ void main() {
 	// Diffuse (Directional)
 	vec3 dLightDir = normalize(-dirLightDirection);
 	float dIntensity = smoothstep(0, 0.01, max(dot(vertNormal, dLightDir), 0.0));
-	//float dLightFactor = calcIntensity(dIntensity);
 	vec3 dDiffuse = dIntensity * dirLightColor;
 
 	vec3 diffuse = reflection.y * dDiffuse;
@@ -87,33 +104,33 @@ void main() {
 
 	vec3 specular = reflection.z * dSpecular;
 
-	vec3 result = (ambient + diffuse) * texture(tex, uvCoord).rgb + specular;
+	// Toon Shading
+	vec3 hsvL = rgb2hsv(ambient + diffuse);
+	float value = calcIntensity(hsvL.z);
+	vec3 rgbL = hsv2rgb(vec3(hsvL.xy, value));
 
+	/*hsvL = rgb2hsv(texture(tex, uvCoord).rgb);
+	value = calcIntensity(hsvL.z);
+	vec3 rgbTex = hsv2rgb(vec3(hsvL.xy, value));*/
+
+	vec3 result = rgbL * texture(tex, uvCoord).rgb + specular;
+
+	// Point Lights
 	for (int i = 0; i < pointLights.length(); i++) {
 		PointLight light = pointLights[i];
-		vec3[2] point = calcPointLight(light, vertNormal, viewDirection);
-		result += (point[0]) * texture(tex, uvCoord).rgb + point[1];
+		vec3[2] pointValues = calcPointLight(light, vertNormal, viewDirection);
+
+		// Toon Shading
+		vec3 hsvL = rgb2hsv(pointValues[0]);
+		float value = calcIntensity(hsvL.z);
+		vec3 rgbL = hsv2rgb(vec3(hsvL.rg, value));
+
+		/*hsvL = rgb2hsv(texture(tex, uvCoord).rgb);
+		value = calcIntensity(hsvL.z);
+		vec3 rgbTex = hsv2rgb(vec3(hsvL.xy, value));*/
+
+		result += rgbL * texture(tex, uvCoord).rgb + pointValues[1];
 	}
-	
-	// Diffuse (Point)
-	//vec3 pLightDir = normalize(pntLightPosition - fragPosition);
-	//float pIntensity = smoothstep(0, 0.01, dot(vertNormal, pLightDir));
-	//float pLightFactor = calcIntensity(pIntensity);
-	//vec3 pDiffuse = pLightFactor * pntLightColor / a;
-
-	// Specular (Point)
-	//vec3 pReflDirection = reflect(-pLightDir, vertNormal);
-	//float pReflDot = max(dot(viewDirection, pReflDirection) * pIntensity, 0.0);
-	//float pReflIntensity = smoothstep(0, 0.1, pow(pReflDot, glossiness * glossiness));
-	//vec3 pSpecular = (pReflIntensity * pntLightColor) / a;
-
-	// Specular (Directional)
-	//vec3 dReflDirection = reflect(-dLightDir, vertNormal);
-	//float dReflDot = max(dot(viewDirection, dReflDirection) * dIntensity, 0.0);
-	//float dReflIntensity = smoothstep(0, 0.1, pow(dReflDot, glossiness * glossiness));
-	//vec3 dSpecular = (dReflIntensity * dirLightColor);
-
-	//vec3 specular = reflection.z * dSpecular;
 
 	// Vignette (for later)
 	//vec2 dims = vec2(1280, 1024);

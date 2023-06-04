@@ -13,13 +13,14 @@ struct InternalMouseHandler
 	bool released(int button);
 	glm::vec2 getPosition();
 	double getOffset();
+	void setOffset(double);
 
 	void enableScrollCallback();
 
 private:
 	GLFWwindow* window;
 	static double offset;
-
+	
 	void enableScrollCallback(void (*callback)(GLFWwindow*, double, double));
 };
 
