@@ -38,8 +38,6 @@ class TestState : public GameState
 		}
 
 		std::cout << collisions.size() << std::endl;
-		std::cout << std::to_string(this->level.player->bbox.lower.x) + " " + std::to_string(this->level.player->bbox.lower.y) + " " + std::to_string(this->level.player->bbox.lower.z) << std::endl;
-		std::cout << std::to_string(this->level.player->bbox.upper.x) + " " + std::to_string(this->level.player->bbox.upper.y) + " " + std::to_string(this->level.player->bbox.upper.z) << std::endl;
 
 		if (collisions.size() == 1)
 		{

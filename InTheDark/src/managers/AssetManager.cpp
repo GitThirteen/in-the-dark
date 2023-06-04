@@ -171,8 +171,7 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 		obj->asset.illuminate(c.reflection, c.glossiness);
 
 		obj->position = c.position;
-		obj->bbox.lower = c.bbox.lower + c.position;
-		obj->bbox.upper = c.bbox.upper + c.position;
+		obj->bbox = c.bbox;
 
 		return obj;
 	};

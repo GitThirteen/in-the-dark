@@ -12,6 +12,14 @@ public:
 
 	virtual void update() { };
 
+	BBox getTrueBBox()
+	{
+		BBox b{ };
+		b.lower = this->bbox.lower + this->position;
+		b.upper = this->bbox.upper + this->position;
+		return b;
+	}
+
 private:
 
 };

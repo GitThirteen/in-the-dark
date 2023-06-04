@@ -48,30 +48,28 @@ void Player::move()
     this->velocity = this->velocity * (1 - dt * TRANSITION_SPEED) + max_velocity * (dt * TRANSITION_SPEED);
 
     glm::vec3 force = velocity * dt;
-
-    // update player bbox
-    this->bbox.lower += force;
-    this->bbox.upper += force;
     
     // update player position and translate asset accordingly
     this->position += force;
     this->asset.translate(force);
 }
 
-void Player::resetPosition()
-{
-    this->asset.translate(-this->position);
-    this->position = glm::vec3(0, 0, 0);
-}
-
 bool Player::isCollidingWith(std::shared_ptr<GameObject> obj)
 {
+    BBox own_bbox = this->getTrueBBox();
+    BBox obj_bbox = obj->getTrueBBox();
     return (
-        this->bbox.lower.x <= obj->bbox.upper.x &&
-        this->bbox.upper.x >= obj->bbox.lower.x &&
-        this->bbox.lower.y <= obj->bbox.upper.y &&
-        this->bbox.upper.y >= obj->bbox.lower.y &&
-        this->bbox.lower.z <= obj->bbox.upper.z &&
-        this->bbox.upper.z >= obj->bbox.lower.z
+        own_bbox.lower.x <= obj_bbox.upper.x &&
+        own_bbox.upper.x >= obj_bbox.lower.x &&
+        own_bbox.lower.y <= obj_bbox.upper.y &&
+        own_bbox.upper.y >= obj_bbox.lower.y &&
+        own_bbox.lower.z <= obj_bbox.upper.z &&
+        own_bbox.upper.z >= obj_bbox.lower.z
     );
+}
+
+void Player::resetPosition()
+{
+    this->asset.translate(glm::vec3(0) - this->position);
+    this->position = glm::vec3(0);
 }
