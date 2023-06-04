@@ -32,6 +32,7 @@ private:
 	GLFWwindow* window = nullptr;
 
 	Clock& clock = Clock::getInstance();
+	CanvasManager& canvas = CanvasManager::getInstance();
 
 	GameStateManager() { }
 };

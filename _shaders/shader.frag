@@ -20,10 +20,6 @@ layout(std430, binding = 0) buffer pointLightBuffer {
 	PointLight pointLights[];
 };
 
-//layout(location = 7) uniform vec3 pntLightPosition;
-//layout(location = 8) uniform vec3 pntLightColor;
-//layout(location = 9) uniform vec3 attenuation; 
-
 // Camera
 layout(location = 10) uniform vec3 camPosition;
 
@@ -131,13 +127,6 @@ void main() {
 
 		result += rgbL * texture(tex, uvCoord).rgb + pointValues[1];
 	}
-
-	// Vignette (for later)
-	//vec2 dims = vec2(1280, 1024);
-	//vec2 center_pos = (gl_FragCoord.xy / dims.xy) - vec2(0.5);
-	//center_pos.x *= dims.x / dims.y;
-	//float len = length(center_pos);
-	//float vig = smoothstep(0.75, 0.3, len);
 
 	fragColor = vec4(result, 1.0);
 }

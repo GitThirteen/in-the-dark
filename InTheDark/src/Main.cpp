@@ -36,8 +36,8 @@ int main(int argc, char** argv)
 
 	shaders.add(Shader::Vertex, "../_shaders/shader.vert");
 	shaders.add(Shader::Fragment, "../_shaders/shader.frag");
-	shaders.create();
-	shaders.use();
+	GLuint shader = shaders.create();
+	shaders.use(shader);
 
 	events.setWindow(window);
 	events.mouse.enableScrollCallback();
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 		game.draw();
 	}
 
-	shaders.destroy();
+	shaders.destroyAll();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }

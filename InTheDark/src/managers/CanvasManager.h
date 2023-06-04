@@ -6,9 +6,35 @@
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
+#include "SettingsManager.h"
+#include "ShaderManager.h"
+#include "../objects/GameAsset.h"
+
+struct PostProcessor
+{
+void create();
+void draw();
+void bind();
+void unbind();
+void dump();
+bool isCreated();
+
+private:
+	GLuint vao;
+	GLuint fbo;
+	GLuint tex;
+	GLuint rbo;
+	GLuint shader;
+	bool created = false;
+
+	ShaderManager& shaders = ShaderManager::getInstance();
+};
+
 class CanvasManager
 {
 public:
+	PostProcessor post_processor;
+
 	/**
 	 * @brief Clears the canvas with white (RGB 255, 255, 255).
 	*/

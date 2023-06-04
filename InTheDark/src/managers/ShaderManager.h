@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 #include <GL/glew.h>
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
@@ -37,9 +38,11 @@ class ShaderManager
 {
 public:
 	void add(Shader, std::string path);
-	void create();
-	void use();
-	void destroy();
+	GLuint create();
+	void use(GLuint);
+	void use(std::string);
+	void destroy(GLuint);
+	void destroyAll();
 
 	static ShaderManager& getInstance()
 	{
@@ -57,7 +60,7 @@ public:
 private:
 	ShaderManager();
 
-	GLuint shader = 0;
+	std::unordered_map<std::string, GLuint> shaders;
 	std::string vert_sh_path = "";
 	std::string frag_sh_path = "";
 

@@ -15,7 +15,7 @@ void ShaderManager::add(Shader shader_type, std::string path)
 	}
 }
 
-void ShaderManager::create()
+GLuint ShaderManager::create()
 {
 	if (this->vert_sh_path.empty() || this->frag_sh_path.empty())
 	{
@@ -52,20 +52,46 @@ void ShaderManager::create()
 	glDetachShader(program, vertShader);
 	glDetachShader(program, fragShader);
 
-	this->shader = program;
+	this->shaders.insert({ util::split(util::split(this->vert_sh_path, "/").back(), ".")[0], program });
 
 	glDeleteShader(vertShader);
 	glDeleteShader(fragShader);
+
+	this->vert_sh_path = "";
+	this->frag_sh_path = "";
+
+	return program;
 }
 
-void ShaderManager::use()
+void ShaderManager::use(GLuint shader)
 {
-	glUseProgram(this->shader);
+	glUseProgram(shader);
 }
 
-void ShaderManager::destroy()
+void ShaderManager::use(std::string shader_name)
 {
-	glDeleteProgram(this->shader);
+	try {
+		GLuint shader = this->shaders.at(shader_name);
+		glUseProgram(shader);
+	}
+	catch (std::out_of_range e)
+	{
+		LOG_F(ERROR, "No shader with name %s has been found.", shader_name.c_str());
+		return;
+	}
+}
+
+void ShaderManager::destroy(GLuint shader)
+{
+	glDeleteProgram(shader);
+}
+
+void ShaderManager::destroyAll()
+{
+	for (auto& shader : this->shaders)
+	{
+		glDeleteProgram(shader.second);
+	}
 }
 
 void ShaderManager::set(ShaderLocation location, glm::mat4 value)
