@@ -53,7 +53,7 @@ void PostProcessor::create()
 	GLuint rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, settings.get<int>("width"), settings.get<int>("height"));
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 	
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
@@ -66,6 +66,7 @@ void PostProcessor::create()
 		exit(EXIT_FAILURE);
 	}
 
+	// Unbind
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -73,9 +74,8 @@ void PostProcessor::create()
 	/* ------------------------- */
 	/* ---- QUAD FOR SCREEN ---- */
 
-	// Position (3) + UV (2)
-	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-		// positions   // texCoords
+	// Position (2) + UV (2)
+	float quadVertices[] = {
 		-1.0f,  1.0f,  0.0f, 1.0f,
 		-1.0f, -1.0f,  0.0f, 0.0f,
 		 1.0f, -1.0f,  1.0f, 0.0f,
@@ -102,10 +102,10 @@ void PostProcessor::create()
 
 	auto stride = 4 * sizeof(float);
 
-	glVertexAttribPointer(ShaderLocation::POSITION, 2, GL_FLOAT, GL_FALSE, stride, (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, stride, (void*)(2 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(ShaderLocation::POSITION, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+	glEnableVertexAttribArray(ShaderLocation::POSITION);
+	glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(ShaderLocation::UV);
 
 	/* ---- Unbind VAO & VBO ---- */
 
@@ -126,9 +126,11 @@ void PostProcessor::draw()
 {
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glUseProgram(this->shader);
-	shaders.set(ShaderLocation::TEXTURE, 1); // I don't know why it's 1, but it just works
-
 	glBindVertexArray(this->vao);
+
+	glDisable(GL_DEPTH_TEST);
+
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->tex);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 

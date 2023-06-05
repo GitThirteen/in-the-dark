@@ -105,7 +105,6 @@ GLFWwindow* initGL()
 		exit(EXIT_FAILURE);
 	}
 
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_CULL_FACE);
 

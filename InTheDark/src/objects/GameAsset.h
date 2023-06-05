@@ -199,13 +199,14 @@ namespace asset
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	// use linear blend for minifying
 			//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			unbind();
 
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			this->id = texture;
 			this->tex_unit = ++global_tex_counter;
+
+			unbind();
 		}
 
 		void bind()

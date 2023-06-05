@@ -2,7 +2,7 @@
 
 in vec2 uvCoord;
 
-layout(location = 13) uniform sampler2D tex;
+uniform sampler2D tex;
 
 out vec4 fragColor;
 

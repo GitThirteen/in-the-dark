@@ -27,19 +27,19 @@ void GameStateManager::draw()
 
 	canvas.post_processor.bind();
 	
-	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	ShaderManager::getInstance().use("shader");
+	glEnable(GL_DEPTH_TEST);
 
+	ShaderManager::getInstance().use("shader");
+	
 	if (this->active_state)
 	{
 		this->active_state->draw();
 	}
 
-	glDisable(GL_DEPTH_TEST);
-
 	canvas.post_processor.unbind();
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	canvas.post_processor.draw();
 	
 	glfwSwapBuffers(this->window);
