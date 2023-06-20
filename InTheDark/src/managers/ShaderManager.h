@@ -27,7 +27,9 @@ enum ShaderLocation {
 	CAMERA_POSITION		= 10,
 	REFLECTION			= 11,
 	GLOSSINESS			= 12,
-	TEXTURE				= 13
+	TEXTURE				= 13,
+	SCREEN_WIDTH		= 14,
+	SCREEN_HEIGHT		= 15
 };
 
 enum ShaderBinding {

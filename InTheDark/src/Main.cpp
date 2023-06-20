@@ -39,6 +39,9 @@ int main(int argc, char** argv)
 	GLuint shader = shaders.create();
 	shaders.use(shader);
 
+	shaders.set(ShaderLocation::SCREEN_WIDTH, settings.get<int>("width"));
+	shaders.set(ShaderLocation::SCREEN_HEIGHT, settings.get<int>("height"));
+
 	events.setWindow(window);
 	events.mouse.enableScrollCallback();
 

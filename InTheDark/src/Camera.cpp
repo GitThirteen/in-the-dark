@@ -112,9 +112,10 @@ glm::mat4 Camera::getViewProjMatrix()
 
 void Camera::sendToShader()
 {
-	ShaderManager& shaders = ShaderManager::getInstance();
-	shaders.set(ShaderLocation::VIEWPROJECTION_MAT, getViewProjMatrix());
-	shaders.set(ShaderLocation::CAMERA_POSITION, this->coords.origin);
+	ShaderManager& shader = ShaderManager::getInstance();
+	shader.use("shader");
+	shader.set(ShaderLocation::VIEWPROJECTION_MAT, getViewProjMatrix());
+	shader.set(ShaderLocation::CAMERA_POSITION, this->coords.origin);
 }
 
 // CameraCoords
