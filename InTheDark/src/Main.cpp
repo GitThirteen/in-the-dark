@@ -13,6 +13,7 @@
 
 void setupLogger();
 GLFWwindow* initGL();
+void GLAPIENTRY MessageCallback(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, const void*);
 
 /* ---------------------------- */
 // Global variables
@@ -38,9 +39,6 @@ int main(int argc, char** argv)
 	shaders.add(Shader::Fragment, "../_shaders/shader.frag");
 	GLuint shader = shaders.create();
 	shaders.use(shader);
-
-	shaders.set(ShaderLocation::SCREEN_WIDTH, settings.get<int>("width"));
-	shaders.set(ShaderLocation::SCREEN_HEIGHT, settings.get<int>("height"));
 
 	events.setWindow(window);
 	events.mouse.enableScrollCallback();
@@ -110,6 +108,8 @@ GLFWwindow* initGL()
 
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_CULL_FACE);
+	//glEnable(GL_DEBUG_OUTPUT);
+	//glDebugMessageCallback(MessageCallback, 0);
 
 	glViewport(0, 0, width, height);
 
@@ -121,4 +121,18 @@ void setupLogger()
 	loguru::g_preamble_date = false;
 	loguru::g_preamble_uptime = false;
 	loguru::g_preamble_thread = false;
+}
+
+void GLAPIENTRY
+MessageCallback(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+		type, severity, message);
 }

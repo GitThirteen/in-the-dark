@@ -6,7 +6,6 @@
 class TestState : public GameState
 {
 	LevelWrapper level;
-	float rot;
 
 	void init() override
 	{
@@ -24,6 +23,7 @@ class TestState : public GameState
 		//std::cout << "fps: " + std::to_string(clock.getFPS()) << std::endl;
 
 		events.poll();
+
 		bool mouse_pressed = events.mouse.pressed(GLFW_MOUSE_BUTTON_RIGHT);
 		glm::vec2 mouse_pos = events.mouse.getPosition();
 		double cam_radius = events.mouse.getOffset();
@@ -44,7 +44,7 @@ class TestState : public GameState
 			}
 		}
 
-		std::cout << collisions.size() << std::endl;
+		//std::cout << collisions.size() << std::endl;
 
 		if (collisions.size() == 1)
 		{
@@ -71,6 +71,7 @@ class TestState : public GameState
 
 	}
 
+private:
 	void initCamera()
 	{
 		glm::vec3 cam_start_pos = glm::vec3(0.0, 20.0, 20.0);

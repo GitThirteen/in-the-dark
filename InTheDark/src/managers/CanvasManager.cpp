@@ -30,35 +30,52 @@ void PostProcessor::create()
 
 	this->fbo = fbo;
 
-	// Create texture
-	GLuint tex;
-	glGenTextures(1, &tex);
-	glBindTexture(GL_TEXTURE_2D, tex);
-
-	this->tex = tex;
-
 	SettingsManager& settings = SettingsManager::getInstance();
 	auto width = settings.get<int>("width");
 	auto height = settings.get<int>("height");
 
+	// Create textures
+	// Color texture
+	GLuint colorTex;
+	glGenTextures(1, &colorTex);
+	glBindTexture(GL_TEXTURE_2D, colorTex);
+
+	this->colTex = colorTex;
+	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+
+	// Depth texture
+	GLuint depthTex;
+	glGenTextures(1, &depthTex);
+	glBindTexture(GL_TEXTURE_2D, depthTex);
+
+	this->depTex = depthTex;
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
 
 	// Bind render buffer
-	GLuint rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	//GLuint rbo;
+	//glGenRenderbuffers(1, &rbo);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 	
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-	this->rbo = rbo;
+	//this->rbo = rbo;
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
@@ -129,11 +146,20 @@ void PostProcessor::draw()
 	glUseProgram(this->shader);
 	glBindVertexArray(this->vao);
 
-	shaders.set(ShaderLocation::SCREEN_WIDTH, SettingsManager::getInstance().get<int>("width"));
-	shaders.set(ShaderLocation::SCREEN_HEIGHT, SettingsManager::getInstance().get<int>("height"));
+	int screen_width = SettingsManager::getInstance().get<int>("width");
+	int screen_height = SettingsManager::getInstance().get<int>("height");
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, this->tex);
+	shaders.set(ShaderLocation::SCREEN_WIDTH, screen_width);
+	shaders.set(ShaderLocation::SCREEN_HEIGHT, screen_height);
+	shaders.set(ShaderLocation::PPS_COLOR_TEXTURE, 0);
+	shaders.set(ShaderLocation::PPS_DEPTH_TEXTURE, 1);
+	
+	glActiveTexture(GL_TEXTURE0 + 0);
+	glBindTexture(GL_TEXTURE_2D, this->colTex);
+
+	glActiveTexture(GL_TEXTURE0 + 1);
+	glBindTexture(GL_TEXTURE_2D, this->depTex);
+
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glBindVertexArray(0);
@@ -153,8 +179,8 @@ void PostProcessor::unbind()
 void PostProcessor::dump()
 {
 	glDeleteFramebuffers(1, &this->fbo);
-	glDeleteRenderbuffers(1, &this->rbo);
-	glDeleteTextures(1, &this->tex);
+	glDeleteTextures(1, &this->colTex);
+	glDeleteTextures(1, &this->depTex);
 }
 
 bool PostProcessor::isCreated()

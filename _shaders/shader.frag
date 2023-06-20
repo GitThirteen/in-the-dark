@@ -30,10 +30,6 @@ layout(location = 12) uniform float glossiness;
 // Texture
 layout(location = 13) uniform sampler2D tex;
 
-// Screen Properties
-layout(location = 14) uniform int screenWidth;
-layout(location = 15) uniform int screenHeight;
-
 out vec4 fragColor;
 
 // ************************************************************* //
@@ -91,38 +87,6 @@ vec3[2] calcPointLight(PointLight light, vec3 vNormal, vec3 viewDir) {
 }
 
 // =========== MAIN =========== //
-
-// Values taken from https://en.wikipedia.org/wiki/Canny_edge_detector
-int[25] gaussianFilter = int[] (
-	2,  4,  5,  4, 2,
-	4,  9, 12,  9, 4,
-	5, 12, 15, 12, 5,
-	4,  9, 12,  9, 4,
-	2,  4,  5,  4, 2
-);
-float gaussianFactor = 1.0 / 159.0;
-
-vec3 blurWithGaussian() {
-	float offX = 1.0f / float(screenWidth);
-	float offY = 1.0f / float(screenHeight);
-
-	vec2[25] offset5x5 = vec2[] (
-		vec2(-2*offX,  2*offY), vec2(-offX,  2*offY), vec2(0.0f,  2*offY), vec2(offX,  2*offY), vec2(2*offX,  2*offY),
-		vec2(-2*offX,    offY), vec2(-offX,    offY), vec2(0.0f,    offY), vec2(offX,    offY), vec2(2*offX,    offY),
-		vec2(-2*offX,    0.0f), vec2(-offX,    0.0f), vec2(0.0f,    0.0f), vec2(offX,    0.0f), vec2(2*offX,    0.0f),
-		vec2(-2*offX,   -offY), vec2(-offX,   -offY), vec2(0.0f,   -offY), vec2(offX,   -offY), vec2(2*offX,   -offY),
-		vec2(-2*offX, -2*offY), vec2(-offX, -2*offY), vec2(0.0f, -2*offY), vec2(offX, -2*offY), vec2(2*offX, -2*offY)
-	);
-
-	int i;
-	int size = gaussianFilter.length();
-	vec3 value = vec3(0.0f);
-	for (i = 0; i < size; i++) {
-		value += vec3(texture(tex, uvCoord + offset5x5[i])) * (gaussianFactor * gaussianFilter[i]);
-	}
-
-	return value;
-}
 
 void main() {
 	vec3 vertNormal = normalize(vertexNormal);

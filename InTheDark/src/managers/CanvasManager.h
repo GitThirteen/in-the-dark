@@ -22,8 +22,8 @@ bool isCreated();
 private:
 	GLuint vao;
 	GLuint fbo;
-	GLuint tex;
-	GLuint rbo;
+	GLuint colTex;
+	GLuint depTex;
 	GLuint shader;
 	bool created = false;
 

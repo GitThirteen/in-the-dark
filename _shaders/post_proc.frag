@@ -1,11 +1,12 @@
 #version 430
 
-in vec2 uvCoord;
+in vec2 uvCoords;
 
 layout(location = 14) uniform int screenWidth;
 layout(location = 15) uniform int screenHeight;
 
-uniform sampler2D tex;
+layout(location = 7) uniform sampler2D colorTex;
+layout(location = 8) uniform sampler2D depthTex;
 
 out vec4 fragColor;
 
@@ -37,11 +38,10 @@ void main() {
 
 	int i;
 	int size = laplacian.length();
-	vec3 edgeDetection = vec3(0.0f);
+	vec3 edgeData = vec3(0.0f);
 	for (i = 0; i < size; i++) {
-		edgeDetection += vec3(texture(tex, uvCoord + offset3x3[i])) * laplacian[i];
+		edgeData += vec3(texture(depthTex, uvCoords + offset3x3[i]).r) * laplacian[i];
 	}
 
-	vec4 t = texture(tex, uvCoord);
-	fragColor = vec4(edgeDetection, 1.0f);
+	fragColor = texture(colorTex, uvCoords);
 }
