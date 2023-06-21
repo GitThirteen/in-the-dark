@@ -11,7 +11,6 @@ struct ParticleSettings
 
 struct Particle
 {
-    float type;
     glm::vec3 pos;
     glm::vec3 color;
     glm::vec3 velocity;
@@ -25,15 +24,17 @@ public:
     ParticleSystem(const glm::vec3&);
 
     void render(int, const glm::mat4&, const glm::vec3&);
-    void update();
-
 private:
-    bool is_first;
-    uint16_t cur_vbuffer;
-    uint16_t cur_tfbuffer;
-    GLuint particle_buffer[2];
-    GLuint transform_feedback[2];
+    bool first = true;
+    uint16_t cur_vbuffer = 0;
+    uint16_t cur_tfbuffer = 1;
+    GLuint particle_vbuffer[2];
+    GLuint tfbuffer[2];
+    int time_millis = 0.0f;
     // TODO
 
     ParticleSettings settings;
+
+    void update(int);
+    void draw(const glm::mat4&, const glm::vec3&);
 };
