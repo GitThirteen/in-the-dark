@@ -38,6 +38,7 @@ int main(int argc, char** argv)
 	shaders.add(Shader::Vertex, "../_shaders/shader.vert");
 	shaders.add(Shader::Fragment, "../_shaders/shader.frag");
 	GLuint shader = shaders.create();
+	shader = shaders.link(shader);
 	shaders.use(shader);
 
 	events.setWindow(window);

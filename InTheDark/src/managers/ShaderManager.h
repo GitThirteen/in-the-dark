@@ -10,7 +10,8 @@
 enum Shader
 {
 	Vertex,
-	Fragment
+	Fragment,
+	Geometry
 };
 
 enum ShaderLocation {
@@ -40,11 +41,20 @@ enum ShaderBinding {
 	LIGHT_P_BUFFER		= 0
 };
 
+struct ShaderData
+{
+	GLuint shader;
+
+	std::string path = "";
+	uint32_t identifier;
+};
+
 class ShaderManager
 {
 public:
 	void add(Shader, std::string path);
 	GLuint create();
+	GLuint link(GLuint);
 	void use(GLuint);
 	void use(std::string);
 	void destroy(GLuint);
@@ -69,10 +79,15 @@ private:
 	ShaderManager();
 
 	std::unordered_map<std::string, GLuint> shaders;
-	std::string vert_sh_path = "";
-	std::string frag_sh_path = "";
-	GLuint cur_shader_program = 0;
 
+	ShaderData vertex_shader;
+	ShaderData fragment_shader;
+	ShaderData geometry_shader;
+
+	GLuint cur_shader_program = 0;
+	bool created = false;
+
+	GLuint create(Shader);
 	std::string read(const std::string&);
 	void compile(GLuint);
 	void linkProgram(GLuint);

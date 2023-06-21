@@ -22,7 +22,7 @@ void GameStateManager::draw()
 {
 	if (!canvas.post_processor.isCreated())
 	{
-		canvas.post_processor.create();
+		//canvas.post_processor.create();
 	}
 
 	//canvas.post_processor.bind();

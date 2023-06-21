@@ -7,59 +7,101 @@ void ShaderManager::add(Shader shader_type, std::string path)
 	switch (shader_type)
 	{
 		case Shader::Vertex:
-			this->vert_sh_path = path;
+			this->vertex_shader.path = path;
+			this->vertex_shader.identifier = GL_VERTEX_SHADER;
 			break;
 		case Shader::Fragment:
-			this->frag_sh_path = path;
+			this->fragment_shader.path = path;
+			this->fragment_shader.identifier = GL_FRAGMENT_SHADER;
+			break;
+		case Shader::Geometry:
+			this->geometry_shader.path = path;
+			this->geometry_shader.identifier = GL_GEOMETRY_SHADER;
 			break;
 	}
 }
 
+GLuint ShaderManager::create(Shader shader_type)
+{
+	ShaderData data;
+	if (shader_type == Shader::Vertex) data = this->vertex_shader;
+	else if (shader_type == Shader::Fragment) data = this->fragment_shader;
+	else if (shader_type == Shader::Geometry) data = this->geometry_shader;
+
+	GLuint shader = glCreateShader(data.identifier);
+	
+	auto shader_content = this->read(data.path);
+	auto* content = (const GLchar*)shader_content.c_str();
+
+	glShaderSource(shader, 1, &content, NULL);
+	this->compile(shader);
+
+	return shader;
+}
+
 GLuint ShaderManager::create()
 {
-	if (this->vert_sh_path.empty() || this->frag_sh_path.empty())
+	if (this->vertex_shader.path.empty() || this->fragment_shader.path.empty())
 	{
 		auto error_msg = "ShaderManager is missing shader(s) to create shader program. Please verify if shader paths for vert and frag have been set.";
 		LOG_F(ERROR, error_msg);
 		exit(EXIT_FAILURE);
 	}
 
-	/* ---- Shader Init ---- */
-
-	GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	auto vertContent = this->read(this->vert_sh_path);
-	auto fragContent = this->read(this->frag_sh_path);
-
-	auto* vert = (const GLchar*)vertContent.c_str();
-	glShaderSource(vertShader, 1, &vert, NULL);
-	this->compile(vertShader);
-
-	auto* frag = (const GLchar*)fragContent.c_str();
-	glShaderSource(fragShader, 1, &frag, NULL);
-	this->compile(fragShader);
-
-	/* ---- Program Init ---- */
-
 	GLuint program = glCreateProgram();
 
-	glAttachShader(program, vertShader);
-	glAttachShader(program, fragShader);
+	auto vert = create(Shader::Vertex);
+	this->vertex_shader.shader = vert;
+	glAttachShader(program, vert);
+
+	auto frag = create(Shader::Fragment);
+	this->fragment_shader.shader = frag;
+	glAttachShader(program, frag);
+
+	if (!this->geometry_shader.path.empty())
+	{
+		auto geom = create(Shader::Geometry);
+		this->geometry_shader.shader = geom;
+		glAttachShader(program, geom);
+	}
+
+	this->created = true;
+	return program;
+}
+
+GLuint ShaderManager::link(GLuint program)
+{
+	if (!this->created)
+	{
+		auto error_msg = "Shader program has not been created before linkage. Please create shaders via create() before linking them.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
+	}
+
+	if (this->vertex_shader.path.empty() || this->fragment_shader.path.empty())
+	{
+		auto error_msg = "Missing shaders for linking. Please make sure you first load all required shaders and call create() before linking.";
+		LOG_F(ERROR, error_msg);
+		exit(EXIT_FAILURE);
+	}
 
 	this->linkProgram(program);
 
-	glDetachShader(program, vertShader);
-	glDetachShader(program, fragShader);
+	glDetachShader(program, this->vertex_shader.shader);
+	glDetachShader(program, this->fragment_shader.shader);
+	if (!this->geometry_shader.path.empty()) glDetachShader(program, this->geometry_shader.shader);
 
-	this->shaders.insert({ util::split(util::split(this->vert_sh_path, "/").back(), ".")[0], program });
+	this->shaders.insert({ util::split(util::split(this->vertex_shader.path, "/").back(), ".")[0], program });
 
-	glDeleteShader(vertShader);
-	glDeleteShader(fragShader);
+	glDeleteShader(this->vertex_shader.shader);
+	glDeleteShader(this->fragment_shader.shader);
+	if (!this->geometry_shader.path.empty()) glDeleteShader(this->geometry_shader.shader);
 
-	this->vert_sh_path = "";
-	this->frag_sh_path = "";
+	this->vertex_shader.path = "";
+	this->fragment_shader.path = "";
+	this->geometry_shader.path = "";
 
+	this->created = false;
 	return program;
 }
 
