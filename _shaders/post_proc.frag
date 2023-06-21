@@ -43,5 +43,5 @@ void main() {
 		edgeData += vec3(texture(depthTex, uvCoords + offset3x3[i]).r) * laplacian[i];
 	}
 
-	fragColor = texture(colorTex, uvCoords);
+	fragColor = (texture(colorTex, uvCoords) + vec4(edgeData, 1.0f)) * vig;
 }

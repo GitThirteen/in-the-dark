@@ -25,7 +25,7 @@ void GameStateManager::draw()
 		canvas.post_processor.create();
 	}
 
-	canvas.post_processor.bind();
+	//canvas.post_processor.bind();
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -35,11 +35,11 @@ void GameStateManager::draw()
 		this->active_state->draw();
 	}
 
-	canvas.post_processor.unbind();
-	glClear(GL_COLOR_BUFFER_BIT);
+	//canvas.post_processor.unbind();
+	//glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 
-	canvas.post_processor.draw();
+	//canvas.post_processor.draw();
 	
 	glfwSwapBuffers(this->window);
 }

@@ -16,10 +16,12 @@
     <ClInclude Include="src\objects\GameAsset.h" />
     <ClInclude Include="src\objects\Level.h" />
     <ClInclude Include="src\objects\LightSource.h" />
+    <ClInclude Include="src\objects\ParticleSystem.h" />
     <ClInclude Include="src\objects\Player.h" />
     <ClInclude Include="src\states\GameState.h" />
     <ClCompile Include="src\objects\BBox.cpp" />
     <ClCompile Include="src\objects\LightSource.cpp" />
+    <ClCompile Include="src\objects\ParticleSystem.cpp" />
     <ClCompile Include="src\objects\Player.cpp" />
     <ClCompile Include="src\states\TestState.cpp" />
     <ClCompile Include="src\Main.cpp" />
