@@ -25,7 +25,7 @@ public:
     ParticleSystem();
     ParticleSystem(const glm::vec3&);
 
-    void render();
+    void render(const glm::mat4&, const glm::vec3&);
 private:
     bool first = true;
     uint16_t cur_vbuffer = 0;
@@ -37,7 +37,7 @@ private:
     ParticleSettings settings;
 
     void update();
-    void draw();
+    void draw(const glm::mat4&, const glm::vec3&);
 
     ShaderManager& shaders = ShaderManager::getInstance();
     Clock& clock = Clock::getInstance();

@@ -23,8 +23,8 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
     }
 
     shaders.add(Shader::Vertex, "../_shaders/particle_system.vert");
-    shaders.add(Shader::Fragment, "../_shaders/particle_system.frag");
     shaders.add(Shader::Geometry, "../_shaders/particle_system.geom");
+    shaders.add(Shader::Fragment, "../_shaders/particle_system.frag");
     GLuint shader = shaders.create();
 
     const GLchar* varyings[4];
@@ -35,12 +35,18 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
 
     glTransformFeedbackVaryings(shader, 4, varyings, GL_INTERLEAVED_ATTRIBS);
     shaders.link(shader);
+
+    shaders.add(Shader::Vertex, "../_shaders/billboard.vert");
+    shaders.add(Shader::Geometry, "../_shaders/billboard.geom");
+    shaders.add(Shader::Fragment, "../_shaders/billboard.frag");
+    shader = shaders.create();
+    shaders.link(shader);
 }
 
-void ParticleSystem::render()
+void ParticleSystem::render(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
     update();
-    draw();
+    draw(viewproj, cam_pos);
 
     this->cur_vbuffer = this->cur_tfbuffer;
     this->cur_tfbuffer = (this->cur_tfbuffer + 1) & 0x1;
@@ -86,16 +92,21 @@ void ParticleSystem::update()
     glDisableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
 }
 
-void ParticleSystem::draw()
+void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
-    // Maybe set camera pos and view-projection?
+    shaders.use("billboard");
+
+    shaders.set(ShaderLocation::VIEWPROJECTION_MAT, viewproj);
+    shaders.set(ShaderLocation::CAMERA_POSITION, cam_pos);
+
+    // Probably needs texture too?
 
     glDisable(GL_RASTERIZER_DISCARD);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[this->cur_tfbuffer]);
     
-    glVertexAttribPointer(ShaderLocation::PARTICLE_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)4);
-    glEnableVertexAttribArray(ShaderLocation::PARTICLE_POSITION);
+    glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)4);
+    glEnableVertexAttribArray(ShaderLocation::POSITION);
 
     glDrawTransformFeedback(GL_POINTS, this->tfbuffer[this->cur_tfbuffer]);
 

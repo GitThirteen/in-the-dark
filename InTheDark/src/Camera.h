@@ -29,10 +29,11 @@ struct CameraCoords
 class Camera
 {
 public:
+	CameraCoords coords;
+
 	Camera();
 	Camera(double);
 	Camera(glm::vec3&, glm::vec3&, glm::vec3&, double);
-	
 
 	void update(bool, glm::vec2, double);
 	void updatePosition(glm::vec3);
@@ -44,8 +45,7 @@ public:
 private:
 	double radius = 1.0;
 	bool locked = true;
-	
-	CameraCoords coords;
+
 	glm::mat4 view_mat;
 	glm::mat4 proj_mat;
 	glm::vec2 mouse_old;

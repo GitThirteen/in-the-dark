@@ -55,6 +55,9 @@
     <ClInclude Include="src\util\logger\loguru.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\_shaders\billboard.frag" />
+    <None Include="..\_shaders\billboard.geom" />
+    <None Include="..\_shaders\billboard.vert" />
     <None Include="..\_shaders\particle_system.frag" />
     <None Include="..\_shaders\particle_system.vert" />
     <None Include="..\_shaders\post_proc.frag" />

@@ -67,7 +67,7 @@ class TestState : public GameState
 			obj->asset.draw();
 		}
 
-		this->particles.render();
+		this->particles.render(camera.getViewProjMatrix(), camera.coords.origin);
 	}
 
 	void discard() override
