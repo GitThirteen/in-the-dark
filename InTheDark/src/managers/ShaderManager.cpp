@@ -21,24 +21,6 @@ void ShaderManager::add(Shader shader_type, std::string path)
 	}
 }
 
-GLuint ShaderManager::create(Shader shader_type)
-{
-	ShaderData data;
-	if (shader_type == Shader::Vertex) data = this->vertex_shader;
-	else if (shader_type == Shader::Fragment) data = this->fragment_shader;
-	else if (shader_type == Shader::Geometry) data = this->geometry_shader;
-
-	GLuint shader = glCreateShader(data.identifier);
-	
-	auto shader_content = this->read(data.path);
-	auto* content = (const GLchar*)shader_content.c_str();
-
-	glShaderSource(shader, 1, &content, NULL);
-	this->compile(shader);
-
-	return shader;
-}
-
 GLuint ShaderManager::create()
 {
 	if (this->vertex_shader.path.empty() || this->fragment_shader.path.empty())
@@ -67,6 +49,24 @@ GLuint ShaderManager::create()
 
 	this->created = true;
 	return program;
+}
+
+GLuint ShaderManager::create(Shader shader_type)
+{
+	ShaderData data;
+	if (shader_type == Shader::Vertex) data = this->vertex_shader;
+	else if (shader_type == Shader::Fragment) data = this->fragment_shader;
+	else if (shader_type == Shader::Geometry) data = this->geometry_shader;
+
+	GLuint shader = glCreateShader(data.identifier);
+
+	auto shader_content = this->read(data.path);
+	auto* content = (const GLchar*)shader_content.c_str();
+
+	glShaderSource(shader, 1, &content, NULL);
+	this->compile(shader);
+
+	return shader;
 }
 
 GLuint ShaderManager::link(GLuint program)

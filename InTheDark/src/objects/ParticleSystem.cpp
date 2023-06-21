@@ -22,15 +22,19 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
         glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, this->particle_vbuffer[i]);
     }
 
+    shaders.add(Shader::Vertex, "../_shaders/particle_system.vert");
+    shaders.add(Shader::Fragment, "../_shaders/particle_system.frag");
+    shaders.add(Shader::Geometry, "../_shaders/particle_system.geom");
+    GLuint shader = shaders.create();
+
     const GLchar* varyings[4];
     varyings[0] = "positionOut";
     varyings[1] = "velocityOut";
     varyings[2] = "ageOut";
     varyings[3] = "colorOut";
 
-    glTransformFeedbackVaryings(shaders.getCurrentProgram(), 4, varyings, GL_INTERLEAVED_ATTRIBS);
-
-    glLinkProgram(shaders.getCurrentProgram()); // ???
+    glTransformFeedbackVaryings(shader, 4, varyings, GL_INTERLEAVED_ATTRIBS);
+    shaders.link(shader);
 }
 
 void ParticleSystem::render()
@@ -44,6 +48,8 @@ void ParticleSystem::render()
 
 void ParticleSystem::update()
 {
+    shaders.use("particle_system");
+
     shaders.set(ShaderLocation::DELTA_TIME, clock.getDeltaTimeAsMillis());
 
     glEnable(GL_RASTERIZER_DISCARD);
