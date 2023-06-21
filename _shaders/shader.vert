@@ -18,7 +18,6 @@ out vec2 uvCoord;
 out vec4 vertexColor;
 
 // Particle System
-out float pType;
 out vec3 pPosition;
 out vec3 pVelocity;
 out float pAge;
@@ -32,7 +31,6 @@ void main() {
 	uvCoord = uv;
 	vertexColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	pType = particleType;
 	pPosition = particlePosition;
 	pVelocity = particleVelocity;
 	pAge = particleAge;

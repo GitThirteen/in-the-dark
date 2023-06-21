@@ -66,12 +66,14 @@ GLuint ShaderManager::create()
 void ShaderManager::use(GLuint shader)
 {
 	glUseProgram(shader);
+	this->cur_shader_program = shader;
 }
 
 void ShaderManager::use(std::string shader_name)
 {
 	try {
 		GLuint shader = this->shaders.at(shader_name);
+		this->cur_shader_program = shader;
 		glUseProgram(shader);
 	}
 	catch (std::out_of_range e)
@@ -92,6 +94,11 @@ void ShaderManager::destroyAll()
 	{
 		glDeleteProgram(shader.second);
 	}
+}
+
+GLuint ShaderManager::getCurrentProgram()
+{
+	return this->cur_shader_program;
 }
 
 void ShaderManager::set(ShaderLocation location, glm::mat4 value)

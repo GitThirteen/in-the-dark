@@ -24,8 +24,9 @@ void main() {
 
     gl_Position = vec4(posIn + velIn * dt, gl_Position.w);
     positionOut = gl_Position.xyz;
-    colorOut = colIn;
     velocityOut = velIn - vec3(0.0, 9.81, 0.0) * dt;
+    ageOut = ageIn;
+    colorOut = colIn;
 
     EmitVertex();
     EndPrimitive();

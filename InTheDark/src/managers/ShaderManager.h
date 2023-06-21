@@ -56,6 +56,8 @@ public:
 		return instance;
 	};
 
+	GLuint getCurrentProgram();
+
 	void set(ShaderLocation, glm::mat4);
 	void set(ShaderLocation, glm::vec3);
 	void set(ShaderLocation, float);
@@ -69,6 +71,7 @@ private:
 	std::unordered_map<std::string, GLuint> shaders;
 	std::string vert_sh_path = "";
 	std::string frag_sh_path = "";
+	GLuint cur_shader_program = 0;
 
 	std::string read(const std::string&);
 	void compile(GLuint);

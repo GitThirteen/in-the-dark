@@ -2,6 +2,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <GL/glew.h>
 #include <vector>
+#include "../managers/ShaderManager.h"
 
 struct ParticleSettings
 {
@@ -37,4 +38,6 @@ private:
 
     void update(int);
     void draw(const glm::mat4&, const glm::vec3&);
+
+    ShaderManager& shaders = ShaderManager::getInstance();
 };
