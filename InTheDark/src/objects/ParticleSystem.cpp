@@ -7,9 +7,9 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
     std::vector<Particle> particles = std::vector<Particle>(this->settings.max_particles);
 
     particles[0].pos = pos;
-    particles[0].color = glm::vec3(1.0f, 0.0f, 0.0f);
     particles[0].velocity = glm::vec3(0.0f, 0.0001f, 0.0f);
     particles[0].lifetime = 0.0f;
+    particles[0].color = glm::vec3(1.0f, 0.0f, 0.0f);
 
     glGenTransformFeedbacks(2, this->tfbuffer);
     glGenBuffers(2, this->particle_vbuffer);
@@ -33,20 +33,18 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
     glLinkProgram(shaders.getCurrentProgram()); // ???
 }
 
-void ParticleSystem::render(int dt, const glm::mat4& vp, const glm::vec3& cam_pos)
+void ParticleSystem::render()
 {
-    this->time_millis += dt;
-
-    update(dt);
-    draw(vp, cam_pos);
+    update();
+    draw();
 
     this->cur_vbuffer = this->cur_tfbuffer;
     this->cur_tfbuffer = (this->cur_tfbuffer + 1) & 0x1;
 }
 
-void ParticleSystem::update(int dt)
+void ParticleSystem::update()
 {
-    shaders.set(ShaderLocation::DELTA_TIME, dt);
+    shaders.set(ShaderLocation::DELTA_TIME, clock.getDeltaTimeAsMillis());
 
     glEnable(GL_RASTERIZER_DISCARD);
 
@@ -55,7 +53,12 @@ void ParticleSystem::update(int dt)
 
     glVertexAttribPointer(ShaderLocation::PARTICLE_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_POSITION);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_VELOCITY, 3, );
+    glVertexAttribPointer(ShaderLocation::PARTICLE_VELOCITY, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)12);
+    glEnableVertexAttribArray(ShaderLocation::PARTICLE_VELOCITY);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_AGE, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)16);
+    glEnableVertexAttribArray(ShaderLocation::PARTICLE_AGE);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_COLOR, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)28);
+    glEnableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
 
     glBeginTransformFeedback(GL_POINTS);
 
@@ -77,7 +80,7 @@ void ParticleSystem::update(int dt)
     glDisableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
 }
 
-void ParticleSystem::draw(const glm::mat4& vp, const glm::vec3& cam_pos)
+void ParticleSystem::draw()
 {
     // Maybe set camera pos and view-projection?
 

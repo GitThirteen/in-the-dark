@@ -2,10 +2,12 @@
 #include <typeinfo>
 #include <iostream>
 #include <string>
+#include "../objects/ParticleSystem.h"
 
 class TestState : public GameState
 {
 	LevelWrapper level;
+	//ParticleSystem particles = ParticleSystem(glm::vec3(1.0f));
 
 	void init() override
 	{
@@ -64,6 +66,8 @@ class TestState : public GameState
 		{
 			obj->asset.draw();
 		}
+
+		//this->particles.render();
 	}
 
 	void discard() override

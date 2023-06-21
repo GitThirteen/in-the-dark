@@ -3,6 +3,8 @@
 #include <chrono>
 #include <thread>
 
+using namespace std::chrono_literals;
+
 class Clock
 {
 public:
@@ -10,6 +12,11 @@ public:
 	 * @return The time passed between the last frame and the current one in fractions of a second (e.g., 0.0015).
 	*/
 	double getDeltaTime();
+
+	/**
+	 * @return The time passed between the last frame and the current one as integer in milliseconds (e.g., 15).
+	*/
+	int getDeltaTimeAsMillis();
 
 	/**
 	 * @return The FPS as int based on the delta time.

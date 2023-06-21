@@ -5,6 +5,12 @@ double Clock::getDeltaTime()
 	return this->dt.count();
 }
 
+int Clock::getDeltaTimeAsMillis()
+{
+	auto cast_dt = std::chrono::duration_cast<std::chrono::milliseconds>(this->dt);
+	return cast_dt.count();
+}
+
 int Clock::getFPS()
 {
 	int fps = 1 / this->dt.count();
