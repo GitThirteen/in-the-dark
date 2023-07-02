@@ -25,8 +25,6 @@ void main() {
 	float vig = smoothstep(0.95, 0.3, len);
 
 	// Contour via Laplacian
-	// Personal Note:
-	// Maybe switch to Canny + Otsu's in the future, but for now, this is (hopefully) good enough.
 	float offX = 1.0f / float(screenWidth);
 	float offY = 1.0f / float(screenHeight);
 
@@ -43,5 +41,5 @@ void main() {
 		edgeData += vec3(texture(depthTex, uvCoords + offset3x3[i]).r) * laplacian[i];
 	}
 
-	fragColor = (texture(colorTex, uvCoords) + vec4(edgeData, 1.0f)) * vig;
+	fragColor = texture(colorTex, uvCoords);
 }

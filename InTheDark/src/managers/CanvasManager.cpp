@@ -34,7 +34,6 @@ void PostProcessor::create()
 	auto width = settings.get<int>("width");
 	auto height = settings.get<int>("height");
 
-	// Create textures
 	// Color texture
 	GLuint colorTex;
 	glGenTextures(1, &colorTex);
@@ -58,7 +57,7 @@ void PostProcessor::create()
 
 	this->depTex = depthTex;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -87,7 +86,7 @@ void PostProcessor::create()
 	// Unbind
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	/* ------------------------- */
 	/* ---- QUAD FOR SCREEN ---- */
@@ -138,12 +137,13 @@ void PostProcessor::create()
 	shaders.add(Shader::Vertex, "../_shaders/post_proc.vert");
 	shaders.add(Shader::Fragment, "../_shaders/post_proc.frag");
 	this->shader = shaders.create();
+	shaders.link(this->shader);
 }
 
 void PostProcessor::draw()
 {
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glUseProgram(this->shader);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	shaders.use(this->shader);
 	glBindVertexArray(this->vao);
 
 	int screen_width = SettingsManager::getInstance().get<int>("width");

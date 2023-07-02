@@ -25,7 +25,7 @@ layout(location = 10) uniform vec3 camPosition;
 
 // Mesh Properties
 layout(location = 11) uniform vec3 reflection; // .x (ambient) .y (diffuse) .z (specular)
-layout(location = 12) uniform float glossiness;
+layout(location = 12) uniform int glossiness;
 
 // Texture
 layout(location = 13) uniform sampler2D tex;

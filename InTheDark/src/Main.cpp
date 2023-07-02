@@ -109,8 +109,11 @@ GLFWwindow* initGL()
 
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_CULL_FACE);
-	//glEnable(GL_DEBUG_OUTPUT);
-	//glDebugMessageCallback(MessageCallback, 0);
+
+	#ifdef DEBUG
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallback, 0);
+	#endif
 
 	glViewport(0, 0, width, height);
 
