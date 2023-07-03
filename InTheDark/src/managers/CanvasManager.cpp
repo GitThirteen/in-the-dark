@@ -39,7 +39,7 @@ void PostProcessor::create()
 	glGenTextures(1, &colorTex);
 	glBindTexture(GL_TEXTURE_2D, colorTex);
 
-	this->colTex = colorTex;
+	this->col_tex = colorTex;
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
@@ -55,14 +55,16 @@ void PostProcessor::create()
 	glGenTextures(1, &depthTex);
 	glBindTexture(GL_TEXTURE_2D, depthTex);
 
-	this->depTex = depthTex;
+	this->dep_tex = depthTex;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
 
@@ -140,10 +142,18 @@ void PostProcessor::create()
 	shaders.link(this->shader);
 }
 
+bool PostProcessor::isCreated()
+{
+	return this->created;
+}
+
 void PostProcessor::draw()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // uncomment for debugging
+
+	GLuint old_shader = shaders.getCurrentProgram();
 	shaders.use(this->shader);
+
 	glBindVertexArray(this->vao);
 
 	int screen_width = SettingsManager::getInstance().get<int>("width");
@@ -153,17 +163,18 @@ void PostProcessor::draw()
 	shaders.set(ShaderLocation::SCREEN_HEIGHT, screen_height);
 	shaders.set(ShaderLocation::PPS_COLOR_TEXTURE, 0);
 	shaders.set(ShaderLocation::PPS_DEPTH_TEXTURE, 1);
-	
+
 	glActiveTexture(GL_TEXTURE0 + 0);
-	glBindTexture(GL_TEXTURE_2D, this->colTex);
+	glBindTexture(GL_TEXTURE_2D, this->col_tex);
 
 	glActiveTexture(GL_TEXTURE0 + 1);
-	glBindTexture(GL_TEXTURE_2D, this->depTex);
+	glBindTexture(GL_TEXTURE_2D, this->dep_tex);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glBindVertexArray(0);
-	glUseProgram(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	shaders.use(old_shader);
 }
 
 void PostProcessor::bind()
@@ -179,11 +190,6 @@ void PostProcessor::unbind()
 void PostProcessor::dump()
 {
 	glDeleteFramebuffers(1, &this->fbo);
-	glDeleteTextures(1, &this->colTex);
-	glDeleteTextures(1, &this->depTex);
-}
-
-bool PostProcessor::isCreated()
-{
-	return this->created;
+	glDeleteTextures(1, &this->col_tex);
+	glDeleteTextures(1, &this->dep_tex);
 }

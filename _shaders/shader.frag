@@ -61,7 +61,7 @@ float calcIntensity(float value) {
 	if (value > 0.8) return 1.0;
 	if (value > 0.5) return 0.8;
 	if (value > 0.2) return 0.5;
-	if (value > 0.0) return 0.2;
+	if (value > 0.0) return 0.1;
 	return 0.0;
 }
 

@@ -13,17 +13,17 @@
 struct PostProcessor
 {
 void create();
+bool isCreated();
 void draw();
 void bind();
 void unbind();
 void dump();
-bool isCreated();
 
 private:
 	GLuint vao;
 	GLuint fbo;
-	GLuint colTex;
-	GLuint depTex;
+	GLuint col_tex;
+	GLuint dep_tex;
 	GLuint shader;
 	bool created = false;
 
