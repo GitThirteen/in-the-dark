@@ -16,6 +16,13 @@ int[9] laplacian = int[] (
 	-1, -1, -1
 );
 
+float linearize(float depth) {
+	float zNear = 0.0001f;
+	float zFar = 1.0f;
+
+	return zNear * zFar / (zFar + depth * (zNear - zFar));
+}
+
 void main() {
 	// Vignette
 	vec2 dims = vec2(screenWidth, screenHeight);
@@ -38,8 +45,9 @@ void main() {
 	int size = laplacian.length();
 	vec3 edgeData = vec3(0.0f);
 	for (i = 0; i < size; i++) {
-		edgeData += vec3(texture(depthTex, uvCoords + offset3x3[i]).r) * laplacian[i];
+		edgeData += vec3(linearize(texture(depthTex, uvCoords + offset3x3[i]).r)) * laplacian[i];
 	}
+	edgeData = vec3(1.0f) - abs(edgeData); // Invert colors and use abs for better lines
 
-	fragColor = (texture(colorTex, uvCoords) + vec4(edgeData, 1.0)) * vig;
+	fragColor = texture(colorTex, uvCoords) * vec4(edgeData, 1.0) * vig;
 }
