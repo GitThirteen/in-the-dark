@@ -55,15 +55,15 @@
     <ClInclude Include="src\util\logger\loguru.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\_shaders\billboard.frag" />
-    <None Include="..\_shaders\billboard.geom" />
-    <None Include="..\_shaders\billboard.vert" />
-    <None Include="..\_shaders\particle_system.frag" />
-    <None Include="..\_shaders\particle_system.vert" />
+    <None Include="..\_shaders\ps_billboard.frag" />
+    <None Include="..\_shaders\ps_billboard.geom" />
+    <None Include="..\_shaders\ps_billboard.vert" />
+    <None Include="..\_shaders\ps_default.frag" />
+    <None Include="..\_shaders\ps_default.vert" />
     <None Include="..\_shaders\post_proc.frag" />
     <None Include="..\_shaders\post_proc.vert" />
     <None Include="..\_shaders\shader.frag" />
-    <None Include="..\_shaders\particle_system.geom" />
+    <None Include="..\_shaders\ps_default.geom" />
     <None Include="..\_shaders\shader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

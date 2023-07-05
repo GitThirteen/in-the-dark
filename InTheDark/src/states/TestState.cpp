@@ -7,7 +7,7 @@
 class TestState : public GameState
 {
 	LevelWrapper level;
-	//ParticleSystem particles = ParticleSystem(glm::vec3(1.0f));
+	ParticleSystem particles = ParticleSystem(glm::vec3(1.0f));
 
 	void init() override
 	{
@@ -67,7 +67,7 @@ class TestState : public GameState
 			obj->asset.draw();
 		}
 
-		//this->particles.render(camera.getViewProjMatrix(), camera.coords.origin);
+		this->particles.render(camera.getViewProjMatrix(), camera.coords.origin);
 	}
 
 	void discard() override

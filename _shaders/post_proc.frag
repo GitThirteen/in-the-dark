@@ -41,10 +41,9 @@ void main() {
 		vec2(-offX, -offY), vec2(0.0f, -offY), vec2(offX, -offY)
 	);
 
-	int i;
 	int size = laplacian.length();
 	vec3 edgeData = vec3(0.0f);
-	for (i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		edgeData += vec3(linearize(texture(depthTex, uvCoords + offset3x3[i]).r)) * laplacian[i];
 	}
 	edgeData = vec3(1.0f) - abs(edgeData); // Invert colors and use abs for better lines

@@ -16,15 +16,15 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
 
     for (uint8_t i = 0; i < 2; i++)
     {
-        glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[i]);
         glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, this->tfbuffer[i]);
+        glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[i]);
         glBufferData(GL_ARRAY_BUFFER, particles.size(), &particles.front(), GL_DYNAMIC_DRAW);
         glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, this->particle_vbuffer[i]);
     }
 
-    shaders.add(Shader::Vertex, "../_shaders/particle_system.vert");
-    shaders.add(Shader::Geometry, "../_shaders/particle_system.geom");
-    shaders.add(Shader::Fragment, "../_shaders/particle_system.frag");
+    shaders.add(Shader::Vertex, "../_shaders/ps_default.vert");
+    shaders.add(Shader::Geometry, "../_shaders/ps_default.geom");
+    shaders.add(Shader::Fragment, "../_shaders/ps_default.frag");
     GLuint shader = shaders.create();
 
     const GLchar* varyings[4];
@@ -36,9 +36,9 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
     glTransformFeedbackVaryings(shader, 4, varyings, GL_INTERLEAVED_ATTRIBS);
     shaders.link(shader);
 
-    shaders.add(Shader::Vertex, "../_shaders/billboard.vert");
-    shaders.add(Shader::Geometry, "../_shaders/billboard.geom");
-    shaders.add(Shader::Fragment, "../_shaders/billboard.frag");
+    shaders.add(Shader::Vertex, "../_shaders/ps_billboard.vert");
+    shaders.add(Shader::Geometry, "../_shaders/ps_billboard.geom");
+    shaders.add(Shader::Fragment, "../_shaders/ps_billboard.frag");
     shader = shaders.create();
     shaders.link(shader);
 }
@@ -54,22 +54,24 @@ void ParticleSystem::render(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 
 void ParticleSystem::update()
 {
-    shaders.use("particle_system");
+    shaders.use("ps_default");
 
-    shaders.set(ShaderLocation::DELTA_TIME, clock.getDeltaTimeAsMillis());
+    shaders.set(ShaderLocation::DELTA_TIME, (float) clock.getDeltaTimeAsMillis());
 
     glEnable(GL_RASTERIZER_DISCARD);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[this->cur_vbuffer]);
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, this->tfbuffer[this->cur_tfbuffer]);
 
-    glVertexAttribPointer(ShaderLocation::PARTICLE_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
+    auto stride = sizeof(Particle);
+
+    glVertexAttribPointer(ShaderLocation::PARTICLE_POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_POSITION);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_VELOCITY, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)12);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_VELOCITY, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)12);
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_VELOCITY);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_AGE, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)16);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_AGE, 1, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)16);
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_AGE);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_COLOR, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)28);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_COLOR, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)28);
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
 
     glBeginTransformFeedback(GL_POINTS);
@@ -94,7 +96,7 @@ void ParticleSystem::update()
 
 void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
-    shaders.use("billboard");
+    shaders.use("ps_billboard");
 
     shaders.set(ShaderLocation::VIEWPROJECTION_MAT, viewproj);
     shaders.set(ShaderLocation::CAMERA_POSITION, cam_pos);
