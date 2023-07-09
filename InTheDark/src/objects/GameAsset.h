@@ -16,6 +16,7 @@ enum AssetType
 	TORCH,
 	TREASURE,
 	PLAYER,
+	SMOKE,
 	UNDEFINED // we only use this one for iterating, it doesn't actually exist, do NOT use it for the love of god
 };
 

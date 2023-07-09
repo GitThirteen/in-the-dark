@@ -7,7 +7,8 @@
 class TestState : public GameState
 {
 	LevelWrapper level;
-	ParticleSystem particles = ParticleSystem(glm::vec3(1.0f));
+	// Awful
+	ParticleSystem particles = ParticleSystem(assets.getAsset(AssetType::SMOKE).texture, glm::vec3(0.0f, 1.0f, -5.0f));
 
 	void init() override
 	{

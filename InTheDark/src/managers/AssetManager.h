@@ -27,13 +27,15 @@
 typedef std::vector<std::shared_ptr<lightSource::Point>> PointLights;
 typedef std::vector<std::shared_ptr<GameObject>> GameObjects;
 
+// TODO: Properly separate objects from textures so they can fetched by themselves if needed
 static const std::unordered_map<AssetType, std::string> ASSET_PATHS = {
 	{ AssetType::CRATE,	"../_assets/objects/wooden_crate" },
 	{ AssetType::STONE,	"../_assets/objects/stone" },
 	{ AssetType::SAND, "../_assets/objects/sand" },
 	{ AssetType::TORCH,	"../_assets/objects/torch" },
 	{ AssetType::TREASURE, "../_assets/objects/treasure_chest" },
-	{ AssetType::PLAYER,	"../_assets/objects/player" }
+	{ AssetType::PLAYER,	"../_assets/objects/player" },
+	{ AssetType::SMOKE, "../_assets/objects/part_smoke" }
 };
 
 static const std::vector<std::string> LVL_PATHS = {

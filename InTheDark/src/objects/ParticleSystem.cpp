@@ -1,9 +1,12 @@
 #include "ParticleSystem.h"
 
-ParticleSystem::ParticleSystem() : ParticleSystem(glm::vec3(0.0f)) { };
+ParticleSystem::ParticleSystem() : ParticleSystem({ }, glm::vec3(0.0f)) { };
 
-ParticleSystem::ParticleSystem(const glm::vec3& pos)
+ParticleSystem::ParticleSystem(const asset::Texture& texture, const glm::vec3& pos)
 {
+    this->settings.texture = texture;
+    this->settings.initial_position = pos;
+
     std::vector<Particle> particles = std::vector<Particle>(this->settings.max_particles);
 
     particles[0].pos = pos;
@@ -67,9 +70,11 @@ void ParticleSystem::update()
 {
     shaders.use("ps_default");
 
-    shaders.set(ShaderLocation::DELTA_TIME, (float) clock.getDeltaTimeAsMillis());
+    shaders.set(ShaderLocation::DELTA_TIME, (float) clock.getDeltaTime());
+    shaders.set(ShaderLocation::PARTICLE_LIFETIME, this->settings.particle_lifetime);
+    shaders.set(ShaderLocation::PARTICLE_SYS_POS, this->settings.initial_position);
 
-    // Probably needs texture too?
+    this->settings.texture.bind();
 
     glBindVertexArray(this->vao);
     glEnable(GL_RASTERIZER_DISCARD);
@@ -108,6 +113,7 @@ void ParticleSystem::update()
     glDisableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
 
     glBindVertexArray(0);
+    this->settings.texture.unbind();
 }
 
 void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
@@ -117,18 +123,19 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
     shaders.set(ShaderLocation::VIEWPROJECTION_MAT, viewproj);
     shaders.set(ShaderLocation::CAMERA_POSITION, cam_pos);
 
-    // Probably needs texture too?
+    this->settings.texture.bind();
 
     glBindVertexArray(this->vao);
     glDisable(GL_RASTERIZER_DISCARD);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[this->cur_tfbuffer]);
     
-    glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const GLvoid*)4);
+    glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(ShaderLocation::POSITION);
 
     glDrawTransformFeedback(GL_POINTS, this->tfbuffer[this->cur_tfbuffer]);
 
     glBindVertexArray(0);
-    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(ShaderLocation::POSITION);
+    this->settings.texture.unbind();
 }

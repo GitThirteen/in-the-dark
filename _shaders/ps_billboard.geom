@@ -7,7 +7,7 @@ layout(max_vertices = 4) out;
 layout(location = 4) uniform mat4 viewProjMat;
 layout(location = 10) uniform vec3 camPos;
 
-uniform float particleSize;
+uniform float particleSize; // TODO SET!!!
 
 out vec2 vertexUV;
 
@@ -29,6 +29,7 @@ void main() {
     EmitVertex();
 
     pos.y -= particleSize;
+    pos += right;
     gl_Position = viewProjMat * vec4(pos, 1.0);
     vertexUV = vec2(1.0, 0.0);
     EmitVertex();

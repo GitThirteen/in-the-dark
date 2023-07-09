@@ -41,7 +41,7 @@ asset::Data AssetManager::loadObj(const std::string& path)
 	std::ifstream file(path, std::ios::in);
 	if (!file) // operator! is overloaded, see https://cplusplus.com/reference/ios/ios/operator_not/
 	{
-		LOG_F(ERROR, "Unable to open object file specified at path %s.", path.c_str());
+		LOG_F(WARNING, "Unable to open object file specified at path %s.", path.c_str());
 		return { };
 	}
 
