@@ -11,6 +11,16 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
     particles[0].lifetime = 0.0f;
     particles[0].color = glm::vec3(1.0f, 0.0f, 0.0f);
 
+    /* ---- Create VAO and bind it ---- */
+
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    this->vao = vao;
+
+    /* ---- Create 2 array buffers for particles and 2 transform feedback buffers ---- */
+
     glGenTransformFeedbacks(2, this->tfbuffer);
     glGenBuffers(2, this->particle_vbuffer);
 
@@ -27,6 +37,7 @@ ParticleSystem::ParticleSystem(const glm::vec3& pos)
     shaders.add(Shader::Fragment, "../_shaders/ps_default.frag");
     GLuint shader = shaders.create();
 
+    // The out variables of the geometry shader
     const GLchar* varyings[4];
     varyings[0] = "positionOut";
     varyings[1] = "velocityOut";
@@ -58,6 +69,9 @@ void ParticleSystem::update()
 
     shaders.set(ShaderLocation::DELTA_TIME, (float) clock.getDeltaTimeAsMillis());
 
+    // Probably needs texture too?
+
+    glBindVertexArray(this->vao);
     glEnable(GL_RASTERIZER_DISCARD);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[this->cur_vbuffer]);
@@ -67,11 +81,11 @@ void ParticleSystem::update()
 
     glVertexAttribPointer(ShaderLocation::PARTICLE_POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_POSITION);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_VELOCITY, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)12);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_VELOCITY, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(3 * sizeof(float)));
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_VELOCITY);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_AGE, 1, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)16);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_AGE, 1, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(6 * sizeof(float)));
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_AGE);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_COLOR, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)28);
+    glVertexAttribPointer(ShaderLocation::PARTICLE_COLOR, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(7 * sizeof(float)));
     glEnableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
 
     glBeginTransformFeedback(GL_POINTS);
@@ -92,6 +106,8 @@ void ParticleSystem::update()
     glDisableVertexAttribArray(ShaderLocation::PARTICLE_VELOCITY);
     glDisableVertexAttribArray(ShaderLocation::PARTICLE_AGE);
     glDisableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
+
+    glBindVertexArray(0);
 }
 
 void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
@@ -103,6 +119,7 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 
     // Probably needs texture too?
 
+    glBindVertexArray(this->vao);
     glDisable(GL_RASTERIZER_DISCARD);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[this->cur_tfbuffer]);
@@ -112,5 +129,6 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 
     glDrawTransformFeedback(GL_POINTS, this->tfbuffer[this->cur_tfbuffer]);
 
+    glBindVertexArray(0);
     glDisableVertexAttribArray(0);
 }

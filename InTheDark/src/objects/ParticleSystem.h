@@ -28,6 +28,7 @@ public:
     void render(const glm::mat4&, const glm::vec3&);
 private:
     bool first = true;
+    GLuint vao = 0;
     uint16_t cur_vbuffer = 0;
     uint16_t cur_tfbuffer = 1;
     GLuint particle_vbuffer[2];

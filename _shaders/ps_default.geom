@@ -4,7 +4,7 @@ layout(points) in;
 layout(points) out;
 layout(max_vertices = 60) out;
 
-layout(location = 16) uniform float dt; // float?
+layout(location = 16) uniform float dt;
 
 in vec3 pPosition[];
 in vec3 pVelocity[];
