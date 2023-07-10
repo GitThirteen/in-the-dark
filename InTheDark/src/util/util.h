@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <cctype>
 #include "logger/loguru.hpp"
+#include <random>
 
 class is
 {
@@ -156,4 +157,34 @@ public:
 
 		return "";
 	};
+
+	/**
+	 * @brief Generates a randomly generated number between 0.0f and the specified upper boundary floating point value.
+	 * @param upper The upper boundary
+	 * @return A randomly generated float between [0.0f, upper).
+	*/
+	static float random(double upper)
+	{
+		return random(0.0, upper);
+	}
+
+	/**
+	 * @brief Generates a randomly generated number two specified boundary floating point values.
+	 * @param lower The lower boundary
+	 * @param upper The upper boundary (upper >= lower)
+	 * @return A randomly generated float between [lower, upper).
+	*/
+	static float random(double lower, double upper)
+	{
+		if (upper < lower)
+		{
+			LOG_F(ERROR, "Cannot generate random number, upper is smaller than lower. Returning 0.");
+			return 0.0f;
+		}
+
+		std::random_device rd;
+		std::mt19937 rng(rd());
+		std::uniform_real_distribution<> distribution(lower, upper);
+		return distribution(rng);
+	}
 };

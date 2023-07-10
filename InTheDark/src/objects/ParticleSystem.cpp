@@ -59,6 +59,8 @@ ParticleSystem::ParticleSystem(const asset::Texture& texture, const glm::vec3& p
 
 void ParticleSystem::render(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
+    this->elapsedTime += clock.getDeltaTime();
+
     update();
     draw(viewproj, cam_pos);
 
@@ -70,9 +72,12 @@ void ParticleSystem::update()
 {
     shaders.use("ps_default");
 
+    bool gen_particle = this->elapsedTime >= this->settings.emit_rate;
+
     shaders.set(ShaderLocation::DELTA_TIME, (float) clock.getDeltaTime());
     shaders.set(ShaderLocation::PARTICLE_LIFETIME, this->settings.lifetime);
-    shaders.set(ShaderLocation::PARTICLE_SYS_POS, this->settings.initial_position);
+    shaders.set(ShaderLocation::PS_POSITION, this->settings.initial_position);
+    shaders.set(ShaderLocation::PS_GEN_FLAG, gen_particle);
 
     this->settings.texture.bind();
 
@@ -114,6 +119,10 @@ void ParticleSystem::update()
 
     glBindVertexArray(0);
     this->settings.texture.unbind();
+
+    if (gen_particle) {
+        this->elapsedTime = 0.0f;
+    }
 }
 
 void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
@@ -123,6 +132,7 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
     shaders.set(ShaderLocation::VIEWPROJECTION_MAT, viewproj);
     shaders.set(ShaderLocation::CAMERA_POSITION, cam_pos);
     shaders.set(ShaderLocation::PARTICLE_SIZE, this->settings.size);
+    shaders.set(ShaderLocation::TEXTURE, this->settings.texture.tex_unit);
 
     this->settings.texture.bind();
 
