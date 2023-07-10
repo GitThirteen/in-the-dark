@@ -61,14 +61,45 @@ class TestState : public GameState
 
 	void draw() override
 	{
+		if (!canvas.post_processor.isCreated())
+		{
+			canvas.post_processor.create();
+		}
+
+		// First pass: Render stage + background
+
 		canvas.clear(24, 34, 33);
 
+		canvas.post_processor.bind();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+
+		std::shared_ptr<GameObject> player;
 		for (auto& obj : this->level.data)
 		{
+			if (obj->asset.type == AssetType::PLAYER)
+			{
+				player = obj;
+			}
+
 			obj->asset.draw();
 		}
 
+		// Second pass: Render character with post processing
+
+		player->asset.draw();
+
+		canvas.post_processor.unbind();
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
+
+		canvas.post_processor.draw();
+
+		// Third pass: Render particles
+
 		this->particles.render(camera.getViewProjMatrix(), camera.coords.origin);
+
+		canvas.window.swapBuffers();
 	}
 
 	void discard() override

@@ -3,6 +3,7 @@
 #include "managers/GameStateManager.h"
 #include "managers/SettingsManager.h"
 #include "managers/ShaderManager.h"
+#include "managers/CanvasManager.h"
 
 #include "states/TestState.cpp"
 #include "util/util.h"
@@ -23,6 +24,7 @@ GameStateManager& game = GameStateManager::getInstance();
 SettingsManager& settings = SettingsManager::getInstance();
 ShaderManager& shaders = ShaderManager::getInstance();
 EventHandler& events = EventHandler::getInstance();
+CanvasManager& canvas = CanvasManager::getInstance();
 
 /* ---------------------------- */
 // Main
@@ -33,7 +35,7 @@ int main(int argc, char** argv)
 	setupLogger();
 
 	auto window = initGL();
-	game.setWindow(window);
+	canvas.window.set(window);
 
 	shaders.add(Shader::Vertex, "../_shaders/shader.vert");
 	shaders.add(Shader::Fragment, "../_shaders/shader.frag");
@@ -41,7 +43,6 @@ int main(int argc, char** argv)
 	shader = shaders.link(shader);
 	shaders.use(shader);
 
-	events.setWindow(window);
 	events.mouse.enableScrollCallback();
 
 	auto test_state = std::make_unique<TestState>();

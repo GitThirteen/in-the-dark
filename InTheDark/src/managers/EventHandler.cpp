@@ -9,25 +9,20 @@ void EventHandler::poll()
 
 double InternalMouseHandler::offset = 20;
 
-InternalMouseHandler::InternalMouseHandler(GLFWwindow* window)
-{
-	this->window = window;
-}
-
 bool InternalMouseHandler::pressed(int button)
 {
-	return glfwGetMouseButton(this->window, button) == GLFW_PRESS;
+	return glfwGetMouseButton(canvas.window.get(), button) == GLFW_PRESS;
 }
 
 bool InternalMouseHandler::released(int button)
 {
-	return glfwGetMouseButton(this->window, button) == GLFW_RELEASE;
+	return glfwGetMouseButton(canvas.window.get(), button) == GLFW_RELEASE;
 }
 
 glm::vec2 InternalMouseHandler::getPosition()
 {
 	double m_x = 0.0, m_y = 0.0;
-	glfwGetCursorPos(this->window, &m_x, &m_y);
+	glfwGetCursorPos(canvas.window.get(), &m_x, &m_y);
 	return glm::vec2(m_x, m_y);
 }
 
@@ -51,22 +46,17 @@ void InternalMouseHandler::enableScrollCallback()
 
 void InternalMouseHandler::enableScrollCallback(void (*callback)(GLFWwindow*, double, double))
 {
-	glfwSetScrollCallback(this->window, callback);
+	glfwSetScrollCallback(canvas.window.get(), callback);
 }
 
 // Key Handler
 
-InternalKeyHandler::InternalKeyHandler(GLFWwindow* window)
-{
-	this->window = window;
-}
-
 bool InternalKeyHandler::pressed(int key)
 {
-	return glfwGetKey(this->window, key) == GLFW_PRESS;
+	return glfwGetKey(canvas.window.get(), key) == GLFW_PRESS;
 }
 
 bool InternalKeyHandler::released(int key)
 {
-	return glfwGetKey(this->window, key) == GLFW_RELEASE;
+	return glfwGetKey(canvas.window.get(), key) == GLFW_RELEASE;
 }

@@ -7,7 +7,7 @@ layout(max_vertices = 4) out;
 layout(location = 4) uniform mat4 viewProjMat;
 layout(location = 10) uniform vec3 camPos;
 
-uniform float particleSize; // TODO SET!!!
+layout(location = 23) uniform float particleSize;
 
 out vec2 vertexUV;
 

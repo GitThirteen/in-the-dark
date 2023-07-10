@@ -58,7 +58,7 @@ void main() {
 
     gl_Position = vec4(position + velocity * dt, gl_Position.w);
     positionOut = gl_Position.xyz;
-    velocityOut = velocity - vec3(0.0, 9.81, 0.0) * dt * -0.01;
+    velocityOut = velocity - vec3(0.0, 9.81, 0.0) * dt * 0.01;
     ageOut = age;
     colorOut = color;
 

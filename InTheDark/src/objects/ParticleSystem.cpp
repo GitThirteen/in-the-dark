@@ -71,7 +71,7 @@ void ParticleSystem::update()
     shaders.use("ps_default");
 
     shaders.set(ShaderLocation::DELTA_TIME, (float) clock.getDeltaTime());
-    shaders.set(ShaderLocation::PARTICLE_LIFETIME, this->settings.particle_lifetime);
+    shaders.set(ShaderLocation::PARTICLE_LIFETIME, this->settings.lifetime);
     shaders.set(ShaderLocation::PARTICLE_SYS_POS, this->settings.initial_position);
 
     this->settings.texture.bind();
@@ -122,6 +122,7 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 
     shaders.set(ShaderLocation::VIEWPROJECTION_MAT, viewproj);
     shaders.set(ShaderLocation::CAMERA_POSITION, cam_pos);
+    shaders.set(ShaderLocation::PARTICLE_SIZE, this->settings.size);
 
     this->settings.texture.bind();
 

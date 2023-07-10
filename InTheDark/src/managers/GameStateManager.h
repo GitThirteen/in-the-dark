@@ -19,17 +19,11 @@ public:
 		return instance;
 	};
 
-	void setWindow(GLFWwindow* window)
-	{
-		this->window = window;
-	};
-
 	GameStateManager(GameStateManager const&)	= delete;
 	void operator=(GameStateManager const&)		= delete;
 
 private:
 	std::unique_ptr<GameState> active_state = nullptr;
-	GLFWwindow* window = nullptr;
 
 	Clock& clock = Clock::getInstance();
 	CanvasManager& canvas = CanvasManager::getInstance();

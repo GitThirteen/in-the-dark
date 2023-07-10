@@ -30,10 +30,21 @@ private:
 	ShaderManager& shaders = ShaderManager::getInstance();
 };
 
+struct Window
+{
+void set(GLFWwindow*);
+GLFWwindow* get();
+void swapBuffers();
+
+private:
+	GLFWwindow* window;
+};
+
 class CanvasManager
 {
 public:
 	PostProcessor post_processor;
+	Window window;
 
 	/**
 	 * @brief Clears the canvas with white (RGB 255, 255, 255).

@@ -37,6 +37,7 @@ enum ShaderLocation {
 	PARTICLE_COLOR		= 20,
 	PARTICLE_LIFETIME	= 21,
 	PARTICLE_SYS_POS	= 22,
+	PARTICLE_SIZE		= 23
 };
 
 enum ShaderBinding {

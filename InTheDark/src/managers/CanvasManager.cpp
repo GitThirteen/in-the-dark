@@ -193,3 +193,20 @@ void PostProcessor::dump()
 	glDeleteTextures(1, &this->col_tex);
 	glDeleteTextures(1, &this->dep_tex);
 }
+
+// Window
+
+void Window::set(GLFWwindow* window)
+{
+	this->window = window;
+}
+
+void Window::swapBuffers()
+{
+	glfwSwapBuffers(this->window);
+}
+
+GLFWwindow* Window::get()
+{
+	return this->window;
+}
