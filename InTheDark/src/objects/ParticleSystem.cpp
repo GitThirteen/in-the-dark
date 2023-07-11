@@ -147,7 +147,7 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 
     glDrawTransformFeedback(GL_POINTS, this->tfbuffer[this->cur_tfbuffer]);
 
-    glBindVertexArray(0);
     glDisableVertexAttribArray(ShaderLocation::Billboard::POSITION);
+    glBindVertexArray(0);
     this->settings.texture.unbind();
 }
