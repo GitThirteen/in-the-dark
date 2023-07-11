@@ -85,7 +85,7 @@ class TestState : public GameState
 			obj->asset.draw();
 		}
 
-		// Second pass: Render character with post processing
+		// Second pass: Render character (TODO: With post-processing)
 
 		player->asset.draw();
 

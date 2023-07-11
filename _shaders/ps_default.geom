@@ -39,7 +39,7 @@ void main() {
         gl_Position = vec4(position + velocity * dt, gl_Position.w);
         
         positionOut = gl_Position.xyz;
-        velocityOut = velocity - vec3(0.0, 9.81, 0.0) * dt * -0.01; // temp, consider replacing with linear velocity (no change)
+        velocityOut = velocity - vec3(0.0, 9.81, 0.0) * dt * -0.01; // temp, consider replacing with linear velocity (= velocity)
         ageOut = age;
         colorOut = color;
 
@@ -54,8 +54,8 @@ void main() {
     // Generate new particle if the generateParticle flag is true (elapsedTime > emitInterval on CPU side)
     if (generateParticle) {
         vec3 startPos = defaultPosition;
-        startPos.x += ((rng * 2.0 - 1.0) * 0.25);
-        startPos.z += ((rng * 2.0 - 1.0) * 0.25);
+        //startPos.x += ((rng * 2.0 - 1.0) * 0.25);
+        //startPos.z += ((rng * 2.0 - 1.0) * 0.25);
         gl_Position = vec4(startPos, gl_Position.w);
 
         positionOut = gl_Position.xyz;

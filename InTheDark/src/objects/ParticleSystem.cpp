@@ -7,7 +7,7 @@ ParticleSystem::ParticleSystem(const asset::Texture& texture, const glm::vec3& p
     this->settings.texture = texture;
     this->settings.initial_position = pos;
 
-    std::vector<Particle> particles = std::vector<Particle>(this->settings.max_particles);
+    std::vector<Particle> particles = std::vector<Particle>(this->settings.max_particles * sizeof(Particle));
 
     particles[0].pos = pos;
     particles[0].velocity = glm::vec3(0.0f, 0.0001f, 0.0f);
@@ -79,8 +79,6 @@ void ParticleSystem::update()
     shaders.set(ShaderLocation::PS_POSITION, this->settings.initial_position);
     shaders.set(ShaderLocation::PS_GEN_FLAG, gen_particle);
 
-    this->settings.texture.bind();
-
     glBindVertexArray(this->vao);
     glEnable(GL_RASTERIZER_DISCARD);
 
@@ -118,7 +116,6 @@ void ParticleSystem::update()
     glDisableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
 
     glBindVertexArray(0);
-    this->settings.texture.unbind();
 
     if (gen_particle) {
         this->elapsedTime = 0.0f;
