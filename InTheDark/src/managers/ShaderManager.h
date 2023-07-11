@@ -7,43 +7,69 @@
 
 #include "../util/util.h"
 
-enum Shader
+enum class Shader
 {
 	Vertex,
 	Fragment,
 	Geometry
 };
 
-enum ShaderLocation {
-	POSITION			= 0,
-	NORMAL				= 1,
-	UV					= 2,
-	TRANSFORM_MAT		= 3,
-	VIEWPROJECTION_MAT	= 4,
-	LIGHT_D_DIRECTION	= 5,
-	LIGHT_D_COL			= 6,
-	PPS_COLOR_TEXTURE	= 7,
-	PPS_DEPTH_TEXTURE	= 8,
-	CAMERA_POSITION		= 10,
-	REFLECTION			= 11,
-	GLOSSINESS			= 12,
-	TEXTURE				= 13,
-	SCREEN_WIDTH		= 14,
-	SCREEN_HEIGHT		= 15,
-	DELTA_TIME			= 16,
-	PARTICLE_POSITION	= 17,
-	PARTICLE_VELOCITY	= 18,
-	PARTICLE_AGE		= 19,
-	PARTICLE_COLOR		= 20,
-	PARTICLE_LIFETIME	= 21,
-	PS_POSITION			= 22,
-	PARTICLE_SIZE		= 23,
-	PS_GEN_FLAG			= 24
-};
+// This monstrosity was sponsored by the C++ committee's decision that enum classes shouldn't have implicit enum decay
+namespace ShaderLocation {
+	namespace Default {
+		enum Values {
+			POSITION			= 0,
+			NORMAL				= 1,
+			UV					= 2,
+			TRANSFORM_MAT		= 3,
+			VIEWPROJECTION_MAT	= 4,
+			LIGHT_D_DIRECTION	= 5,
+			LIGHT_D_COL			= 6,
+			CAMERA_POSITION		= 7,
+			REFLECTION			= 8,
+			GLOSSINESS			= 9,
+			TEXTURE				= 10
+		};
 
-enum ShaderBinding {
-	LIGHT_P_BUFFER		= 0
-};
+		enum Bindings {
+			LIGHT_P_BUFFER		= 0
+		};
+	}
+
+	namespace PProc {
+		enum Values {
+			POSITION			= 0,
+			UV					= 1,
+			SCREEN_WIDTH		= 2,
+			SCREEN_HEIGHT		= 3,
+			COLOR_TEXTURE		= 4,
+			DEPTH_TEXTURE		= 5
+		};
+	}
+
+	namespace Particle {
+		enum Values {
+			POSITION			= 0,
+			VELOCITY			= 1,
+			AGE					= 2,
+			COLOR				= 3,
+			DELTA_TIME			= 4,
+			LIFETIME			= 5,
+			SYSTEM_POSITION		= 6,
+			GENERATION_FLAG		= 7
+		};
+	}
+
+	namespace Billboard {
+		enum Values {
+			POSITION			= 0,
+			VIEWPROJECTION_MAT	= 1,
+			CAMERA_POSITION		= 2,
+			PARTICLE_SIZE		= 3,
+			TEXTURE				= 4
+		};
+	}
+}
 
 struct ShaderData
 {
@@ -72,10 +98,10 @@ public:
 
 	GLuint getCurrentProgram();
 
-	void set(ShaderLocation, glm::mat4);
-	void set(ShaderLocation, glm::vec3);
-	void set(ShaderLocation, float);
-	void set(ShaderLocation, int);
+	void set(GLint, glm::mat4);
+	void set(GLint, glm::vec3);
+	void set(GLint, float);
+	void set(GLint, int);
 
 	ShaderManager(ShaderManager const&)  = delete;
 	void operator=(ShaderManager const&) = delete;

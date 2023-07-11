@@ -158,14 +158,14 @@ namespace asset
 
 			auto stride = 8 * sizeof(GLfloat);
 
-			glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
-			glEnableVertexAttribArray(ShaderLocation::POSITION);
+			glVertexAttribPointer(ShaderLocation::Default::POSITION, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+			glEnableVertexAttribArray(ShaderLocation::Default::POSITION);
 
-			glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(3 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(ShaderLocation::UV);
+			glVertexAttribPointer(ShaderLocation::Default::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(ShaderLocation::Default::UV);
 
-			glVertexAttribPointer(ShaderLocation::NORMAL, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(ShaderLocation::NORMAL);
+			glVertexAttribPointer(ShaderLocation::Default::NORMAL, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(ShaderLocation::Default::NORMAL);
 
 			// Indices
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
@@ -246,14 +246,14 @@ public:
 		// Technically we should have a separate method that only re-sets the uniforms if needed, but considering
 		// that it's not particularly expensive to do set a uniform, it's not worth the hassle at the moment
 
-		shader.set(ShaderLocation::TRANSFORM_MAT, this->trans_mat);
-		shader.set(ShaderLocation::REFLECTION, this->reflection);
-		shader.set(ShaderLocation::GLOSSINESS, this->glossiness);
+		shader.set(ShaderLocation::Default::TRANSFORM_MAT, this->trans_mat);
+		shader.set(ShaderLocation::Default::REFLECTION, this->reflection);
+		shader.set(ShaderLocation::Default::GLOSSINESS, this->glossiness);
 
 		bool tex_loaded = this->texture.data != NULL;
 		if (tex_loaded)
 		{
-			shader.set(ShaderLocation::TEXTURE, this->texture.tex_unit);
+			shader.set(ShaderLocation::Default::TEXTURE, this->texture.tex_unit);
 			this->texture.bind();
 		}
 

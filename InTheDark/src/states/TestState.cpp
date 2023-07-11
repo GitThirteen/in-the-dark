@@ -80,6 +80,7 @@ class TestState : public GameState
 			if (obj->asset.type == AssetType::PLAYER)
 			{
 				player = obj;
+				continue;
 			}
 
 			obj->asset.draw();

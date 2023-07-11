@@ -2,11 +2,11 @@
 
 in vec2 uvCoords;
 
-layout(location = 14) uniform int screenWidth;
-layout(location = 15) uniform int screenHeight;
+layout(location = 2) uniform int screenWidth;
+layout(location = 3) uniform int screenHeight;
 
-layout(location = 7) uniform sampler2D colorTex;
-layout(location = 8) uniform sampler2D depthTex;
+layout(location = 4) uniform sampler2D colorTex;
+layout(location = 5) uniform sampler2D depthTex;
 
 out vec4 fragColor;
 

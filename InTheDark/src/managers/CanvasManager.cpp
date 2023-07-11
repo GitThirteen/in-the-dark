@@ -121,10 +121,10 @@ void PostProcessor::create()
 
 	auto stride = 4 * sizeof(float);
 
-	glVertexAttribPointer(ShaderLocation::POSITION, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
-	glEnableVertexAttribArray(ShaderLocation::POSITION);
-	glVertexAttribPointer(ShaderLocation::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(float)));
-	glEnableVertexAttribArray(ShaderLocation::UV);
+	glVertexAttribPointer(ShaderLocation::PProc::POSITION, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+	glEnableVertexAttribArray(ShaderLocation::PProc::POSITION);
+	glVertexAttribPointer(ShaderLocation::PProc::UV, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(ShaderLocation::PProc::UV);
 
 	/* ---- Unbind VAO & VBO ---- */
 
@@ -159,10 +159,10 @@ void PostProcessor::draw()
 	int screen_width = SettingsManager::getInstance().get<int>("width");
 	int screen_height = SettingsManager::getInstance().get<int>("height");
 
-	shaders.set(ShaderLocation::SCREEN_WIDTH, screen_width);
-	shaders.set(ShaderLocation::SCREEN_HEIGHT, screen_height);
-	shaders.set(ShaderLocation::PPS_COLOR_TEXTURE, 0);
-	shaders.set(ShaderLocation::PPS_DEPTH_TEXTURE, 1);
+	shaders.set(ShaderLocation::PProc::SCREEN_WIDTH, screen_width);
+	shaders.set(ShaderLocation::PProc::SCREEN_HEIGHT, screen_height);
+	shaders.set(ShaderLocation::PProc::COLOR_TEXTURE, 0);
+	shaders.set(ShaderLocation::PProc::DEPTH_TEXTURE, 1);
 
 	glActiveTexture(GL_TEXTURE0 + 0);
 	glBindTexture(GL_TEXTURE_2D, this->col_tex);

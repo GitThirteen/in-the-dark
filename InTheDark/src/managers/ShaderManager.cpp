@@ -143,22 +143,22 @@ GLuint ShaderManager::getCurrentProgram()
 	return this->cur_shader_program;
 }
 
-void ShaderManager::set(ShaderLocation location, glm::mat4 value)
+void ShaderManager::set(GLint location, glm::mat4 value)
 {
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void ShaderManager::set(ShaderLocation location, glm::vec3 value)
+void ShaderManager::set(GLint location, glm::vec3 value)
 {
 	glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
-void ShaderManager::set(ShaderLocation location, float value)
+void ShaderManager::set(GLint location, float value)
 {
 	glUniform1f(location, value);
 }
 
-void ShaderManager::set(ShaderLocation location, int value)
+void ShaderManager::set(GLint location, int value)
 {
 	glUniform1i(location, value);
 }

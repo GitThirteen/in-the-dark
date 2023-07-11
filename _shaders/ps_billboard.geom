@@ -4,10 +4,10 @@ layout(points) in;
 layout(points) out;
 layout(max_vertices = 4) out;
 
-layout(location = 4) uniform mat4 viewProjMat;
-layout(location = 10) uniform vec3 camPos;
+layout(location = 1) uniform mat4 viewProjMat;
+layout(location = 2) uniform vec3 camPos;
 
-layout(location = 23) uniform float particleSize;
+layout(location = 3) uniform float particleSize;
 
 out vec2 vertexUV;
 

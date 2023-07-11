@@ -35,6 +35,10 @@ ParticleSystem::ParticleSystem(const asset::Texture& texture, const glm::vec3& p
         glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, this->particle_vbuffer[i]);
     }
 
+    GLint maxAttribs;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttribs);
+    std::cout << maxAttribs << std::endl;
+
     shaders.add(Shader::Vertex, "../_shaders/ps_default.vert");
     shaders.add(Shader::Geometry, "../_shaders/ps_default.geom");
     shaders.add(Shader::Fragment, "../_shaders/ps_default.frag");
@@ -74,10 +78,10 @@ void ParticleSystem::update()
 
     bool gen_particle = this->elapsedTime >= this->settings.emit_rate;
 
-    shaders.set(ShaderLocation::DELTA_TIME, (float) clock.getDeltaTime());
-    shaders.set(ShaderLocation::PARTICLE_LIFETIME, this->settings.lifetime);
-    shaders.set(ShaderLocation::PS_POSITION, this->settings.initial_position);
-    shaders.set(ShaderLocation::PS_GEN_FLAG, gen_particle);
+    shaders.set(ShaderLocation::Particle::DELTA_TIME, (float) clock.getDeltaTime());
+    shaders.set(ShaderLocation::Particle::LIFETIME, this->settings.lifetime);
+    shaders.set(ShaderLocation::Particle::SYSTEM_POSITION, this->settings.initial_position);
+    shaders.set(ShaderLocation::Particle::GENERATION_FLAG, gen_particle);
 
     glBindVertexArray(this->vao);
     glEnable(GL_RASTERIZER_DISCARD);
@@ -87,14 +91,14 @@ void ParticleSystem::update()
 
     auto stride = sizeof(Particle);
 
-    glVertexAttribPointer(ShaderLocation::PARTICLE_POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
-    glEnableVertexAttribArray(ShaderLocation::PARTICLE_POSITION);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_VELOCITY, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(ShaderLocation::PARTICLE_VELOCITY);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_AGE, 1, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(ShaderLocation::PARTICLE_AGE);
-    glVertexAttribPointer(ShaderLocation::PARTICLE_COLOR, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(7 * sizeof(float)));
-    glEnableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
+    glVertexAttribPointer(ShaderLocation::Particle::POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
+    glEnableVertexAttribArray(ShaderLocation::Particle::POSITION);
+    glVertexAttribPointer(ShaderLocation::Particle::VELOCITY, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(ShaderLocation::Particle::VELOCITY);
+    glVertexAttribPointer(ShaderLocation::Particle::AGE, 1, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(ShaderLocation::Particle::AGE);
+    glVertexAttribPointer(ShaderLocation::Particle::COLOR, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(7 * sizeof(float)));
+    glEnableVertexAttribArray(ShaderLocation::Particle::COLOR);
 
     glBeginTransformFeedback(GL_POINTS);
 
@@ -110,10 +114,10 @@ void ParticleSystem::update()
 
     glEndTransformFeedback();
 
-    glDisableVertexAttribArray(ShaderLocation::PARTICLE_POSITION);
-    glDisableVertexAttribArray(ShaderLocation::PARTICLE_VELOCITY);
-    glDisableVertexAttribArray(ShaderLocation::PARTICLE_AGE);
-    glDisableVertexAttribArray(ShaderLocation::PARTICLE_COLOR);
+    glDisableVertexAttribArray(ShaderLocation::Particle::POSITION);
+    glDisableVertexAttribArray(ShaderLocation::Particle::VELOCITY);
+    glDisableVertexAttribArray(ShaderLocation::Particle::AGE);
+    glDisableVertexAttribArray(ShaderLocation::Particle::COLOR);
 
     glBindVertexArray(0);
 
@@ -126,10 +130,10 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
     shaders.use("ps_billboard");
 
-    shaders.set(ShaderLocation::VIEWPROJECTION_MAT, viewproj);
-    shaders.set(ShaderLocation::CAMERA_POSITION, cam_pos);
-    shaders.set(ShaderLocation::PARTICLE_SIZE, this->settings.size);
-    shaders.set(ShaderLocation::TEXTURE, this->settings.texture.tex_unit);
+    shaders.set(ShaderLocation::Billboard::VIEWPROJECTION_MAT, viewproj);
+    shaders.set(ShaderLocation::Billboard::CAMERA_POSITION, cam_pos);
+    shaders.set(ShaderLocation::Billboard::PARTICLE_SIZE, this->settings.size);
+    shaders.set(ShaderLocation::Billboard::TEXTURE, this->settings.texture.tex_unit);
 
     this->settings.texture.bind();
 
@@ -138,12 +142,12 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 
     glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[this->cur_tfbuffer]);
     
-    glVertexAttribPointer(ShaderLocation::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(ShaderLocation::POSITION);
+    glVertexAttribPointer(ShaderLocation::Billboard::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(ShaderLocation::Billboard::POSITION);
 
     glDrawTransformFeedback(GL_POINTS, this->tfbuffer[this->cur_tfbuffer]);
 
     glBindVertexArray(0);
-    glDisableVertexAttribArray(ShaderLocation::POSITION);
+    glDisableVertexAttribArray(ShaderLocation::Billboard::POSITION);
     this->settings.texture.unbind();
 }

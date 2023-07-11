@@ -5,8 +5,8 @@ void lightSource::Directional::addToScene()
 	if (this->placed) return;
 
 	ShaderManager& shader = ShaderManager::getInstance();
-	shader.set(ShaderLocation::LIGHT_D_COL, this->color);
-	shader.set(ShaderLocation::LIGHT_D_DIRECTION, this->direction);
+	shader.set(ShaderLocation::Default::LIGHT_D_COL, this->color);
+	shader.set(ShaderLocation::Default::LIGHT_D_DIRECTION, this->direction);
 
 	this->placed = true;
 }
@@ -49,7 +49,7 @@ void PointLightDataHandler::create()
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, this->entities.size() * sizeof(lightSource::Point), this->entities.data(), GL_STATIC_DRAW);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ShaderBinding::LIGHT_P_BUFFER, ssbo);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ShaderLocation::Default::Bindings::LIGHT_P_BUFFER, ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
 	this->ubo = ssbo;

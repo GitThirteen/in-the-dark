@@ -4,10 +4,10 @@ layout(points) in;
 layout(points) out;
 layout(max_vertices = 60) out;
 
-layout(location = 16) uniform float dt;
-layout(location = 21) uniform float maxLifetime;
-layout(location = 22) uniform vec3 defaultPosition;
-layout(location = 24) uniform bool generateParticle;
+layout(location = 4) uniform float dt;
+layout(location = 5) uniform float maxLifetime;
+layout(location = 6) uniform vec3 defaultPosition;
+layout(location = 7) uniform bool generateParticle;
 
 in vec3 pPosition[];
 in vec3 pVelocity[];

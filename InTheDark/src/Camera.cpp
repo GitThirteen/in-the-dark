@@ -114,8 +114,8 @@ void Camera::sendToShader()
 {
 	ShaderManager& shader = ShaderManager::getInstance();
 	shader.use("shader");
-	shader.set(ShaderLocation::VIEWPROJECTION_MAT, getViewProjMatrix());
-	shader.set(ShaderLocation::CAMERA_POSITION, this->coords.origin);
+	shader.set(ShaderLocation::Default::VIEWPROJECTION_MAT, getViewProjMatrix());
+	shader.set(ShaderLocation::Default::CAMERA_POSITION, this->coords.origin);
 }
 
 // CameraCoords
