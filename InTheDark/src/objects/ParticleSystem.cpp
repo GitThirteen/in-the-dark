@@ -102,6 +102,7 @@ void ParticleSystem::update()
 
     glBeginTransformFeedback(GL_POINTS);
 
+    
     if (this->first)
     {
         glDrawArrays(GL_POINTS, 0, 1);
@@ -142,7 +143,7 @@ void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 
     glBindBuffer(GL_ARRAY_BUFFER, this->particle_vbuffer[this->cur_tfbuffer]);
     
-    glVertexAttribPointer(ShaderLocation::Billboard::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(ShaderLocation::Billboard::POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
     glEnableVertexAttribArray(ShaderLocation::Billboard::POSITION);
 
     glDrawTransformFeedback(GL_POINTS, this->tfbuffer[this->cur_tfbuffer]);
