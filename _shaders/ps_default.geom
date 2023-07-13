@@ -54,8 +54,8 @@ void main() {
     // Generate new particle if the generateParticle flag is true (elapsedTime > emitInterval on CPU side)
     if (generateParticle) {
         vec3 startPos = defaultPosition;
-        startPos.x += ((rng * 2.0 - 1.0) * 0.25);
-        startPos.z += ((rng * 2.0 - 1.0) * 0.25);
+        startPos.x += ((rng * 2.0 - 1.0) * 0.1);
+        startPos.z += ((rng * 2.0 - 1.0) * 0.1);
         gl_Position = vec4(startPos, gl_Position.w);
 
         positionOut = gl_Position.xyz;

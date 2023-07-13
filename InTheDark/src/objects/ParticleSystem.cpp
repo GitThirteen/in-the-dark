@@ -6,6 +6,8 @@ ParticleSystem::ParticleSystem(const asset::Texture& texture, const glm::vec3& p
 {
     this->settings.texture = texture;
     this->settings.initial_position = pos;
+    
+    this->emit_rate = this->settings.default_emit_rate; // TODO: Make that param adjustable (actually, make all params adjustable)
 
     std::vector<Particle> particles = std::vector<Particle>(this->settings.max_particles * sizeof(Particle));
 
@@ -73,6 +75,7 @@ void ParticleSystem::render(const glm::mat4& viewproj, const glm::vec3& cam_pos)
     update();
     draw(viewproj, cam_pos);
 
+    glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
 
     this->cur_vbuffer = this->cur_tfbuffer;
@@ -83,7 +86,7 @@ void ParticleSystem::update()
 {
     shaders.use("ps_default");
 
-    bool gen_particle = this->elapsedTime >= this->settings.emit_rate;
+    bool gen_particle = this->elapsedTime >= this->emit_rate;
 
     shaders.set(ShaderLocation::Particle::DELTA_TIME, (float) clock.getDeltaTime());
     shaders.set(ShaderLocation::Particle::LIFETIME, this->settings.lifetime);
@@ -130,6 +133,9 @@ void ParticleSystem::update()
 
     if (gen_particle) {
         this->elapsedTime = 0.0f;
+
+        float range = 0.25f; // magic number, make adjustable
+        this->emit_rate = this->settings.default_emit_rate + (util::random(range * 2) * 2 - range);
     }
 }
 

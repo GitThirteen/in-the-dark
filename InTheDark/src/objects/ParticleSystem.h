@@ -10,10 +10,10 @@ struct ParticleSettings
 {
     asset::Texture texture;
     uint16_t max_particles = 200;
-    float lifetime = 3.0f;
+    float lifetime = 3.5f;
     float size = 0.05f;
     glm::vec3 initial_position = glm::vec3(0.0f);
-    float emit_rate = 1.0f;
+    float default_emit_rate = 1.0f;
 };
 
 struct Particle
@@ -38,7 +38,9 @@ private:
     uint16_t cur_tfbuffer = 1;
     GLuint particle_vbuffer[2];
     GLuint tfbuffer[2];
+
     float elapsedTime = 0.75f * util::random(1.0); // random offset so it doesn't look eerie
+    float emit_rate = 1.0f;
 
     ParticleSettings settings;
 
