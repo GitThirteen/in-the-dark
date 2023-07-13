@@ -65,8 +65,15 @@ void ParticleSystem::render(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
     this->elapsedTime += clock.getDeltaTime();
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    glDepthMask(GL_FALSE);
+
     update();
     draw(viewproj, cam_pos);
+
+    glDepthMask(GL_TRUE);
 
     this->cur_vbuffer = this->cur_tfbuffer;
     this->cur_tfbuffer = (this->cur_tfbuffer + 1) & 0x1;
@@ -101,7 +108,6 @@ void ParticleSystem::update()
     glEnableVertexAttribArray(ShaderLocation::Particle::COLOR);
 
     glBeginTransformFeedback(GL_POINTS);
-
     
     if (this->first)
     {

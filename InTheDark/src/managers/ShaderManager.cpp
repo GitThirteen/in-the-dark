@@ -193,6 +193,10 @@ void ShaderManager::compile(GLuint shader)
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
 	if (success == GL_FALSE) {
+		std::vector<GLchar> errorLog(512);
+		glGetShaderInfoLog(shader, 512, NULL, &errorLog[0]);
+		LOG_F(ERROR, std::string(errorLog.begin(), errorLog.end()).c_str());
+
 		glDeleteShader(shader);
 
 		auto error_msg = "Shader initialization failed.";
@@ -208,6 +212,10 @@ void ShaderManager::linkProgram(GLuint program)
 	GLint success = 0;
 	glGetProgramiv(program, GL_LINK_STATUS, (int*)&success);
 	if (success == GL_FALSE) {
+		std::vector<GLchar> errorLog(512);
+		glGetProgramInfoLog(program, 512, NULL, &errorLog[0]);
+		LOG_F(ERROR, std::string(errorLog.begin(), errorLog.end()).c_str());
+
 		glDeleteProgram(program);
 
 		auto error_msg = "Program initialization failed.";

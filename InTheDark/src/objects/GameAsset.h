@@ -242,6 +242,7 @@ public:
 	void draw()
 	{
 		ShaderManager& shader = ShaderManager::getInstance();
+		shader.use("shader");
 		
 		// Technically we should have a separate method that only re-sets the uniforms if needed, but considering
 		// that it's not particularly expensive to do set a uniform, it's not worth the hassle at the moment

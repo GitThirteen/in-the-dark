@@ -9,7 +9,7 @@
 struct ParticleSettings
 {
     asset::Texture texture;
-    uint16_t max_particles = 2000;
+    uint16_t max_particles = 200;
     float lifetime = 3.0f;
     float size = 0.05f;
     glm::vec3 initial_position = glm::vec3(0.0f);

@@ -65,30 +65,25 @@ class TestState : public GameState
 		{
 			canvas.post_processor.create();
 		}
-
-		// First pass: Render stage + background
-
+		
 		canvas.clear(24, 34, 33);
+
+		// First pass: Render stage
 
 		canvas.post_processor.bind();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
-
-		std::shared_ptr<GameObject> player;
+		
 		for (auto& obj : this->level.data)
 		{
-			if (obj->asset.type == AssetType::PLAYER)
-			{
-				player = obj;
-				continue;
-			}
+			if (obj->asset.type == AssetType::PLAYER) continue;
 
 			obj->asset.draw();
 		}
 
 		// Second pass: Render character (TODO: With post-processing)
 
-		player->asset.draw();
+		this->level.player->asset.draw();
 
 		canvas.post_processor.unbind();
 		glClear(GL_COLOR_BUFFER_BIT);
