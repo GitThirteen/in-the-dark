@@ -1,27 +1,31 @@
 #include "Player.h"
 
-void Player::update()
+void Player::update(const glm::vec3& view_dir) // param temporary until camera is global
 {
-    // Adjust, neg_dz and pos_dz probably wrong due to RHCS
     bool pos_dz = events.key.pressed(GLFW_KEY_S) || events.key.pressed(GLFW_KEY_DOWN);
     bool neg_dz = events.key.pressed(GLFW_KEY_W) || events.key.pressed(GLFW_KEY_UP);
-    bool pos_dx = events.key.pressed(GLFW_KEY_D) || events.key.pressed(GLFW_KEY_RIGHT);
-    bool neg_dx = events.key.pressed(GLFW_KEY_A) || events.key.pressed(GLFW_KEY_LEFT);
+    bool pos_dx = events.key.pressed(GLFW_KEY_A) || events.key.pressed(GLFW_KEY_LEFT);
+    bool neg_dx = events.key.pressed(GLFW_KEY_D) || events.key.pressed(GLFW_KEY_RIGHT);
 
-    glm::vec3 forward = glm::vec3(0.0, 0.0, 1.0);
-    glm::vec3 right = glm::vec3(1.0, 0.0, 0.0);
+    glm::vec3 forward = view_dir;
+    forward.y = 0.0f;
+    forward = glm::normalize(forward); //glm::vec3(0.0, 0.0, 1.0);
+    glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0, 1.0, 0.0))); // glm::vec3(1.0, 0.0, 0.0);
 
+    std::cout << std::to_string(forward.x) + " " + std::to_string(forward.y) + " " + std::to_string(forward.z) << std::endl;
+    //std::cout << std::to_string(right.x) + " " + std::to_string(right.y) + " " + std::to_string(right.z) << std::endl;
     float dx = 0.0, dz = 0.0;
     if (pos_dx ^ neg_dx)
     {
-        dx = pos_dx ? 1.0 : -1.0;
+        dx = pos_dx ? -1.0 : 1.0;
     }
     if (pos_dz ^ neg_dz)
     {
-        dz = pos_dz ? 1.0 : -1.0;
+        dz = pos_dz ? -1.0 : 1.0;
     }
 
     this->input_direction = (forward * dz + right * dx);
+    this->input_direction.y = 0.0;
     //this->movement_vec.y = GRAVITY;
 
     move();
@@ -29,6 +33,7 @@ void Player::update()
 
     //movement_vec *= FRICTION_FACTOR;
 
+    // temp
     if (this->position.y < -3)
     {
         resetPosition();

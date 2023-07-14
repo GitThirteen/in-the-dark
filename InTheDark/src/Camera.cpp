@@ -54,7 +54,7 @@ void Camera::update(bool rightMouseDown, glm::vec2 mouse, double r)
 		if (dx != 0 || dy != 0)
 		{
 			// adjusting pitch if mouse moves up or down
-			this->coords.spherical.y = util::clamp(this->coords.spherical.y - move_y, 0.01, M_PI - 0.01);
+			this->coords.spherical.y = util::clamp(this->coords.spherical.y - move_y, 0.5, M_PI - 0.5);
 			// adjusting yaw if mouse moves left or right
 			this->coords.spherical.z += move_x;
 

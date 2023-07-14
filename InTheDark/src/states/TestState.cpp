@@ -43,7 +43,7 @@ class TestState : public GameState
 		double cam_radius = events.mouse.getOffset();
 		camera.update(mouse_pressed, mouse_pos, cam_radius);
 
-		this->level.player->update();
+		this->level.player->update(camera.coords.target - camera.coords.origin);
 
 		camera.updatePosition(this->level.player->position);
 		

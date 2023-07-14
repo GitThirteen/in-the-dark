@@ -4,11 +4,12 @@
 #include "GameObject.h"
 #include "../managers/EventHandler.h"
 #include "../managers/Clock.h"
+#include "../Camera.h"
 
 class Player : public GameObject
 {
 public:
-	void update();
+	void update(const glm::vec3&);
 	bool isCollidingWith(std::shared_ptr<GameObject>);
 
 private:
