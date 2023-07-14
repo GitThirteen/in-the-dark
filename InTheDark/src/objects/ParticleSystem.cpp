@@ -2,9 +2,9 @@
 
 ParticleSystem::ParticleSystem() : ParticleSystem({ }, glm::vec3(0.0f)) { };
 
-ParticleSystem::ParticleSystem(const asset::Texture& texture, const glm::vec3& pos)
+ParticleSystem::ParticleSystem(AssetType asset, const glm::vec3& pos)
 {
-    this->settings.texture = texture;
+    this->settings.texture = AssetManager::getInstance().getAsset(asset).texture;
     this->settings.initial_position = pos;
     
     this->emit_rate = this->settings.default_emit_rate; // TODO: Make that param adjustable (actually, make all params adjustable)
@@ -63,7 +63,7 @@ ParticleSystem::ParticleSystem(const asset::Texture& texture, const glm::vec3& p
     shaders.link(shader);
 }
 
-void ParticleSystem::render(const glm::mat4& viewproj, const glm::vec3& cam_pos)
+void ParticleSystem::emit(std::shared_ptr<Camera> camera)
 {
     this->elapsedTime += clock.getDeltaTime();
 
@@ -73,7 +73,7 @@ void ParticleSystem::render(const glm::mat4& viewproj, const glm::vec3& cam_pos)
     glDepthMask(GL_FALSE);
 
     update();
-    draw(viewproj, cam_pos);
+    draw(camera->getViewProjMatrix(), camera->coords.origin);
 
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
@@ -141,6 +141,8 @@ void ParticleSystem::update()
 
 void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
+
+
     shaders.use("ps_billboard");
 
     shaders.set(ShaderLocation::Billboard::VIEWPROJECTION_MAT, viewproj);

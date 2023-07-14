@@ -7,6 +7,7 @@
     <ClCompile Include="src\managers\Clock.cpp" />
     <ClCompile Include="src\managers\EventHandler.cpp" />
     <ClCompile Include="src\managers\GameStateManager.cpp" />
+    <ClCompile Include="src\objects\Torch.cpp" />
     <ClInclude Include="src\managers\Clock.h" />
     <ClInclude Include="src\managers\EventHandler.h" />
     <ClInclude Include="src\managers\GameStateManager.h" />
@@ -18,6 +19,7 @@
     <ClInclude Include="src\objects\LightSource.h" />
     <ClInclude Include="src\objects\ParticleSystem.h" />
     <ClInclude Include="src\objects\Player.h" />
+    <ClInclude Include="src\objects\Torch.h" />
     <ClInclude Include="src\states\GameState.h" />
     <ClCompile Include="src\objects\BBox.cpp" />
     <ClCompile Include="src\objects\LightSource.cpp" />

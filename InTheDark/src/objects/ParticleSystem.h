@@ -2,9 +2,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <GL/glew.h>
 #include <vector>
+
 #include "../managers/ShaderManager.h"
+#include "../managers/AssetManager.h"
 #include "../managers/Clock.h"
 #include "GameAsset.h"
+#include "../Camera.h"
 
 struct ParticleSettings
 {
@@ -28,9 +31,9 @@ class ParticleSystem
 {
 public:
     ParticleSystem();
-    ParticleSystem(const asset::Texture&, const glm::vec3&);
+    ParticleSystem(AssetType asset, const glm::vec3&);
 
-    void render(const glm::mat4&, const glm::vec3&);
+    void emit(std::shared_ptr<Camera>);
 private:
     bool first = true;
     GLuint vao = 0;

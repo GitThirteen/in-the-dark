@@ -3,12 +3,12 @@
 #include <iostream>
 #include <string>
 #include "../objects/ParticleSystem.h"
+#include "../objects/Torch.h"
 
 class TestState : public GameState
 {
 	LevelWrapper level;
-	// Awful
-	ParticleSystem particles = ParticleSystem(assets.getAsset(AssetType::SMOKE).texture, glm::vec3(0.0f, 1.0f, -5.0f));
+	std::vector<Torch> torches;
 
 	void init() override
 	{
@@ -16,8 +16,19 @@ class TestState : public GameState
 
 		initCamera();
 
-		this->level.lights.directionalLight.addToScene();
-		this->level.lights.pointLights.addToScene();
+		auto cam = std::make_shared<Camera>(this->camera);
+		for (auto& obj : this->level.data)
+		{
+			if (obj->asset.type == AssetType::TORCH)
+			{
+				Torch t = Torch(obj);
+				t.setCamera(cam);
+				torches.push_back(t);
+			}
+		}
+
+		this->level.lights.directional_light.addToScene();
+		this->level.lights.point_lights.addToScene();
 	}
 
 	void update() override
@@ -76,9 +87,17 @@ class TestState : public GameState
 		
 		for (auto& obj : this->level.data)
 		{
-			if (obj->asset.type == AssetType::PLAYER) continue;
+			if (
+				obj->asset.type == AssetType::PLAYER || 
+				obj->asset.type == AssetType::TORCH
+			) continue;
 
 			obj->asset.draw();
+		}
+
+		for (auto& torch : this->torches)
+		{
+			torch.draw();
 		}
 
 		// Second pass: Render character (TODO: With post-processing)
@@ -93,7 +112,10 @@ class TestState : public GameState
 
 		// Third pass: Render particles
 
-		this->particles.render(camera.getViewProjMatrix(), camera.coords.origin);
+		for (auto& torch : this->torches)
+		{
+			torch.emitSmoke();
+		}
 
 		canvas.window.swapBuffers();
 	}

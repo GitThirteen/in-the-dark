@@ -149,14 +149,14 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 	auto& dir_j = lights["directional"];
 	auto dir_light = dir_j.get<lightSource::Directional>();
-	game_lights.directionalLight = dir_light;
+	game_lights.directional_light = dir_light;
 
 	for (auto& pnt_j : lights["point"])
 	{
 		auto pnt_light = pnt_j.get<lightSource::Point>();
-		game_lights.pointLights.entities.push_back(pnt_light);
+		game_lights.point_lights.entities.push_back(pnt_light);
 	}
-	game_lights.pointLights.create();
+	game_lights.point_lights.create();
 
 	/* ---- */
 

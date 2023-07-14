@@ -44,8 +44,8 @@ static const std::vector<std::string> LVL_PATHS = {
 
 struct LightWrapper
 {
-	lightSource::Directional directionalLight;
-	PointLightDataHandler pointLights;
+	lightSource::Directional directional_light;
+	PointLightDataHandler point_lights;
 };
 
 struct LevelWrapper
