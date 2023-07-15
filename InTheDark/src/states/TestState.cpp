@@ -50,7 +50,11 @@ class TestState : public GameState
 		auto collisions = std::vector<std::shared_ptr<GameObject>>();
 		for (auto& obj : this->level.data)
 		{
-			if (obj->asset.type == AssetType::PLAYER) continue;
+			if (
+				obj->asset.type == AssetType::PLAYER ||
+				obj->asset.type == AssetType::TORCH
+			) continue;
+			//if (obj->isGround) continue;
 			
 			if (this->level.player->isCollidingWith(obj))
 			{
@@ -58,15 +62,36 @@ class TestState : public GameState
 			}
 		}
 
-		//std::cout << collisions.size() << std::endl;
-
-		if (collisions.size() == 1)
+		for (auto& c : collisions)
 		{
+			glm::vec3 p_ctr_pos = this->level.player->position;
+			p_ctr_pos.y += this->level.player->bbox.upper.y * 0.5f;
 
-		}
-		else if (collisions.size() > 1)
-		{
+			glm::vec3 o_ctr_pos = c->position;
+			o_ctr_pos.y += c->bbox.upper.y * 0.5f;
 
+			auto collision_vector = o_ctr_pos - p_ctr_pos;
+			auto cv_abs = glm::abs(collision_vector);
+
+			//glm::vec3 p_half_width = (this->level.player->bbox.upper - this->level.player->bbox.lower) * 0.5f;
+			//glm::vec3 o_half_width = (c->bbox.upper - c->bbox.lower) * 0.5f;
+
+			//auto overlap = p_half_width + o_half_width - glm::abs(collision_vector);
+			auto smallest = std::min({ cv_abs.x, cv_abs.y, cv_abs.z });
+
+			//auto collision_normal = glm::normalize(collision_vector);
+			auto move_vector = glm::vec3(0.0f);
+			if (smallest == cv_abs.x)
+				move_vector.x = collision_vector.x;
+			else if (smallest == cv_abs.y)
+				move_vector.y = collision_vector.y;
+			else if (smallest == cv_abs.z)
+				move_vector.z = collision_vector.z;
+
+			//std::cout << std::to_string(collision_vector.x) + " " + std::to_string(collision_vector.y) + " " + std::to_string(collision_vector.z) << std::endl;
+
+			this->level.player->position -= move_vector;
+			this->level.player->asset.translate(-move_vector);
 		}
 	}
 
@@ -140,5 +165,10 @@ private:
 		events.mouse.setOffset(radius);
 
 		camera.unlock(); // TODO remove and properly use lock & unlock once main menu and co are defined
+	}
+
+	void resolveCollision()
+	{
+
 	}
 };

@@ -4,7 +4,7 @@
 
 /**
 * @brief A rectangular 3D bounding box is defined by two vertices - the bottom
-* left one and the upper right one, thus allowing to interpolate all other vertices
+* left one (lower) and the upper right one (upper), thus allowing to interpolate all other vertices
 * of the bounding box. The lower and upper vertices are relative to the object position,
 * which is the center of the bottom plane of the bounding box.
 */

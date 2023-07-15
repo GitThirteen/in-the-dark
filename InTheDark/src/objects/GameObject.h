@@ -9,6 +9,7 @@ public:
 	GameAsset asset;
 	glm::vec3 position;
 	BBox bbox;
+	bool isGround;
 
 	virtual void update() { };
 

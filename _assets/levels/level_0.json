@@ -24,11 +24,26 @@
     },
 
     "level": {
+      "data_new": [
+        [
+          {
+            "type": 1,
+            "position": [ -2, 0, 2 ],
+            "reflection": [ 0.1, 0.1, 0.1 ],
+            "glossiness": 0.1,
+            "bbox": {
+              "lower": [ -0.5, 0.0, -0.5 ],
+              "upper": [ 0.5, 1.0, 0.5 ]
+            }
+          }
+        ]
+      ],
       "data": [
         [
           {
             "type": 1,
             "position": [ -2, 0, 2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -59,6 +74,7 @@
           {
             "type": 1,
             "position": [ -1, 0, 2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -89,6 +105,7 @@
           {
             "type": 1,
             "position": [ 0, 0, 2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -119,6 +136,7 @@
           {
             "type": 1,
             "position": [ 1, 0, 2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -149,6 +167,7 @@
           {
             "type": 1,
             "position": [ 2, 0, 2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -181,6 +200,7 @@
           {
             "type": 1,
             "position": [ -2, 0, 1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -211,6 +231,7 @@
           {
             "type": 1,
             "position": [ -1, 0, 1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -221,6 +242,7 @@
           {
             "type": 1,
             "position": [ 0, 0, 1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -231,6 +253,7 @@
           {
             "type": 1,
             "position": [ 1, 0, 1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -241,6 +264,7 @@
           {
             "type": 1,
             "position": [ 2, 0, 1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -273,6 +297,7 @@
           {
             "type": 1,
             "position": [ -2, 0, 0 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -303,6 +328,7 @@
           {
             "type": 1,
             "position": [ -1, 0, 0 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -313,6 +339,7 @@
           {
             "type": 1,
             "position": [ 0, 0, 0 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -323,6 +350,7 @@
           {
             "type": 1,
             "position": [ 1, 0, 0 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -333,6 +361,7 @@
           {
             "type": 1,
             "position": [ 2, 0, 0 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -365,6 +394,7 @@
           {
             "type": 1,
             "position": [ -2, 0, -1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -395,6 +425,7 @@
           {
             "type": 1,
             "position": [ -1, 0, -1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -405,6 +436,7 @@
           {
             "type": 1,
             "position": [ 0, 0, -1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -415,6 +447,7 @@
           {
             "type": 1,
             "position": [ 1, 0, -1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -425,6 +458,7 @@
           {
             "type": 1,
             "position": [ 2, 0, -1 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -457,6 +491,7 @@
           {
             "type": 1,
             "position": [ -2, 0, -2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -487,6 +522,7 @@
           {
             "type": 1,
             "position": [ -1, 0, -2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -497,6 +533,7 @@
           {
             "type": 1,
             "position": [ 0, 0, -2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -507,6 +544,7 @@
           {
             "type": 1,
             "position": [ 1, 0, -2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -517,6 +555,7 @@
           {
             "type": 1,
             "position": [ 2, 0, -2 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -549,6 +588,7 @@
           {
             "type": 1,
             "position": [ -4, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -579,6 +619,7 @@
           {
             "type": 1,
             "position": [ -3, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -589,6 +630,7 @@
           {
             "type": 1,
             "position": [ -2, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -599,6 +641,7 @@
           {
             "type": 1,
             "position": [ -1, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -609,6 +652,7 @@
           {
             "type": 1,
             "position": [ 0, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -619,6 +663,7 @@
           {
             "type": 1,
             "position": [ 1, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -629,6 +674,7 @@
           {
             "type": 1,
             "position": [ 2, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -639,6 +685,7 @@
           {
             "type": 1,
             "position": [ 3, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -649,6 +696,7 @@
           {
             "type": 1,
             "position": [ 4, 0, -3 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -681,6 +729,7 @@
           {
             "type": 1,
             "position": [ -4, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -711,6 +760,7 @@
           {
             "type": 1,
             "position": [ -3, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -721,6 +771,7 @@
           {
             "type": 1,
             "position": [ -2, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -731,6 +782,7 @@
           {
             "type": 1,
             "position": [ -1, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -741,6 +793,7 @@
           {
             "type": 1,
             "position": [ 0, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -751,6 +804,7 @@
           {
             "type": 1,
             "position": [ 1, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -761,6 +815,7 @@
           {
             "type": 1,
             "position": [ 2, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -771,6 +826,7 @@
           {
             "type": 1,
             "position": [ 3, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -781,6 +837,7 @@
           {
             "type": 1,
             "position": [ 4, 0, -4 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -813,6 +870,7 @@
           {
             "type": 1,
             "position": [ -4, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -843,6 +901,7 @@
           {
             "type": 2,
             "position": [ -3, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -853,6 +912,7 @@
           {
             "type": 2,
             "position": [ -2, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -863,6 +923,7 @@
           {
             "type": 2,
             "position": [ -1, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -873,6 +934,7 @@
           {
             "type": 2,
             "position": [ 0, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -883,6 +945,7 @@
           {
             "type": 2,
             "position": [ 1, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -893,6 +956,7 @@
           {
             "type": 2,
             "position": [ 2, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -903,6 +967,7 @@
           {
             "type": 2,
             "position": [ 3, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -913,6 +978,7 @@
           {
             "type": 1,
             "position": [ 4, 0, -5 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -945,6 +1011,7 @@
           {
             "type": 1,
             "position": [ -4, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -975,6 +1042,7 @@
           {
             "type": 2,
             "position": [ -3, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -985,6 +1053,7 @@
           {
             "type": 2,
             "position": [ -2, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -995,6 +1064,7 @@
           {
             "type": 2,
             "position": [ -1, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1005,6 +1075,7 @@
           {
             "type": 2,
             "position": [ 0, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1015,6 +1086,7 @@
           {
             "type": 2,
             "position": [ 1, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1025,6 +1097,7 @@
           {
             "type": 2,
             "position": [ 2, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1035,6 +1108,7 @@
           {
             "type": 2,
             "position": [ 3, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1045,6 +1119,7 @@
           {
             "type": 1,
             "position": [ 4, 0, -6 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1077,6 +1152,7 @@
           {
             "type": 1,
             "position": [ -4, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1107,6 +1183,7 @@
           {
             "type": 2,
             "position": [ -3, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1117,6 +1194,7 @@
           {
             "type": 2,
             "position": [ -2, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1127,6 +1205,7 @@
           {
             "type": 2,
             "position": [ -1, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1137,6 +1216,7 @@
           {
             "type": 2,
             "position": [ 0, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1147,6 +1227,7 @@
           {
             "type": 2,
             "position": [ 1, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1157,6 +1238,7 @@
           {
             "type": 2,
             "position": [ 2, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1167,6 +1249,7 @@
           {
             "type": 2,
             "position": [ 3, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1177,6 +1260,7 @@
           {
             "type": 1,
             "position": [ 4, 0, -7 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1209,6 +1293,7 @@
           {
             "type": 1,
             "position": [ -4, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1239,6 +1324,7 @@
           {
             "type": 2,
             "position": [ -3, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1249,6 +1335,7 @@
           {
             "type": 2,
             "position": [ -2, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1259,6 +1346,7 @@
           {
             "type": 2,
             "position": [ -1, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1269,6 +1357,7 @@
           {
             "type": 2,
             "position": [ 0, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1279,6 +1368,7 @@
           {
             "type": 2,
             "position": [ 1, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1289,6 +1379,7 @@
           {
             "type": 2,
             "position": [ 2, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1299,6 +1390,7 @@
           {
             "type": 2,
             "position": [ 3, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -1309,6 +1401,7 @@
           {
             "type": 1,
             "position": [ 4, 0, -8 ],
+            "isGrounded": true,
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {

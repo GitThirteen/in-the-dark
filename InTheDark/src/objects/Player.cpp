@@ -10,10 +10,9 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
     glm::vec3 forward = view_dir;
     forward.y = 0.0f;
     forward = glm::normalize(forward); //glm::vec3(0.0, 0.0, 1.0);
-    glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0, 1.0, 0.0))); // glm::vec3(1.0, 0.0, 0.0);
+    glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
+    glm::vec3 right = glm::normalize(glm::cross(forward, up)); // glm::vec3(1.0, 0.0, 0.0);
 
-    std::cout << std::to_string(forward.x) + " " + std::to_string(forward.y) + " " + std::to_string(forward.z) << std::endl;
-    //std::cout << std::to_string(right.x) + " " + std::to_string(right.y) + " " + std::to_string(right.z) << std::endl;
     float dx = 0.0, dz = 0.0;
     if (pos_dx ^ neg_dx)
     {
@@ -53,6 +52,7 @@ void Player::move()
     this->velocity = this->velocity * (1 - dt * TRANSITION_SPEED) + max_velocity * (dt * TRANSITION_SPEED);
 
     glm::vec3 force = velocity * dt;
+    //force.y = GRAVITY * dt;
     
     // update player position and translate asset accordingly
     this->position += force;

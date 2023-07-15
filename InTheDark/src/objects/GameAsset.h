@@ -26,9 +26,10 @@ namespace asset
 	{
 		AssetType type;
 		glm::vec3 position;
-		BBox bbox;
 		glm::vec3 reflection;
 		uint8_t glossiness;
+		bool isGround;
+		BBox bbox;
 		std::vector<asset::JSONContainer> children;
 
 		/**
@@ -89,6 +90,9 @@ namespace asset
 		auto& ref = j.at("reflection");
 		c.reflection = glm::vec3(ref[0], ref[1], ref[2]);
 		j.at("glossiness").get_to(c.glossiness);
+
+		auto& isGround = j.find("isGround");
+		if (isGround != j.end()) c.isGround = isGround.value();
 
 		auto& lower = j.at("bbox")["lower"];
 		auto& upper = j.at("bbox")["upper"];
