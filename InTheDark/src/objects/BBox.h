@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtx/io.hpp>
 
 /**
 * @brief A rectangular 3D bounding box is defined by two vertices - the bottom

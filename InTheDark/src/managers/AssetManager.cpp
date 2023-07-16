@@ -168,6 +168,10 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 		obj->asset = getAsset(c.type);
 		obj->asset.translate(c.position);
+		if (c.rot_deg != 0.0f)
+		{
+			obj->asset.rotate(c.rot_axis, c.rot_deg);
+		}
 		obj->asset.illuminate(c.reflection, c.glossiness);
 
 		obj->position = c.position;

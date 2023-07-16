@@ -2,7 +2,7 @@
 
 Torch::Torch(std::shared_ptr<GameObject> game_obj) :
     obj(game_obj),
-    smoke_generator(AssetType::SMOKE, game_obj->position)
+    smoke_generator(AssetType::SMOKE, glm::vec3(game_obj->position.x, game_obj->position.y + 0.2f, game_obj->position.z))
 { }
 
 void Torch::enable()

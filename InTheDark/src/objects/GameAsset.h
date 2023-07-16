@@ -27,6 +27,8 @@ namespace asset
 		AssetType type;
 		glm::vec3 position;
 		glm::vec3 reflection;
+		glm::vec3 rot_axis = glm::vec3(0.0f);
+		float rot_deg = 0.0f;
 		uint8_t glossiness;
 		BBox bbox;
 		std::vector<asset::JSONContainer> children;
@@ -89,6 +91,14 @@ namespace asset
 		auto& ref = j.at("reflection");
 		c.reflection = glm::vec3(ref[0], ref[1], ref[2]);
 		j.at("glossiness").get_to(c.glossiness);
+
+		auto rotation = j.find("rotation");
+		if (rotation != j.end())
+		{
+			auto& axis = rotation.value().at("axis");
+			c.rot_axis = glm::vec3(axis[0], axis[1], axis[2]);
+			c.rot_deg = rotation.value().at("deg");
+		}
 
 		auto& lower = j.at("bbox")["lower"];
 		auto& upper = j.at("bbox")["upper"];

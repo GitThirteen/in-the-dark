@@ -5,6 +5,7 @@ void GameStateManager::changeState(std::unique_ptr<GameState> state)
 	this->discard();
 
 	state->init();
+	clock.tick();
 	this->active_state.swap(state);
 }
 

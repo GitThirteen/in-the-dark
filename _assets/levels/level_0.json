@@ -2,7 +2,7 @@
     "lights": {
         "point": [
             {
-              "position": [ 0.0, 2.0, 0.5 ],
+              "position": [ 0.0, 2.0, 1.4 ],
               "color": [ 246, 154, 84 ],
               "attenuation": [ 1.0, 2.4, 2.4 ]
             }
@@ -44,7 +44,6 @@
           {
             "type": 1,
             "position": [ -2, 0, 2 ],
-            
             "reflection": [ 0.1, 0.4, 0.1 ],
             "glossiness": 8,
             "bbox": {
@@ -132,7 +131,23 @@
             "bbox": {
               "lower": [ -0.5, -1.0, -0.5 ],
               "upper": [ 0.5, 0.0, 0.5 ]
-            }
+            },
+            "children": [
+              {
+                "type": 3,
+                "position": [ 0.0, -0.5, -0.56 ],
+                "reflection": [ 0.1, 0.1, 0.1 ],
+                "glossiness": 0.1,
+                "bbox": {
+                  "lower": [ -0.5, -1.0, -0.5 ],
+                  "upper": [ 0.5, 0.0, 0.5 ]
+                },
+                "rotation": {
+                  "axis": [ 1.0, 0.0, 0.0 ],
+                  "deg": -8
+                }
+              }
+            ]
           },
           {
             "type": 1,
@@ -2640,10 +2655,14 @@
                 "type": 4,
                 "position": [ 0, 1, 0 ],
                 "reflection": [ 0.1, 0.4, 0.1 ],
+                "rotation": {
+                  "axis": [ 0.0, 1.0, 0.0 ],
+                  "deg": -90
+                },
                 "glossiness": 32,
                 "bbox": {
-                  "lower": [ -0.5, 0.0, -0.5 ],
-                  "upper": [ 0.5, 1.0, 0.5 ]
+                  "lower": [ -0.5, -1.0, -0.5 ],
+                  "upper": [ 0.5, 0.0, 0.5 ]
                 }
               }
             ]

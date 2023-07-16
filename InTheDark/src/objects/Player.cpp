@@ -9,9 +9,9 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
 
     glm::vec3 forward = view_dir;
     forward.y = 0.0f;
-    forward = glm::normalize(forward); //glm::vec3(0.0, 0.0, 1.0);
+    forward = glm::normalize(forward);
     glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
-    glm::vec3 right = glm::normalize(glm::cross(forward, up)); // glm::vec3(1.0, 0.0, 0.0);
+    glm::vec3 right = glm::normalize(glm::cross(forward, up));
 
     float dx = 0.0, dz = 0.0;
     if (pos_dx ^ neg_dx)
@@ -25,28 +25,27 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
 
     this->input_direction = (forward * dz + right * dx);
     this->input_direction.y = 0.0;
-    //this->movement_vec.y = GRAVITY;
 
-    auto velocity = calcForce();
+    auto delta_move = calcForce();
 
-    this->position.x += velocity.x;
+    this->position.x += delta_move.x;
     if (this->isColliding())
     {
-        this->position.x -= velocity.x;
-        velocity.x = 0;
+        this->position.x -= delta_move.x;
+        delta_move.x = 0;
     }
 
-    this->position.z += velocity.z;
+    this->position.z += delta_move.z;
     if (this->isColliding())
     {
-        this->position.z -= velocity.z;
-        velocity.z = 0;
+        this->position.z -= delta_move.z;
+        delta_move.z = 0;
     }
 
     // Increase falling speed for less floaty jump
-    if (velocity.y < 0) velocity.y *= FALL_MULTIPLIER;
+    if (velocity.y < 0) delta_move.y *= FALL_MULTIPLIER;
 
-    this->position.y += velocity.y;
+    this->position.y += delta_move.y;
     if (this->isColliding())
     {
         if (velocity.y < 0)
@@ -54,11 +53,11 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
             this->is_grounded = true;
         }
         
-        this->position.y -= velocity.y;
-        velocity.y = 0;
+        this->position.y -= delta_move.y;
+        delta_move.y = 0;
     }
 
-    this->asset.translate(velocity);
+    this->asset.translate(delta_move);
 
     // temp
     if (this->position.y < -3)
@@ -121,8 +120,7 @@ bool Player::isColliding()
         if (
             obj->asset.type == AssetType::PLAYER ||
             obj->asset.type == AssetType::TORCH
-            ) continue;
-        //if (obj->isGround) continue;
+        ) continue;
 
         if (this->isCollidingWith(obj))
         {
@@ -141,8 +139,7 @@ std::vector<std::shared_ptr<GameObject>> Player::getCollisions()
         if (
             obj->asset.type == AssetType::PLAYER ||
             obj->asset.type == AssetType::TORCH
-            ) continue;
-        if (obj->isGround) continue;
+        ) continue;
 
         if (this->isCollidingWith(obj))
         {
@@ -154,6 +151,7 @@ std::vector<std::shared_ptr<GameObject>> Player::getCollisions()
 
 glm::vec3 Player::calcJump()
 {
-    float jump_force = GRAVITY * JUMP_MULTIPLIER;
-    return glm::vec3(0, -jump_force, 0);
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    float jump_force = 10 * JUMP_MULTIPLIER;
+    return up * jump_force;
 }

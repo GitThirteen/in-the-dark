@@ -39,7 +39,7 @@ ParticleSystem::ParticleSystem(AssetType asset, const glm::vec3& pos)
 
     GLint maxAttribs;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttribs);
-    std::cout << maxAttribs << std::endl;
+    //std::cout << maxAttribs << std::endl;
 
     shaders.add(Shader::Vertex, "../_shaders/ps_default.vert");
     shaders.add(Shader::Geometry, "../_shaders/ps_default.geom");
@@ -141,8 +141,6 @@ void ParticleSystem::update()
 
 void ParticleSystem::draw(const glm::mat4& viewproj, const glm::vec3& cam_pos)
 {
-
-
     shaders.use("ps_billboard");
 
     shaders.set(ShaderLocation::Billboard::VIEWPROJECTION_MAT, viewproj);

@@ -17,13 +17,12 @@ class TestState : public GameState
 
 		initCamera();
 
-		auto cam = std::make_shared<Camera>(this->camera);
 		for (auto& obj : this->level.data)
 		{
 			if (obj->asset.type == AssetType::TORCH)
 			{
 				Torch t = Torch(obj);
-				t.setCamera(cam);
+				t.setCamera(this->camera);
 				torches.push_back(t);
 			}
 		}
@@ -42,11 +41,11 @@ class TestState : public GameState
 		bool mouse_pressed = events.mouse.pressed(GLFW_MOUSE_BUTTON_RIGHT);
 		glm::vec2 mouse_pos = events.mouse.getPosition();
 		double cam_radius = events.mouse.getOffset();
-		camera.update(mouse_pressed, mouse_pos, cam_radius);
+		camera->update(mouse_pressed, mouse_pos, cam_radius);
 
-		this->level.player->update(camera.coords.target - camera.coords.origin);
+		this->level.player->update(camera->coords.target - camera->coords.origin);
 
-		camera.updatePosition(this->level.player->position);
+		camera->updatePosition(this->level.player->position);
 	}
 
 	void draw() override
@@ -115,10 +114,10 @@ private:
 			(cam_start_pos.y - player_pos.y) * (cam_start_pos.y - player_pos.y) +
 			(cam_start_pos.z - player_pos.z) * (cam_start_pos.z - player_pos.z)
 		);
-		camera = Camera(cam_start_pos, player_pos, up, radius);
+		camera = std::make_shared<Camera>(Camera(cam_start_pos, player_pos, up, radius));
 		events.mouse.setOffset(radius);
 
-		camera.unlock(); // TODO remove and properly use lock & unlock once main menu and co are defined
+		camera->unlock(); // TODO remove and properly use lock & unlock once main menu and co are defined
 	}
 
 	void resolveCollision()

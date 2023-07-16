@@ -20,5 +20,5 @@ protected:
 	CanvasManager& canvas = CanvasManager::getInstance();
 	Clock& clock = Clock::getInstance();
 	EventHandler& events = EventHandler::getInstance();
-	Camera camera = Camera(events.mouse.getOffset());
+	std::shared_ptr<Camera> camera = nullptr;
 };
