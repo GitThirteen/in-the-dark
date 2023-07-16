@@ -20,7 +20,11 @@ private:
 	glm::vec3 input_direction = glm::vec3(0.0f);
 	std::vector<std::shared_ptr<GameObject>>* level_objs;
 
-	const float GRAVITY = -9.81;
+	bool is_grounded = true;
+	
+	const float GRAVITY = -9.81f;
+	const float JUMP_MULTIPLIER = 5.0f;
+	const float FALL_MULTIPLIER = 1.5f;
 	const float MAX_SPEED = 4.0f; // TODO: SET THIS PER ASSET!!!
 	float TRANSITION_SPEED = 4.0f; // TODO: SET THIS PER ASSET!!!
  
@@ -28,5 +32,6 @@ private:
 	Clock& clock = Clock::getInstance();
 
 	glm::vec3 calcForce();
+	glm::vec3 calcJump();
 	void resetPosition();
 };

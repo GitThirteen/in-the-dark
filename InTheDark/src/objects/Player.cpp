@@ -27,30 +27,38 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
     this->input_direction.y = 0.0;
     //this->movement_vec.y = GRAVITY;
 
-    auto force = calcForce();
+    auto velocity = calcForce();
 
-    this->position.x += force.x;
+    this->position.x += velocity.x;
     if (this->isColliding())
     {
-        this->position.x -= force.x;
-        force.x = 0;
+        this->position.x -= velocity.x;
+        velocity.x = 0;
     }
 
-    this->position.z += force.z;
+    this->position.z += velocity.z;
     if (this->isColliding())
     {
-        this->position.z -= force.z;
-        force.z = 0;
+        this->position.z -= velocity.z;
+        velocity.z = 0;
     }
 
-    this->position.y += force.y;
+    // Increase falling speed for less floaty jump
+    if (velocity.y < 0) velocity.y *= FALL_MULTIPLIER;
+
+    this->position.y += velocity.y;
     if (this->isColliding())
     {
-        this->position.y -= force.y;
-        force.y = 0;
+        if (velocity.y < 0)
+        {
+            this->is_grounded = true;
+        }
+        
+        this->position.y -= velocity.y;
+        velocity.y = 0;
     }
 
-    this->asset.translate(force);
+    this->asset.translate(velocity);
 
     // temp
     if (this->position.y < -3)
@@ -71,6 +79,12 @@ glm::vec3 Player::calcForce()
     }
 
     this->velocity = this->velocity * (1 - dt * TRANSITION_SPEED) + max_velocity * (dt * TRANSITION_SPEED);
+
+    if (this->is_grounded && events.key.pressed(GLFW_KEY_SPACE))
+    {
+        velocity += calcJump();
+        this->is_grounded = false;
+    }
 
     return velocity * dt;
 }
@@ -136,4 +150,10 @@ std::vector<std::shared_ptr<GameObject>> Player::getCollisions()
         }
     }
     return collisions;
+}
+
+glm::vec3 Player::calcJump()
+{
+    float jump_force = GRAVITY * JUMP_MULTIPLIER;
+    return glm::vec3(0, -jump_force, 0);
 }

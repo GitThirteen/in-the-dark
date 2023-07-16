@@ -172,7 +172,6 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 		obj->position = c.position;
 		obj->bbox = c.bbox;
-		obj->isGround = c.isGround;
 
 		return obj;
 	};
