@@ -5,6 +5,11 @@ void EventHandler::poll()
 	glfwPollEvents();
 }
 
+bool EventHandler::gameShouldEnd()
+{
+	return glfwWindowShouldClose(canvas.window.get());
+}
+
 // Mouse Handler
 
 double InternalMouseHandler::offset = 20;

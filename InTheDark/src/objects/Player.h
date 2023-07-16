@@ -14,6 +14,8 @@ public:
 	bool isColliding();
 	std::vector<std::shared_ptr<GameObject>> getCollisions();
 	void setLevelObjs(std::vector<std::shared_ptr<GameObject>>&);
+	void kill();
+	bool hasLost();
 
 private:
 	glm::vec3 velocity = glm::vec3(0.0f);
@@ -21,6 +23,7 @@ private:
 	std::vector<std::shared_ptr<GameObject>>* level_objs;
 
 	bool is_grounded = true;
+	int lives = 3;
 	
 	const float GRAVITY = -9.81f;
 	const float JUMP_MULTIPLIER = 5.0f;
@@ -33,5 +36,4 @@ private:
 
 	glm::vec3 calcForce();
 	glm::vec3 calcJump();
-	void resetPosition();
 };

@@ -46,10 +46,13 @@ public:
 	};
 
 	void poll();
+	bool gameShouldEnd();
 
 	EventHandler(EventHandler const&) = delete;
 	void operator=(EventHandler const&) = delete;
 
 private:
 	EventHandler() { };
+
+	CanvasManager& canvas = CanvasManager::getInstance();
 };

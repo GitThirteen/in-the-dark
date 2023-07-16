@@ -17,6 +17,9 @@ enum AssetType
 	TREASURE,
 	PLAYER,
 	SMOKE,
+	SPIKES,
+	STONE_GOLD,
+	STONE_RED,
 	UNDEFINED // we only use this one for iterating, it doesn't actually exist, do NOT use it for the love of god
 };
 

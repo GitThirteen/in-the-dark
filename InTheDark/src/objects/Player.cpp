@@ -29,14 +29,14 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
     auto delta_move = calcForce();
 
     this->position.x += delta_move.x;
-    if (this->isColliding())
+    if (isColliding())
     {
         this->position.x -= delta_move.x;
         delta_move.x = 0;
     }
 
     this->position.z += delta_move.z;
-    if (this->isColliding())
+    if (isColliding())
     {
         this->position.z -= delta_move.z;
         delta_move.z = 0;
@@ -46,7 +46,7 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
     if (velocity.y < 0) delta_move.y *= FALL_MULTIPLIER;
 
     this->position.y += delta_move.y;
-    if (this->isColliding())
+    if (isColliding())
     {
         if (velocity.y < 0)
         {
@@ -59,11 +59,25 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
 
     this->asset.translate(delta_move);
 
-    // temp
-    if (this->position.y < -3)
+    // arbitrary, replace with death material
+    if (this->position.y < -15)
     {
-        this->resetPosition();
+        kill();
     }
+}
+
+void Player::kill()
+{
+    this->lives -= 1;
+
+    glm::vec3 start_pos = glm::vec3(7, -4, 4); // TODO: fetch from json
+    this->asset.translate(glm::vec3(start_pos) - this->position);
+    this->position = glm::vec3(start_pos);
+}
+
+bool Player::hasLost()
+{
+    return this->lives <= 0;
 }
 
 glm::vec3 Player::calcForce()
@@ -102,12 +116,6 @@ bool Player::isCollidingWith(std::shared_ptr<GameObject> obj)
     );
 }
 
-void Player::resetPosition()
-{
-    this->asset.translate(glm::vec3(0) - this->position);
-    this->position = glm::vec3(0);
-}
-
 void Player::setLevelObjs(std::vector<std::shared_ptr<GameObject>>& objs)
 {
     this->level_objs = &objs;
@@ -119,7 +127,8 @@ bool Player::isColliding()
     {
         if (
             obj->asset.type == AssetType::PLAYER ||
-            obj->asset.type == AssetType::TORCH
+            obj->asset.type == AssetType::TORCH ||
+            obj->asset.type == AssetType::SPIKES
         ) continue;
 
         if (this->isCollidingWith(obj))
@@ -146,6 +155,7 @@ std::vector<std::shared_ptr<GameObject>> Player::getCollisions()
             collisions.push_back(obj);
         }
     }
+
     return collisions;
 }
 

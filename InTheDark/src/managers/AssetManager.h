@@ -35,7 +35,10 @@ static const std::unordered_map<AssetType, std::string> ASSET_PATHS = {
 	{ AssetType::TORCH,	"../_assets/objects/torch" },
 	{ AssetType::TREASURE, "../_assets/objects/treasure_chest" },
 	{ AssetType::PLAYER,	"../_assets/objects/player" },
-	{ AssetType::SMOKE, "../_assets/objects/part_smoke" }
+	{ AssetType::SMOKE, "../_assets/objects/part_smoke" },
+	{ AssetType::SPIKES, "../_assets/objects/spikes" },
+	{ AssetType::STONE_GOLD, "../_assets/objects/stone_gold" },
+	{ AssetType::STONE_RED, "../_assets/objects/stone_red" },
 };
 
 static const std::vector<std::string> LVL_PATHS = {

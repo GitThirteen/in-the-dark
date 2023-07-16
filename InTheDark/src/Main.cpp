@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 	auto test_state = std::make_unique<TestState>();
 	game.changeState(std::move(test_state));
 	
-	while (!glfwWindowShouldClose(window))
+	while (!events.gameShouldEnd())
 	{
 		game.update();
 		game.draw();
