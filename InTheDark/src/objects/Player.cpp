@@ -27,22 +27,43 @@ void Player::update(const glm::vec3& view_dir) // param temporary until camera i
     this->input_direction.y = 0.0;
     //this->movement_vec.y = GRAVITY;
 
-    move();
-    //std::cout << std::to_string(this->movement_vec.x) + " " + std::to_string(this->movement_vec.y) + " " + std::to_string(this->movement_vec.z) << std::endl;
+    auto force = calcForce();
 
-    //movement_vec *= FRICTION_FACTOR;
+    this->position.x += force.x;
+    if (this->isColliding())
+    {
+        this->position.x -= force.x;
+        force.x = 0;
+    }
+
+    this->position.z += force.z;
+    if (this->isColliding())
+    {
+        this->position.z -= force.z;
+        force.z = 0;
+    }
+
+    this->position.y += force.y;
+    if (this->isColliding())
+    {
+        this->position.y -= force.y;
+        force.y = 0;
+    }
+
+    this->asset.translate(force);
 
     // temp
     if (this->position.y < -3)
     {
-        resetPosition();
+        this->resetPosition();
     }
 }
 
-void Player::move()
+glm::vec3 Player::calcForce()
 {
     float dt = clock.getDeltaTime();
     glm::vec3 max_velocity = MAX_SPEED * this->input_direction;
+    max_velocity.y = GRAVITY;
 
     if (this->input_direction.x == 0 && this->input_direction.y == 0 && this->input_direction.z == 0)
     {
@@ -51,12 +72,7 @@ void Player::move()
 
     this->velocity = this->velocity * (1 - dt * TRANSITION_SPEED) + max_velocity * (dt * TRANSITION_SPEED);
 
-    glm::vec3 force = velocity * dt;
-    //force.y = GRAVITY * dt;
-    
-    // update player position and translate asset accordingly
-    this->position += force;
-    this->asset.translate(force);
+    return velocity * dt;
 }
 
 bool Player::isCollidingWith(std::shared_ptr<GameObject> obj)
@@ -64,12 +80,12 @@ bool Player::isCollidingWith(std::shared_ptr<GameObject> obj)
     BBox own_bbox = this->getTrueBBox();
     BBox obj_bbox = obj->getTrueBBox();
     return (
-        own_bbox.lower.x <= obj_bbox.upper.x &&
-        own_bbox.upper.x >= obj_bbox.lower.x &&
-        own_bbox.lower.y <= obj_bbox.upper.y &&
-        own_bbox.upper.y >= obj_bbox.lower.y &&
-        own_bbox.lower.z <= obj_bbox.upper.z &&
-        own_bbox.upper.z >= obj_bbox.lower.z
+        own_bbox.lower.x < obj_bbox.upper.x &&
+        own_bbox.upper.x > obj_bbox.lower.x &&
+        own_bbox.lower.y < obj_bbox.upper.y &&
+        own_bbox.upper.y > obj_bbox.lower.y &&
+        own_bbox.lower.z < obj_bbox.upper.z &&
+        own_bbox.upper.z > obj_bbox.lower.z
     );
 }
 
@@ -77,4 +93,47 @@ void Player::resetPosition()
 {
     this->asset.translate(glm::vec3(0) - this->position);
     this->position = glm::vec3(0);
+}
+
+void Player::setLevelObjs(std::vector<std::shared_ptr<GameObject>>& objs)
+{
+    this->level_objs = &objs;
+}
+
+bool Player::isColliding()
+{
+    for (auto& obj : *this->level_objs)
+    {
+        if (
+            obj->asset.type == AssetType::PLAYER ||
+            obj->asset.type == AssetType::TORCH
+            ) continue;
+        //if (obj->isGround) continue;
+
+        if (this->isCollidingWith(obj))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+std::vector<std::shared_ptr<GameObject>> Player::getCollisions()
+{
+    auto collisions = std::vector<std::shared_ptr<GameObject>>();
+    for (auto& obj : *this->level_objs)
+    {
+        if (
+            obj->asset.type == AssetType::PLAYER ||
+            obj->asset.type == AssetType::TORCH
+            ) continue;
+        if (obj->isGround) continue;
+
+        if (this->isCollidingWith(obj))
+        {
+            collisions.push_back(obj);
+        }
+    }
+    return collisions;
 }
