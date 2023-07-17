@@ -47,6 +47,7 @@ public:
 
 	void poll();
 	bool gameShouldEnd();
+	void initiateGameEnd();
 
 	EventHandler(EventHandler const&) = delete;
 	void operator=(EventHandler const&) = delete;

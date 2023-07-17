@@ -77,14 +77,29 @@ GLFWwindow* initGL()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // Prevents GLFW from getting resized, change if needed
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
+	auto refresh_rate = settings.get<int>("refresh_rate");
+	if (refresh_rate != -1)
+	{
+		glfwWindowHint(GLFW_REFRESH_RATE, refresh_rate);
+	}
+
 	auto width = settings.get<int>("width");
 	auto height = settings.get<int>("height");
+	auto fullscreen_mode = settings.get<std::string>("fullscreen") == "true";
 	
 	GLFWwindow* window = glfwCreateWindow(
 		width,
 		height,
 		settings.get<std::string>("title").c_str(),
-		NULL, NULL);
+		fullscreen_mode ? glfwGetPrimaryMonitor() : NULL,
+		NULL);
+
+	if (fullscreen_mode)
+	{
+		auto vid_mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		refresh_rate = refresh_rate == -1 ? 60 : refresh_rate;
+		glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, vid_mode->width, vid_mode->height, refresh_rate);
+	}
 	
 	glfwGetFramebufferSize(window, &width, &height);
 	

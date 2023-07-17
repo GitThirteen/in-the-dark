@@ -161,6 +161,7 @@ void PostProcessor::draw()
 	shaders.set(ShaderLocation::PProc::SCREEN_HEIGHT, screen_height);
 	shaders.set(ShaderLocation::PProc::COLOR_TEXTURE, 0);
 	shaders.set(ShaderLocation::PProc::DEPTH_TEXTURE, 1);
+	shaders.set(ShaderLocation::PProc::BRIGHTNESS, SettingsManager::getInstance().get<float>("brightness"));
 
 	glActiveTexture(GL_TEXTURE0 + 0);
 	glBindTexture(GL_TEXTURE_2D, this->col_tex);

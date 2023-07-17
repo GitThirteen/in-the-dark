@@ -10,6 +10,11 @@ bool EventHandler::gameShouldEnd()
 	return glfwWindowShouldClose(canvas.window.get());
 }
 
+void EventHandler::initiateGameEnd()
+{
+	return glfwSetWindowShouldClose(canvas.window.get(), true);
+}
+
 // Mouse Handler
 
 double InternalMouseHandler::offset = 20;

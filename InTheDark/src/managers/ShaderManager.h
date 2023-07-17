@@ -43,7 +43,8 @@ namespace ShaderLocation {
 			SCREEN_WIDTH		= 2,
 			SCREEN_HEIGHT		= 3,
 			COLOR_TEXTURE		= 4,
-			DEPTH_TEXTURE		= 5
+			DEPTH_TEXTURE		= 5,
+			BRIGHTNESS			= 6
 		};
 	}
 

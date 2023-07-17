@@ -27,6 +27,7 @@ private:
 
 	Clock& clock = Clock::getInstance();
 	CanvasManager& canvas = CanvasManager::getInstance();
+	EventHandler& events = EventHandler::getInstance();
 
 	GameStateManager() { }
 };

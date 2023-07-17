@@ -13,6 +13,11 @@ void GameStateManager::update()
 {
 	clock.tick();
 
+	if (events.key.pressed(GLFW_KEY_ESCAPE))
+	{
+		events.initiateGameEnd();
+	}
+
 	if (this->active_state)
 	{
 		this->active_state->update();
