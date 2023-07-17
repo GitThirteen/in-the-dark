@@ -8,7 +8,6 @@
 struct Spikes {
 	GameObjects objs;
 	float default_y = FLT_MIN;
-	float clock_default = 0.0f;
 	float spike_clock = 0.0f;
 
 	glm::vec3 get_target_offset()
@@ -25,11 +24,22 @@ struct Spikes {
 	}
 };
 
+struct Puzzle {
+	bool solved = false;
+	std::array<int, 4> solution = { 2, 4, 3, 5 };
+	std::vector<int> order;
+	bool on_cooldown = false;
+	float cooldown = 1.5f;
+};
+
 class TestState : public GameState
 {
 	LevelWrapper level;
-	std::vector<Torch> torches;
 	std::array<Spikes, 4> spikes;
+	std::shared_ptr<GameObject> treasure;
+	Puzzle puzzle;
+
+	bool stage_finished = false;
 
 	void init() override
 	{
@@ -38,15 +48,14 @@ class TestState : public GameState
 
 		initCamera();
 
+		for (auto& torch : this->level.lights.point_lights.entities)
+		{
+			torch.setCamera(this->camera);
+			if (torch.id == 0 || torch.id == 1) torch.enable();
+		}
+
 		for (auto& obj : this->level.data)
 		{
-			if (obj->asset.type == AssetType::TORCH)
-			{
-				Torch t = Torch(obj);
-				t.setCamera(this->camera);
-				torches.push_back(t);
-			}
-
 			if (obj->asset.type == AssetType::SPIKES)
 			{
 				int group_index = 3;
@@ -62,13 +71,17 @@ class TestState : public GameState
 					this->spikes[group_index].default_y = obj->position.y;
 				}
 			}
+
+			if (obj->asset.type == AssetType::TREASURE)
+			{
+				this->treasure = obj;
+			}
 		}
 
 		auto spike_default = std::array<float, 4> { 0.0f, -0.5f, -1.0f, 0.25f };
 		for (int i = 0; i < spike_default.size(); i++)
 		{
-			this->spikes[i].spike_clock = 
-				this->spikes[i].clock_default = spike_default[i];
+			this->spikes[i].spike_clock = spike_default[i];
 		}
 
 		this->level.lights.directional_light.addToScene();
@@ -83,6 +96,7 @@ class TestState : public GameState
 		events.poll();
 
 		if (this->level.player->hasLost()) return;
+		if (stage_finished) return;
 
 		bool mouse_pressed = events.mouse.pressed(GLFW_MOUSE_BUTTON_RIGHT);
 		glm::vec2 mouse_pos = events.mouse.getPosition();
@@ -107,6 +121,60 @@ class TestState : public GameState
 			}
 		}
 
+		if (!this->puzzle.on_cooldown)
+		{
+			for (auto& torch : this->level.lights.point_lights.entities)
+			{
+				if (torch.id == 0 || torch.id == 1) continue;
+
+				if (this->level.player->isCollidingWith(torch.obj) && !torch.isActive)
+				{
+					torch.enable();
+					this->puzzle.order.push_back(torch.id);
+				}
+			}
+
+			if (!this->puzzle.solved && this->puzzle.order.size() == this->puzzle.solution.size())
+			{
+				bool solved = true;
+				for (int i = 0; i < this->puzzle.order.size(); i++)
+				{
+					if (this->puzzle.order[i] == this->puzzle.solution[i]) continue;
+
+					for (auto& torch : this->level.lights.point_lights.entities)
+					{
+						if (torch.id == 0 || torch.id == 1) continue;
+						torch.disable();
+					}
+
+					solved = false;
+					this->puzzle.order.clear();
+					this->puzzle.on_cooldown = true;
+					break;
+				}
+
+				this->puzzle.solved = solved;
+			}
+		}
+		else {
+			this->puzzle.cooldown -= dt;
+
+			if (this->puzzle.cooldown < 0.0f)
+			{
+				this->puzzle.on_cooldown = false;
+				this->puzzle.cooldown = 1.5f;
+			}
+		}
+
+		if (
+			this->puzzle.solved &&
+			glm::abs(glm::distance(this->level.player->position, this->treasure->position)) < 1.5f &&
+			events.key.pressed(GLFW_KEY_E)
+		)
+		{
+			this->stage_finished = true;
+		}
+
 		// Update player
 
 		this->level.player->update(camera->coords.target - camera->coords.origin);
@@ -125,6 +193,7 @@ class TestState : public GameState
 		}
 
 		camera->updatePosition(this->level.player->position);
+		this->level.lights.point_lights.addToScene();
 	}
 
 	void draw() override
@@ -141,6 +210,14 @@ class TestState : public GameState
 			canvas.window.swapBuffers();
 			return;
 		}
+
+		if (this->stage_finished)
+		{
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			canvas.clear(0, 255, 0);
+			canvas.window.swapBuffers();
+			return;
+		}
 		
 		canvas.clear(24, 34, 33);
 
@@ -154,15 +231,21 @@ class TestState : public GameState
 		{
 			if (
 				obj->asset.type == AssetType::PLAYER || 
-				obj->asset.type == AssetType::TORCH
+				obj->asset.type == AssetType::TORCH ||
+				obj->asset.type == AssetType::TREASURE
 			) continue;
 
 			obj->asset.draw();
 		}
 
-		for (auto& torch : this->torches)
+		for (auto& torch : this->level.lights.point_lights.entities)
 		{
 			torch.draw();
+		}
+
+		if (this->puzzle.solved)
+		{
+			this->treasure->asset.draw();
 		}
 
 		// Second pass: Render character (TODO: With post-processing)
@@ -177,7 +260,7 @@ class TestState : public GameState
 
 		// Third pass: Render particles
 
-		for (auto& torch : this->torches)
+		for (auto& torch : this->level.lights.point_lights.entities)
 		{
 			torch.emitSmoke();
 		}

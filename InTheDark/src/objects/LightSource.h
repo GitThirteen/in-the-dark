@@ -26,6 +26,8 @@ namespace lightSource
 		FLOAT_PADDING(p)
 		glm::vec3 attenuation = glm::vec3(0);
 		FLOAT_PADDING(a)
+		glm::vec3 isActive = glm::vec3(0);
+		FLOAT_PADDING(i)
 
 		// TODO might need own addToScene() since player light is dynamic
 	};
@@ -36,15 +38,3 @@ namespace lightSource
 	void to_json(nlohmann::json& j, const lightSource::Point&) = delete;
 	void from_json(const nlohmann::json& j, lightSource::Point&);
 }
-
-struct PointLightDataHandler
-{
-	GLuint ubo;
-	std::vector<lightSource::Point> entities;
-	bool created = false;
-	bool placed = false;
-
-	bool incomplete();
-	void create();
-	void addToScene();
-};

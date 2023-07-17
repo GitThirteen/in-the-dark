@@ -2,9 +2,9 @@
 
 ParticleSystem::ParticleSystem() : ParticleSystem({ }, glm::vec3(0.0f)) { };
 
-ParticleSystem::ParticleSystem(AssetType asset, const glm::vec3& pos)
+ParticleSystem::ParticleSystem(asset::Texture tex, const glm::vec3& pos)
 {
-    this->settings.texture = AssetManager::getInstance().getAsset(asset).texture;
+    this->settings.texture = tex;
     this->settings.initial_position = pos;
     
     this->emit_rate = this->settings.default_emit_rate; // TODO: Make that param adjustable (actually, make all params adjustable)

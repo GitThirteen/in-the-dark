@@ -14,6 +14,7 @@ struct PointLight {
 	vec3 color;
 	vec3 position;
 	vec3 attenuation; // .x (constant) .y (linear) .z (quadratic)
+	vec3 activeFlag;
 };
 
 layout(std430, binding = 0) buffer pointLightBuffer {
@@ -124,6 +125,8 @@ void main() {
 	// Point Lights
 	for (int i = 0; i < pointLights.length(); i++) {
 		PointLight light = pointLights[i];
+		if (light.activeFlag.x == 0) continue;
+
 		vec3[2] pointValues = calcPointLight(light, vertNormal, viewDirection);
 
 		// Toon Shading

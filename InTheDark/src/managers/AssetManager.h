@@ -21,7 +21,7 @@
 #include "../util/json.hpp"
 #include "../objects/GameAsset.h"
 #include "../objects/GameObject.h"
-#include "../objects/LightSource.h"
+#include "../objects/PointLightData.h"
 #include "../objects/Player.h"
 
 typedef std::vector<std::shared_ptr<lightSource::Point>> PointLights;
@@ -48,7 +48,7 @@ static const std::vector<std::string> LVL_PATHS = {
 struct LightWrapper
 {
 	lightSource::Directional directional_light;
-	PointLightDataHandler point_lights;
+	PointLightData point_lights;
 };
 
 struct LevelWrapper

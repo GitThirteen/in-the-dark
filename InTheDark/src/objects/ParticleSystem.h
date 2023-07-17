@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "../managers/ShaderManager.h"
-#include "../managers/AssetManager.h"
 #include "../managers/Clock.h"
 #include "GameAsset.h"
 #include "../Camera.h"
@@ -31,7 +30,7 @@ class ParticleSystem
 {
 public:
     ParticleSystem();
-    ParticleSystem(AssetType asset, const glm::vec3&);
+    ParticleSystem(asset::Texture, const glm::vec3&);
 
     void emit(std::shared_ptr<Camera>);
 private:

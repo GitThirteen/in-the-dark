@@ -151,12 +151,12 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 	auto dir_light = dir_j.get<lightSource::Directional>();
 	game_lights.directional_light = dir_light;
 
-	for (auto& pnt_j : lights["point"])
+	/*for (auto& pnt_j : lights["point"])
 	{
 		auto pnt_light = pnt_j.get<lightSource::Point>();
 		game_lights.point_lights.entities.push_back(pnt_light);
 	}
-	game_lights.point_lights.create();
+	game_lights.point_lights.create();*/
 
 	/* ---- */
 
@@ -176,6 +176,17 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 
 		obj->position = c.position;
 		obj->bbox = c.bbox;
+
+		if (obj->asset.type == AssetType::TORCH)
+		{
+			Torch t = Torch(obj, getAsset(AssetType::SMOKE).texture);
+			t.light = lightSource::Point();
+			t.light.attenuation = glm::vec3(1.0, 2.4, 2.4);
+			t.light.position = t.obj->position + glm::vec3(0.0, 0.4, 0.0);
+			t.light.color = glm::vec3(246 / 255.0f, 154 / 255.0f, 84 / 255.0f);
+
+			game_lights.point_lights.entities.push_back(t);
+		}
 
 		return obj;
 	};
@@ -213,6 +224,8 @@ LevelWrapper AssetManager::loadLevel(const std::string& path)
 			}
 		}
 	}
+
+	game_lights.point_lights.create();
 
 	return {
 		game_lights,
